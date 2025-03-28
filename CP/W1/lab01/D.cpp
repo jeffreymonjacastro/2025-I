@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 #define cpu()                                                                  \
   ios::sync_with_stdio(false);                                                 \
