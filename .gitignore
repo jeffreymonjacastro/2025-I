@@ -11,3 +11,8 @@ babysat
 monster
 beator
 beator-32
+
+
+*.vscode
+*.idea
+*cmake-build-debug
