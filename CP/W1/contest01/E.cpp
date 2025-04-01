@@ -14,59 +14,53 @@ const int mod = 1e9 + 7;
 
 void solve() {
   vector<vector<char>> m(3, vector<char>(3));
-  vector<vector<bool>> n(3, vector<bool>(3, true));
-
-  int r, c, min = 1e9;
-  string s;
+  string s, sol;
 
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
       cin >> m[i][j];
-      if (m[i][j] - 'A' < min) {
-        min = m[i][j] - 'A';
-        r = i;
-        c = j;
-      }
     }
   }
 
-  n[r][c] = false;
-  s += m[r][c];
-  int a, b;
+  int directions[3] = {-1, 0, 1};
 
-  for (int i = 0; i < 2; i++) {
-    min = 1e9;
-    a = r;
-    b = c;
+  sol = "ZZZ";
 
-    int directions[3] = {-1, 0, 1};
+  for (int r = 0; r < 3; r++) {
+    for (int c = 0; c < 3; c++) {
+      for (int firstdr : directions) {
+        for (int firstdc : directions) {
+          int firstr = r + firstdr;
+          int firstc = c + firstdc;
 
-    for (int dr : directions) {
-      for (int dc : directions) {
-        if (dr == 0 && dc == 0)
-          continue;
+          if ((firstdr == 0 && firstdc == 0) || (firstr == r && firstc == c) ||
+              firstr < 0 || firstr > 2 || firstc < 0 || firstc > 2)
+            continue;
 
-        int new_r = r + dr;
-        int new_c = c + dc;
+          for (int seconddr : directions) {
+            for (int seconddc : directions) {
+              int secondr = firstr + seconddr;
+              int secondc = firstc + seconddc;
 
-        if (new_r >= 0 && new_r <= 2 && new_c >= 0 && new_c <= 2) {
-          if (m[new_r][new_c] - 'A' < min && n[new_r][new_c]) {
-            min = m[new_r][new_c] - 'A';
-            a = new_r;
-            b = new_c;
+              if ((seconddr == 0 && seconddc == 0) ||
+                  (secondr == r && secondc == c) || secondr < 0 ||
+                  secondr > 2 || secondc < 0 || secondc > 2)
+                continue;
+
+              s = string(1, m[r][c]) + string(1, m[firstr][firstc]) +
+                  string(1, m[secondr][secondc]);
+
+              if (s < sol) {
+                sol = s;
+              }
+            }
           }
         }
       }
     }
-
-    r = a;
-    c = b;
-
-    n[r][c] = false;
-    s += m[r][c];
   }
 
-  cout << s;
+  cout << sol;
 }
 
 int main() {
