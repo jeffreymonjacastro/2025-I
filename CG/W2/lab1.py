@@ -4,7 +4,13 @@ from math import *
 
 img = cv.imread('lowcontrast.png')
 
-def brightness(img, new_m, new_M):
+## 1
+## Brigthness
+
+
+## 2 
+## Contrast
+def contrast(img, new_m, new_M):
   old_m = img.min()
   old_M = img.max()
 
@@ -15,7 +21,10 @@ def brightness(img, new_m, new_M):
   return img
 
 
-new_img = brightness(img, 0, 255)
+new_img = contrast(img, 0, 255)
 cv.imshow("Display window", new_img)
 k = cv.waitKey(0)
 cv.destroyAllWindows()
+
+## 3
+## Tone Mapping HDR images

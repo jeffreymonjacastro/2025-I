@@ -65,6 +65,7 @@ def generate_circle(canvas_size, center_coordinates, radius, color, thickness):
 # cv.destroyAllWindows()
 
 ## 1.4
+# Fractal de Maldebrot
 
 # ANIMATIONS
 ## 2.1
@@ -112,6 +113,8 @@ def bouncing_animation(height, width, radius):
 
   cv.destroyAllWindows()
 
-
 bouncing_animation(400, 400, 30)
+
+## 2.2 
+## Game Life in a board of size NxM
 
