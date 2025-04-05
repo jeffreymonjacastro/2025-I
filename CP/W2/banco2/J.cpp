@@ -41,8 +41,8 @@ void solve() {
     for (int i = k; i <= new_n; i++) {
       for (int j = k; j <= new_m; j++) {
         if (rings[i - 1][j] >= k && rings[i][j - 1] >= k &&
-            rings[i + 1][j] >= k && rings[i][j + 1] >= k) {
-          rings[i][j]++;
+            rings[i + 1][j] >= k && rings[i][j + 1] >= k && rings[i][j]) {
+          rings[i][j] = k + 1;
         }
       }
     }
