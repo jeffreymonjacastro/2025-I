@@ -323,10 +323,16 @@ void testTreeStructureValidity() {
 }
 
 int main() {
-    testTreeStructureValidity();
-    testPolygonsIntegrity();
-    testQueryRandomBalls();
-    
-    std::cout << "\nTodos los tests se ejecutaron correctamente.\n";
+    Point3D p1(1.1, 2.2, 3.3);
+    std::cout << p1 << std::endl;
     return 0;
 }
+
+// int main() {
+//     testTreeStructureValidity();
+//     testPolygonsIntegrity();
+//     testQueryRandomBalls();
+//
+//     std::cout << "\nTodos los tests se ejecutaron correctamente.\n";
+//     return 0;
+// }

@@ -21,7 +21,7 @@ class Polygon;
 template <typename T = NType>
 class Plane {
 private:
-    Point3D <T>  point_;    // A point on the plane
+    Point3D <T> point_;    // A point on the plane
     Vector3D<T> normal_;    // A normal vector to the plane
 
 public:
@@ -99,6 +99,27 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Polygon<U>& polygon);
 };
 
+// Implementations
+// Plane
+template <typename T>
+T Plane<T>::distance(const Point3D<T>& p) const {
+    return abs(normal_.dot(p - point_));
+}
+
+template <typename T>
+Point3D<T> Plane<T>::intersect(const Line<T>& l) const {
+    return Point3D<T>();
+}
+
+template <typename T>
+bool Plane<T>::contains(const Point3D<T>& p) const {
+    return bool();
+}
+
+template <typename T>
+bool Plane<T>::contains(const Line<T>& l) const {
+    return bool();
+}
 
 // Equality operators
 template <typename T>
@@ -114,10 +135,27 @@ std::ostream& operator<<(std::ostream& os, const Plane<T>& plane) {
     return os;
 }
 
+// Polygon
+
 // Equality operators
 template <typename T>
 bool Polygon<T>::operator==(const Polygon<T>& other) const {
     return vertices_ == other.vertices_;
+}
+
+template <typename T>
+Plane<T> Polygon<T>::getPlane() const {
+    return Plane<T>();
+}
+
+template <typename T>
+Vector3D <T> Polygon<T>::getNormal() const {
+    return Vector3D<T>();
+}
+
+template <typename T>
+Point3D<T> Polygon<T>::getCentroid() const {
+    return Point3D<T>();
 }
 
 // Output operator for Polygon
