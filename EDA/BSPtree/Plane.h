@@ -108,17 +108,52 @@ T Plane<T>::distance(const Point3D<T>& p) const {
 
 template <typename T>
 Point3D<T> Plane<T>::intersect(const Line<T>& l) const {
-    return Point3D<T>();
+    try {
+        if (this->contains(l)) {
+            throw std::runtime_error("Line is contained in the plane");
+        }
+
+        Point3D<T> P = l.getPoint();
+        Vector3D<T> v = l.getDirection();
+
+        T t = -normal_.dot(P - point_) / normal_.dot(v);
+
+        if (t >= static_cast<T>(0)) {
+            Point3D<T> point_v(v.getX(), v.getY(), v.getZ());
+            return P + point_v * t;
+        }
+
+        throw std::runtime_error("No intersection with the plane");
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Exception caught: " << e.what() << "\n";
+
+        return Point3D<T>(T(0), T(0), T(0));
+    }
 }
 
 template <typename T>
 bool Plane<T>::contains(const Point3D<T>& p) const {
-    return bool();
+    Point3D<T> P = p - point_;
+    T dot = normal_.dot(P);
+
+    if (dot == static_cast<T>(0)) {
+        return true;
+    }
+
+    return false;
 }
 
 template <typename T>
 bool Plane<T>::contains(const Line<T>& l) const {
-    return bool();
+    Vector3D<T> v = l.getDirection();
+    Point3D<T> point_v(v.getX(), v.getY(), v.getZ());
+    T dot = normal_.dot(point_v);
+
+    if (dot == static_cast<T>(0)) {
+        return true;
+    }
+
+    return false;
 }
 
 // Equality operators
@@ -156,6 +191,29 @@ Vector3D <T> Polygon<T>::getNormal() const {
 template <typename T>
 Point3D<T> Polygon<T>::getCentroid() const {
     return Point3D<T>();
+}
+
+template <typename T>
+bool Polygon<T>::contains(const Point3D<T>& p) const {
+    p.getX();
+    return bool();
+}
+
+template <typename T>
+RelationType Polygon<T>::relationWithPlane(const Plane<T>& plane) const {
+    plane = plane.getNormal();
+    return COINCIDENT;
+}
+
+template <typename T>
+std::pair<Polygon<T>, Polygon<T>> Polygon<T>::split(const Plane<T>& plane) const {
+    plane = plane.getNormal();
+    return std::make_pair(Polygon<T>(), Polygon<T>());
+}
+
+template <typename T>
+T Polygon<T>::area() const {
+    return T();
 }
 
 // Output operator for Polygon

@@ -166,6 +166,7 @@ bool comparePolygonSets(const std::vector<Polygon<NType>>& a, const std::vector<
     return true;
 }
 
+// Verificar la validez de un subárbol
 bool checkSubtreeValidity(const BSPNode<NType>* node, const Plane<NType>& parentPlane, bool isFront) {
     std::vector<Polygon<NType>> polys;
     node->collectPolygons(polys);
@@ -322,9 +323,26 @@ void testTreeStructureValidity() {
     std::cout << "Test de estructura y validez del árbol pasó exitosamente.\n";
 }
 
+
 int main() {
-    Point3D p1(1.1, 2.2, 3.3);
-    std::cout << p1 << std::endl;
+    // Plane test
+    // const Point3D p1(1.0, 2.0, 1.0);
+    // const Vector3D v1(0.0,0.0,1.0);
+    // const Plane plane1(p1, v1);
+    //
+    // const Point3D p2(1.0, 1.0, 1.0);
+    // const Point3D p3(2.0,2.0,1.0);
+    // const Line line1(p3, p2);
+    //
+    // std::cout << "Plane: " << plane1 << "\n";
+    // std::cout << "Line: " << line1 << "\n";
+    // std::cout << "Intersection: " << plane1.intersect(line1) << "\n";
+    // std::cout << "Contains point " << p3 << ": " << plane1.contains(p3) << "\n";
+    // std::cout << "Contains line " << line1 << ": " << plane1.contains(line1) << "\n";
+
+    // Polygon test
+
+
     return 0;
 }
 

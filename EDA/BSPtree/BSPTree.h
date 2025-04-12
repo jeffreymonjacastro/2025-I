@@ -36,10 +36,16 @@ public:
     const BSPNode<T>* getFront() const { return front_.get(); }
     const BSPNode<T>*  getBack() const { return  back_.get(); }
 
-    void insert(const Polygon<T>& polygon);
+    void insert(const Polygon<T>& polygon) {
+        polygon.getCentroid();
+    };
 
     // Método de consulta: recolecta en 'results' los polígonos que pueden colisionar con la Ball.
-    void query(const Ball<T>& ball, const LineSegment<T>& movement, std::vector<Polygon<T>>& results) const;
+    void query(const Ball<T>& ball, const LineSegment<T>& movement, std::vector<Polygon<T>>& results) const {
+        ball.getCentroid();
+        movement.getP1();
+        results.clear();
+    };
     
     // Print
     void print(std::ostream& os, int indent = 0) const{
@@ -113,10 +119,16 @@ public:
     BSPTree() : root_(nullptr) {}
     ~BSPTree() = default;
 
-    void insert(const Polygon<T>& polygon);
+    void insert(const Polygon<T>& polygon) {
+        polygon.getPlane();
+    };
     
     // Devuelve los polígonos candidatos a colisión con la Ball.
-    std::vector<Polygon<T>> query(const Ball<T>& ball, const LineSegment<T>& movement) const;
+    std::vector<Polygon<T>> query(const Ball<T>& ball, const LineSegment<T>& movement) const {
+        ball.getPosition();
+        movement.getP1();
+        return std::vector<Polygon<T>>();
+    };
     
     // Print
     void print(std::ostream& os) const{
