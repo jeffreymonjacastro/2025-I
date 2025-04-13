@@ -166,14 +166,14 @@ void BSPNode<T>::insert(const Polygon<T>& polygon) {
 
         case IN_FRONT:
             if (!front_) {
-                front_ = std::make_unique<BSPNode<T>>();
+                front_ = std::unique_ptr<BSPNode<T>>();
             }
             front_->insert(polygon);
             break;
 
         case BEHIND:
             if (!back_) {
-                back_ = std::make_unique<BSPNode<T>>();
+                back_ = std::unique_ptr<BSPNode<T>>();
             }
             back_->insert(polygon);
             break;
@@ -182,12 +182,12 @@ void BSPNode<T>::insert(const Polygon<T>& polygon) {
             std::pair<Polygon<T>, Polygon<T>> splitPolygons = polygon.split(partition_);
 
             if (!front_) {
-                front_ = std::make_unique<BSPNode<T>>();
+                front_ = std::unique_ptr<BSPNode<T>>();
             }
             front_->insert(splitPolygons.first);
 
             if (!back_) {
-                back_ = std::make_unique<BSPNode<T>>();
+                back_ = std::unique_ptr<BSPNode<T>>();
             }
             back_->insert(splitPolygons.second);
             break;
@@ -227,7 +227,7 @@ void BSPNode<T>::query(const Ball<T>& ball, const LineSegment<T>& movement, std:
 template <typename T>
 void BSPTree<T>::insert(const Polygon<T>& polygon) {
     if (!root_) {
-        root_ = std::make_unique<BSPNode<T>>();
+        root_ = std::unique_ptr<BSPNode<T>>();
     }
     root_->insert(polygon);
 };
