@@ -36,16 +36,10 @@ public:
     const BSPNode<T>* getFront() const { return front_.get(); }
     const BSPNode<T>*  getBack() const { return  back_.get(); }
 
-    void insert(const Polygon<T>& polygon) {
-        polygon.getCentroid();
-    };
+    void insert(const Polygon<T>& polygon);
 
     // Método de consulta: recolecta en 'results' los polígonos que pueden colisionar con la Ball.
-    void query(const Ball<T>& ball, const LineSegment<T>& movement, std::vector<Polygon<T>>& results) const {
-        ball.getCentroid();
-        movement.getP1();
-        results.clear();
-    };
+    void query(const Ball<T>& ball, const LineSegment<T>& movement, std::vector<Polygon<T>>& results) const;
     
     // Print
     void print(std::ostream& os, int indent = 0) const{
@@ -119,17 +113,11 @@ public:
     BSPTree() : root_(nullptr) {}
     ~BSPTree() = default;
 
-    void insert(const Polygon<T>& polygon) {
-        polygon.getPlane();
-    };
+    void insert(const Polygon<T>& polygon);
     
     // Devuelve los polígonos candidatos a colisión con la Ball.
-    std::vector<Polygon<T>> query(const Ball<T>& ball, const LineSegment<T>& movement) const {
-        ball.getPosition();
-        movement.getP1();
-        return std::vector<Polygon<T>>();
-    };
-    
+    std::vector<Polygon<T>> query(const Ball<T>& ball, const LineSegment<T>& movement) const;
+
     // Print
     void print(std::ostream& os) const{
         if (root_) {
@@ -159,5 +147,99 @@ public:
             root_->traverse(func);
     }
 };
+
+// BSP Node
+template <typename T>
+void BSPNode<T>::insert(const Polygon<T>& polygon) {
+    if (polygons_.empty()) {
+        partition_ = polygon.getPlane();
+        polygons_.push_back(polygon);
+        return;
+    }
+
+    RelationType relation = polygon.relationWithPlane(partition_);
+
+    switch (relation) {
+        case COINCIDENT:
+            polygons_.push_back(polygon);
+            break;
+
+        case IN_FRONT:
+            if (!front_) {
+                front_ = std::make_unique<BSPNode<T>>();
+            }
+            front_->insert(polygon);
+            break;
+
+        case BEHIND:
+            if (!back_) {
+                back_ = std::make_unique<BSPNode<T>>();
+            }
+            back_->insert(polygon);
+            break;
+
+        case SPLIT:
+            std::pair<Polygon<T>, Polygon<T>> splitPolygons = polygon.split(partition_);
+
+            if (!front_) {
+                front_ = std::make_unique<BSPNode<T>>();
+            }
+            front_->insert(splitPolygons.first);
+
+            if (!back_) {
+                back_ = std::make_unique<BSPNode<T>>();
+            }
+            back_->insert(splitPolygons.second);
+            break;
+    }
+};
+
+
+template <typename T>
+void BSPNode<T>::query(const Ball<T>& ball, const LineSegment<T>& movement, std::vector<Polygon<T>>& results) const {
+    T radius = ball.getRadius();
+    T distanceStart = partition_.distance(movement.getP1());
+    T distanceEnd = partition_.distance(movement.getP2());
+
+    if ((distanceStart > radius && distanceEnd > radius) || (distanceStart < -radius && distanceEnd < -radius)) {
+        if (front_) front_->query(ball, movement, results);
+        if (back_) back_->query(ball, movement, results);
+        return;
+    }
+
+    for (const auto& polygon : polygons_) {
+        T denom = distanceStart - distanceEnd;
+        if (denom == 0) continue;
+        T t = distanceStart / denom;
+        if (t < T(0) || t > T(1)) continue;
+        Point3D<T> intersection = movement.getP1() + (movement.getP2() - movement.getP1()) * t;
+        if (polygon.contains(intersection)) {
+            results.push_back(polygon);
+        }
+    }
+
+    if (front_) front_->query(ball, movement, results);
+    if (back_) back_->query(ball, movement, results);
+
+};
+
+// BSP Tree
+template <typename T>
+void BSPTree<T>::insert(const Polygon<T>& polygon) {
+    if (!root_) {
+        root_ = std::make_unique<BSPNode<T>>();
+    }
+    root_->insert(polygon);
+};
+
+template <typename T>
+std::vector<Polygon<T>> BSPTree<T>::query(const Ball<T>& ball, const LineSegment<T>& movement) const {
+    std::vector<Polygon<T>> results;
+    if (root_) {
+        root_->query(ball, movement, results);
+    }
+    return results;
+};
+
 
 #endif // BSPTREE_H

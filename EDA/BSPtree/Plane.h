@@ -103,7 +103,8 @@ public:
 // Plane
 template <typename T>
 T Plane<T>::distance(const Point3D<T>& p) const {
-    return abs(normal_.dot(p - point_));
+    Vector3D<T> diff(p - point_);
+    return diff.dotProduct(normal_);
 }
 
 template <typename T>
@@ -180,40 +181,177 @@ bool Polygon<T>::operator==(const Polygon<T>& other) const {
 
 template <typename T>
 Plane<T> Polygon<T>::getPlane() const {
-    return Plane<T>();
+    Point3D<T> p1 = vertices_[0];
+    Point3D<T> p2 = vertices_[1];
+    Point3D<T> p3 = vertices_[2];
+
+    Vector3D<T> v1(p2 - p1);
+    Vector3D<T> v2(p3 - p1);
+    Vector3D<T> normal = v2.crossProduct(v1);
+
+    Plane<T> plane(p1, normal);
+    return plane;
 }
 
 template <typename T>
 Vector3D <T> Polygon<T>::getNormal() const {
-    return Vector3D<T>();
+    Plane<T> plane = getPlane();
+    return plane.getNormal();
 }
 
 template <typename T>
 Point3D<T> Polygon<T>::getCentroid() const {
-    return Point3D<T>();
+    Point3D<T> centroid;
+    for (const auto& vertex : vertices_) {
+        centroid += vertex;
+    }
+    centroid /= static_cast<T>(vertices_.size());
+    return centroid;
 }
 
 template <typename T>
 bool Polygon<T>::contains(const Point3D<T>& p) const {
-    p.getX();
-    return bool();
+    int positiveCount = 0;
+    int negativeCount = 0;
+
+    Plane<T> plane = this->getPlane();
+
+    T dist = abs(plane.distance(p));
+    if (dist > static_cast<T>(0)) {
+        return false;
+    }
+
+    T zero = static_cast<T>(0.0);
+
+    Vector3D<T> v1(vertices_[0] - p);
+    Vector3D<T> v2(vertices_[vertices_.size() - 1] - p);
+    Vector3D<T> cross = v1.crossProduct(v2);
+
+    T proyection = plane.distance(cross);
+
+    if (proyection > zero) {
+        positiveCount++;
+    } else if (proyection < zero) {
+        negativeCount++;
+    }
+
+    for (size_t i = 0; i < vertices_.size() - 1; i++) {
+        v1 = Vector3D<T>(vertices_[i] - p);
+        v2 = Vector3D<T>(vertices_[i + 1] - p);
+        cross = v2.crossProduct(v1);
+
+        proyection = plane.distance(cross);
+
+        if (proyection > zero) {
+            positiveCount++;
+        } else if (proyection < zero) {
+            negativeCount++;
+        }
+    }
+
+    if (positiveCount > 0 && negativeCount > 0) {
+        return false;
+    }
+
+    return true;
 }
 
 template <typename T>
 RelationType Polygon<T>::relationWithPlane(const Plane<T>& plane) const {
-    plane = plane.getNormal();
-    return COINCIDENT;
+    int positiveCount = 0;
+    int negativeCount = 0;
+
+    T zero = static_cast<T>(0.0);
+    for (size_t i = 0; i < vertices_.size(); i++) {
+        T proyection = plane.distance(vertices_[i]);
+
+        if (proyection > zero) {
+            positiveCount++;
+        } else if (proyection < zero) {
+            negativeCount++;
+        }
+    }
+
+    if (positiveCount == 0 && negativeCount == 0) {
+        return COINCIDENT;
+    }
+    if (positiveCount == 0) {
+        return BEHIND;
+    }
+    if (negativeCount == 0) {
+        return IN_FRONT;
+    }
+
+    return SPLIT;
 }
 
 template <typename T>
 std::pair<Polygon<T>, Polygon<T>> Polygon<T>::split(const Plane<T>& plane) const {
-    plane = plane.getNormal();
-    return std::make_pair(Polygon<T>(), Polygon<T>());
+    std::vector<Point3D<T>> frontVertices;
+    std::vector<Point3D<T>> backVertices;
+
+    T zero = static_cast<T>(0.0);
+    for (size_t i = 0; i < vertices_.size() - 1; i++) {
+        T dist1 = plane.distance(vertices_[i]);
+        T dist2 = plane.distance(vertices_[i + 1]);
+
+        if (dist1 == zero) {
+            frontVertices.push_back(vertices_[i]);
+            backVertices.push_back(vertices_[i]);
+        } else if (dist1 > zero) {
+            frontVertices.push_back(vertices_[i]);
+        } else {
+            backVertices.push_back(vertices_[i]);
+        }
+
+        if (dist1 * dist2 < zero) {
+            Line<T> line(vertices_[i], vertices_[i + 1]);
+            Point3D<T> intersection = plane.intersect(line);
+            frontVertices.push_back(intersection);
+            backVertices.push_back(intersection);
+        }
+    }
+
+    Point3D<T> vertice1 = vertices_[0];
+    Point3D<T> vertice2 = vertices_[vertices_.size() - 1];
+    T dist1 = plane.distance(vertice1);
+    T dist2 = plane.distance(vertice2);
+
+    if (dist2 == zero) {
+        frontVertices.push_back(vertice2);
+        backVertices.push_back(vertice2);
+    } else if (dist2 > zero) {
+        frontVertices.push_back(vertice2);
+    } else {
+        backVertices.push_back(vertice2);
+    }
+    if (dist1 * dist2 < zero) {
+        Line<T> line(vertice1, vertice2);
+        Point3D<T> intersection = plane.intersect(line);
+        frontVertices.push_back(intersection);
+        backVertices.push_back(intersection);
+    }
+
+    return std::make_pair(Polygon<T>(frontVertices), Polygon<T>(backVertices));
 }
 
 template <typename T>
 T Polygon<T>::area() const {
-    return T();
+    if (vertices_.size() < 3) {
+        throw std::runtime_error("Polygon must have at least 3 vertices");
+    }
+
+    Point3D<T> origin = vertices_[0];
+    T area = static_cast<T>(0);
+
+    for (size_t i = 1; i < vertices_.size() - 1; ++i) {
+        Vector3D<T> v1(vertices_[i] - origin);
+        Vector3D<T> v2(vertices_[i + 1] - origin);
+        Vector3D<T> cross = v1.crossProduct(v2);
+        area += cross.magnitude();
+    }
+
+    return area / static_cast<T>(2);
 }
 
 // Output operator for Polygon

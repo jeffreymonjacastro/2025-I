@@ -120,18 +120,18 @@ bool sweptSphereIntersectsPolygon(const Ball<NType>& ball, const LineSegment<NTy
     NType r = ball.getRadius();
     NType dStart = plane.distance(movement.getP1());
     NType dEnd   = plane.distance(movement.getP2());
-    
+
     // Claro que no hay interseccion
     if ((dStart > r && dEnd > r) || (dStart < -r && dEnd < -r))
         return false;
-    
+
     // Calcular t (si existe)
     NType denom = dStart - dEnd;
     if (denom == 0) return false; // Evitar división por cero.
     NType t = dStart / denom;
     if (t < NType(0) || t > NType(1))
         return false;
-    
+
     // Punto de interseccion
     Point3D<NType> intersection = movement.getP1() + (movement.getP2() - movement.getP1()) * t;
     return poly.contains(intersection);
@@ -324,7 +324,7 @@ void testTreeStructureValidity() {
 }
 
 
-int main() {
+// int main() {
     // Plane test
     // const Point3D p1(1.0, 2.0, 1.0);
     // const Vector3D v1(0.0,0.0,1.0);
@@ -341,16 +341,52 @@ int main() {
     // std::cout << "Contains line " << line1 << ": " << plane1.contains(line1) << "\n";
 
     // Polygon test
+    // const Point3D p1(0.0, 0.0, 1.0);
+    // const Point3D p2(1.0, 1.0, 1.0);
+    // const Point3D p3(2.0, 0.0, 1.0);
+    //
+    // const std::vector<Point3D<double>> vertices = {p1, p2, p3};
+    //
+    // const Polygon triangle(vertices);
+    // const Plane trianglePlane = triangle.getPlane();
+    //
+    // std::cout << triangle << "\n";
+    // std::cout << "Plane: " << trianglePlane << "\n";
+    // std::cout << "Normal: " << trianglePlane.getNormal() << "\n";
+    // std::cout << "Centroid: " << triangle.getCentroid() << "\n";
+    // std::cout << "Area: " << triangle.area() << "\n";
 
+    // const Plane plane1(Point3D(0.0,0.0,0.0), Vector3D(0.0,0.0,1.0));
+    // const Plane plane2(Point3D(1.0,1.0,1.0), Vector3D(1.0,0.0,0.0));
+    //
+    // std::cout << "Relation with polygonPlane: " << triangle.relationWithPlane(trianglePlane) << "\n";
+    // std::cout << "Relation with plane1: " << triangle.relationWithPlane(plane1) << "\n";
+    // std::cout << "Relation with plane2: " << triangle.relationWithPlane(plane2) << "\n";
+    //
+    // std::cout << "Plane 2: " << plane2 << "\n";
+    // auto [fst, snd] = triangle.split(plane2);
+    //
+    // std::cout << "Polygon1 : " << fst << "\n";
+    // std::cout << "Polygon2 : " << snd << "\n";
 
-    return 0;
-}
+    // const Point3D centroid = triangle.getCentroid();
+    // const Point3D randomPoint(2.0, 2.0, 1.0);
+    // const Point3D randomPoint2(1.0, 0.5, 1.0);
+    // const Point3D randomPoint3(10.0, -1.0, 15.0);
+    //
+    // std::cout << "Contains " << centroid << ": " << triangle.contains(centroid) << "\n";
+    // std::cout << "Contains " << randomPoint <<  ": " << triangle.contains(randomPoint) << "\n";
+    // std::cout << "Contains " << randomPoint2 <<  ": " << triangle.contains(randomPoint2) << "\n";
+    // std::cout << "Contains " << randomPoint3 <<  ": " << triangle.contains(randomPoint3) << "\n";
 
-// int main() {
-//     testTreeStructureValidity();
-//     testPolygonsIntegrity();
-//     testQueryRandomBalls();
-//
-//     std::cout << "\nTodos los tests se ejecutaron correctamente.\n";
 //     return 0;
 // }
+
+int main() {
+    testTreeStructureValidity();
+    testPolygonsIntegrity();
+    testQueryRandomBalls();
+
+    std::cout << "\nTodos los tests se ejecutaron correctamente.\n";
+    return 0;
+}
