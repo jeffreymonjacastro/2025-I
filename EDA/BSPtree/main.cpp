@@ -186,8 +186,6 @@ bool checkSubtreeValidity(const BSPNode<NType>* node, const Plane<NType>& parent
     return true;
 }
 
-
-
 // ---------------------------------------------------------------------
 // Test 1: Verificar insercion
 // ---------------------------------------------------------------------
