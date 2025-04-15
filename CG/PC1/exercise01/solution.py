@@ -2,12 +2,12 @@ import cv2
 import numpy as np
 
 def resize(
-  InputImage: str, 
+  InputImage: np.ndarray, 
   NEW_WIDTH: int, 
   NEW_HEIGHT: int, 
   PADDING_STRATEGY: str) -> np.ndarray:
 
-  img = cv2.imread(InputImage, cv2.IMREAD_UNCHANGED)
+  img = InputImage
   old_height, old_width = img.shape[:2]
 
   scale_height = (old_height - 1) / (NEW_HEIGHT - 1)
@@ -55,7 +55,9 @@ def resize(
   
   return output_image
 
-new_img = resize("../lenna.png", 900, 400, "ZEROS")
-cv2.imshow("Display window", new_img)
+
+img = cv2.imread("../lenna.png", cv2.IMREAD_UNCHANGED)
+result = resize(img, 900, 400, "LAST_PIXEL")
+cv2.imshow("Display window", result)
 k = cv2.waitKey(0)
 cv2.destroyAllWindows()

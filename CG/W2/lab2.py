@@ -17,13 +17,14 @@ def changeColorScale(img, target_color):
   new_img = new_img.astype(np.uint8)
   return new_img
 
-# new_img = changeColorScale(img, (100, 100, 100))
+new_img = changeColorScale(img, (100, 0, 0))
 # cv.imshow("Display window", new_img)
 
 ## 3. Create color regios on a image or put an image (combinar)
 def colorRegions(orig_img, bg_img):
 
   return
+
 
 cv.imshow("Display window", new_img)
 k = cv.waitKey(0)
