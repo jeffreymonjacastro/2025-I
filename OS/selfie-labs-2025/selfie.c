@@ -1335,6 +1335,9 @@ uint64_t debug_write = 0;
 uint64_t debug_open = 0;
 uint64_t debug_brk = 0;
 
+//* New global variable for instruction counter S4
+uint64_t ic_tick = 0;
+
 uint64_t SYSCALL_EXIT = 93;
 uint64_t SYSCALL_READ = 63;
 uint64_t SYSCALL_WRITE = 64;
@@ -1343,6 +1346,9 @@ uint64_t SYSCALL_BRK = 214;
 
 //* New ID for sycall S2
 uint64_t SYSCALL_DUMMY_SYSCALL = 1;
+
+//* New ID for syscall S4
+uint64_t SYSCALL_TICK = 23;
 
 /* DIRFD_AT_FDCWD corresponds to AT_FDCWD in fcntl.h and
    is passed as first argument of the openat system call
@@ -6497,8 +6503,10 @@ void selfie_compile() {
   emit_read();
   emit_write();
   emit_open();
-  //* Syscall implemented S2
+  //* Syscall dummy syscall implemented on S2
   emit_dummy_syscall();
+  //* Syscall tick implemented on S4
+  emit_tick();
 
   emit_malloc();
 
@@ -8333,6 +8341,24 @@ void implement_dummy_syscall(uint64_t *context) {
   //   println();
   // }
 }
+
+//* Emit tick syscall for S4
+void emit_tick() {
+  create_symbol_table_entry(GLOBAL_TABLE, string_copy("tick"), 0, PROCEDURE,
+                            UINT64_T, 1, code_size);
+
+  emit_load(REG_A0, REG_SP, 0); // tick syscall number
+  emit_addi(REG_SP, REG_SP, WORDSIZE);
+
+  emit_addi(REG_A7, REG_ZR, SYSCALL_TICK);
+
+  emit_ecall();
+
+  emit_jalr(REG_ZR, REG_RA, 0);
+}
+
+//* Implement tick syscall for S4
+void implement_tick(uint_64 *context) { uint64_t syscall_number; }
 
 // -----------------------------------------------------------------
 // ------------------------ HYPSTER SYSCALL ------------------------
@@ -12017,6 +12043,8 @@ uint64_t handle_system_call(uint64_t *context) {
     implement_openat(context);
   else if (a7 == SYSCALL_DUMMY_SYSCALL) //* S2
     implement_dummy_syscall(context);
+  else if (a7 == SYSCALL_TICK) //* S4
+    implement_tick(context);
   else if (a7 == SYSCALL_EXIT) {
     implement_exit(context);
 
