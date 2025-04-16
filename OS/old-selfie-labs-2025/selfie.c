@@ -8344,8 +8344,8 @@ void implement_dummy_syscall(uint64_t *context) {
 
 //* Emit tick syscall for S4
 void emit_tick() {
-  create_symbol_table_entry(GLOBAL_TABLE, string_copy("tick"), 0, PROCEDURE,
-                            UINT64_T, 1, code_size);
+
+  create_symbol_table_entry(GLOBAL_TABLE, string_copy("tick"), 0, PROCEDURE, UINT64_T, 1, code_size);
 
   emit_load(REG_A0, REG_SP, 0); // tick syscall number
   emit_addi(REG_SP, REG_SP, WORDSIZE);
