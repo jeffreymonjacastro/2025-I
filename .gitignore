@@ -16,3 +16,4 @@ beator-32
 *.vscode
 *.idea
 *cmake-build-debug
+CG/PC1/exercise05/output/images
