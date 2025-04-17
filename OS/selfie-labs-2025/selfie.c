@@ -1301,6 +1301,14 @@ void implement_brk(uint64_t *context);
 
 uint64_t is_boot_level_zero();
 
+//* Lab1: Dummy syscall
+void emit_dummy_syscall();
+void implement_dummy_syscall(uint64_t *context);
+
+//* Lab2: Tick syscall
+void emit_tick();
+void implement_tick(uint64_t *context);
+
 // ------------------------ GLOBAL CONSTANTS -----------------------
 
 uint64_t debug_read = 0;
@@ -1308,11 +1316,20 @@ uint64_t debug_write = 0;
 uint64_t debug_open = 0;
 uint64_t debug_brk = 0;
 
+//* Lab2: Global variable instruction counter
+uint64_t ic_tick = 0;
+
 uint64_t SYSCALL_EXIT = 93;
 uint64_t SYSCALL_READ = 63;
 uint64_t SYSCALL_WRITE = 64;
 uint64_t SYSCALL_OPENAT = 56;
 uint64_t SYSCALL_BRK = 214;
+
+//* Lab1: ID dummy syscall
+uint64_t SYSCALL_DUMMY_SYSCALL = 1;
+
+//* Lab2: ID tick syscall
+uint64_t SYSCALL_TICK = 23;
 
 /* DIRFD_AT_FDCWD corresponds to AT_FDCWD in fcntl.h and
    is passed as first argument of the openat system call
@@ -6843,6 +6860,12 @@ void selfie_compile()
   emit_write();
   emit_open();
 
+  //* Lab1: Emit dummy syscall
+  emit_dummy_syscall();
+
+  //* Lab2: Emit tick syscall
+  emit_tick();
+
   emit_malloc();
 
   emit_switch();
@@ -8699,6 +8722,54 @@ uint64_t is_boot_level_zero()
 
   // selfie's malloc, cannot be boot level 0!
   return 0;
+}
+
+//* Lab1: Dummy syscall
+void emit_dummy_syscall() {
+  create_symbol_table_entry(GLOBAL_TABLE, string_copy("dummy_syscall"),
+                            0, PROCEDURE, UINT64_T, 1, code_size);
+
+  emit_load(REG_A0, REG_SP, 0);
+  emit_addi(REG_SP, REG_SP, WORDSIZE);
+
+  emit_addi(REG_A7, REG_ZR, SYSCALL_DUMMY_SYSCALL);
+
+  emit_ecall();
+
+  emit_jalr(REG_ZR, REG_RA, 0);
+}
+
+//* Lab1: Dummy syscall
+void implement_dummy_syscall(uint64_t *context) {
+  uint64_t syscall_number;
+
+  syscall_number = *(get_regs(context) + REG_A0);
+
+  *(get_regs(context) + REG_A0) = syscall_number + 2025;
+
+  set_pc(context, get_pc(context) + INSTRUCTIONSIZE);
+}
+
+//* Lab2: Tick syscall
+void emit_tick() {
+  create_symbol_table_entry(GLOBAL_TABLE, string_copy("tick"),
+                            0, PROCEDURE, UINT64_T, 0, code_size);
+
+  // emit_load(REG_A0, REG_SP, 0);
+  // emit_addi(REG_SP, REG_SP, WORDSIZE);
+
+  emit_addi(REG_A7, REG_ZR, SYSCALL_TICK);
+
+  emit_ecall();
+
+  emit_jalr(REG_ZR, REG_RA, 0);
+}
+
+//* Lab2: Tick syscall
+void implement_tick(uint64_t *context) {
+  *(get_regs(context) + REG_A0) = ic_tick;
+
+  set_pc(context, get_pc(context) + INSTRUCTIONSIZE);
 }
 
 // -----------------------------------------------------------------
@@ -10893,18 +10964,24 @@ void do_ecall()
   {
     read_register(REG_A0);
 
-    if (*(registers + REG_A7) != SYSCALL_EXIT)
-    {
-      if (*(registers + REG_A7) != SYSCALL_BRK)
-      {
-        read_register(REG_A1);
-        read_register(REG_A2);
-
-        if (*(registers + REG_A7) == SYSCALL_OPENAT)
-          read_register(REG_A3);
-      }
-
+    if (*(registers + REG_A7) == SYSCALL_DUMMY_SYSCALL) //* Lab1: Dummy syscall
       write_register(REG_A0);
+    else if (*(registers + REG_A7) == SYSCALL_TICK) //* Lab2: Tick syscall
+      write_register(REG_A0);
+    else {
+      if (*(registers + REG_A7) != SYSCALL_EXIT)
+      {
+        if (*(registers + REG_A7) != SYSCALL_BRK)
+        {
+          read_register(REG_A1);
+          read_register(REG_A2);
+
+          if (*(registers + REG_A7) == SYSCALL_OPENAT)
+            read_register(REG_A3);
+        }
+
+        write_register(REG_A0);
+      }
     }
 
     // all system calls other than switch are handled by exception
@@ -11607,6 +11684,9 @@ void run_until_exception()
     fetch();
     decode();
     execute();
+
+    //* Lab2: Increment the instruction counter
+    ic_tick = ic_tick + 1;
 
     interrupt();
   }
@@ -12689,6 +12769,10 @@ uint64_t handle_system_call(uint64_t *context)
     implement_write(context);
   else if (a7 == SYSCALL_OPENAT)
     implement_openat(context);
+  else if (a7 == SYSCALL_DUMMY_SYSCALL) //* Lab1
+    implement_dummy_syscall(context);
+  else if (a7 == SYSCALL_TICK) //* Lab2
+    implement_tick(context);
   else if (a7 == SYSCALL_EXIT)
   {
     implement_exit(context);
@@ -13432,6 +13516,9 @@ int main(int argc, char **argv)
   uint64_t exit_code;
 
   init_selfie((uint64_t)argc, (uint64_t *)argv);
+
+  //* Grader: print-your-name 
+  printf("%s: This is %s %s's Selfie!\n", selfie_name, "Jeffrey", "Monja");
 
   init_library();
   init_system();
