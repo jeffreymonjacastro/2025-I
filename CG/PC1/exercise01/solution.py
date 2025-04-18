@@ -63,9 +63,9 @@ def resize(
   return output_image
 
 
-img = cv2.imread("../lenna.png", cv2.IMREAD_UNCHANGED)
-result = resize(img, 900, 400, "LAST_PIXEL")
-print(result.shape)
-cv2.imshow("Display window", result)
-k = cv2.waitKey(0)
-cv2.destroyAllWindows()
+# img = cv2.imread("../lenna.png", cv2.IMREAD_UNCHANGED)
+# result = resize(img, 900, 400, "LAST_PIXEL")
+# print(result.shape)
+# cv2.imshow("Display window", result)
+# k = cv2.waitKey(0)
+# cv2.destroyAllWindows()

@@ -8,7 +8,7 @@ last_update_time = time.time()
 def contrast(
   factor: float = 1.0) -> np.ndarray:
 
-  img = cv2.imread("../lowcontrast.png")
+  img = cv2.imread("./lowcontrast.png")
   img = img.astype(np.float32)
 
   old_m = np.min(img)
@@ -28,6 +28,7 @@ def update_contrast(val):
   global last_update_time
   val = val / 100.0
 
+  # Para optimizar porque en windows iba muy lento
   current_time = time.time()
   if platform.system() == 'Windows' and (current_time - last_update_time) < 0.05: 
     return
@@ -44,7 +45,7 @@ cv2.createTrackbar("(%)", "Contrast", 100, 200, update_contrast)
 is_windows = platform.system() == 'Windows'
 
 if is_windows:
-  original_img = cv2.imread("../lowcontrast.png")
+  original_img = cv2.imread("./lowcontrast.png")
   height, width = original_img.shape[:2]
   cv2.resizeWindow("Contrast", width, height + 50)
 
