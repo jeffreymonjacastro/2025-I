@@ -50,9 +50,5 @@ if is_windows:
 
 update_contrast(100)
 
-# while True:
-#   key = cv2.waitKey(1) & 0xFF
-#   if key == 27:  
-#     break
 cv2.waitKey(0)
 cv2.destroyAllWindows()

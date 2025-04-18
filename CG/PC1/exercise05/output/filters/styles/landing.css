@@ -1,0 +1,8 @@
+/* Agregar un degradado oscuro en la parte inferior de la imagen de fondo */
+.landing-background {
+  background-image: 
+    linear-gradient(to bottom, transparent,rgba(10, 10, 10, 1)), 
+    url('/landing-bg.jpg');
+  background-size: cover;
+  background-position: center;
+}

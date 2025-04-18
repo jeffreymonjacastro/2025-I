@@ -10,15 +10,20 @@ def resize(
   img = InputImage
   old_height, old_width = img.shape[:2]
 
+  padding = 1
+
+  NEW_HEIGHT = NEW_HEIGHT + 2 * padding
+  NEW_WIDTH = NEW_WIDTH + 2 * padding
+
   scale_height = (old_height - 1) / (NEW_HEIGHT - 1)
   scale_width = (old_width - 1) / (NEW_WIDTH - 1)
-
-  padding = 1
   
   if PADDING_STRATEGY == "ZEROS":
     img = np.pad(img, pad_width=((padding, padding), (padding, padding)) + ((0, 0),) * (img.ndim - 2), mode='constant')
   elif PADDING_STRATEGY == "LAST_PIXEL":
     img = np.pad(img, pad_width=((padding, padding), (padding, padding)) + ((0, 0),) * (img.ndim - 2), mode='edge')
+  else:
+    raise ValueError("Invalid padding strategy. Use 'ZEROS' or 'LAST_PIXEL'.")
 
   output_image = np.zeros((NEW_HEIGHT, NEW_WIDTH) + img.shape[2:], dtype=img.dtype)
 
@@ -53,11 +58,14 @@ def resize(
 
       output_image[i, j] = np.clip(f, 0, 255).astype(img.dtype) 
   
+  output_image = output_image[padding:-padding, padding:-padding]
+
   return output_image
 
 
 img = cv2.imread("../lenna.png", cv2.IMREAD_UNCHANGED)
 result = resize(img, 900, 400, "LAST_PIXEL")
+print(result.shape)
 cv2.imshow("Display window", result)
 k = cv2.waitKey(0)
 cv2.destroyAllWindows()

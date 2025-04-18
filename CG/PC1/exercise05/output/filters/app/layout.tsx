@@ -4,7 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Filters",
   description: "Jeffrey Monja Castro",
+  icons: {
+    icon: "icon.png",
+  }
 };
+
 
 export default function RootLayout({
   children,
@@ -13,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="dark">
         {children}
       </body>
     </html>

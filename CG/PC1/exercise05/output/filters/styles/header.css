@@ -1,0 +1,20 @@
+.nav-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+.scrolled {
+  background-color: rgba(10, 10, 10, 0.9);
+  transition: background-color 0.3s ease;
+}
+
+nav {
+  z-index: 9999;
+}
