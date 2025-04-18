@@ -25,7 +25,7 @@ export default function Filter({ filter_type }: { filter_type: string }) {
                   <CardContent className="flex flex-col aspect-squre items-center justify-center p-0">
                     <p className="my-1">{`${index * 2 + 3} x ${index * 2 + 3}`}</p>
                     <Image
-                      src={`/lenna/${filter_type}_${index * 2 + 3}.png`}
+                      src={`./lenna/${filter_type}_${index * 2 + 3}.png`}
                       alt={`${filter_type} ${index * 2 + 3}`}
                       width={500}
                       height={500}

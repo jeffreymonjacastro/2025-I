@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Filters",
   description: "Jeffrey Monja Castro",
   icons: {
-    icon: "icon.png",
+    icon: "./icon.png",
   }
 };
 

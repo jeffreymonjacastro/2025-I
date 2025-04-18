@@ -14,7 +14,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold my-2">Original image</h2>
           <p className="mb-3">I will apply different filters to Lenna&apos;s famous picture to see the differences between them. The original one is this:</p>
           <Image
-            src="/lenna/lenna.png"
+            src="./lenna/lenna.png"
             alt="Original"
             width={500}
             height={500}
@@ -44,7 +44,7 @@ export default function Home() {
               <CardContent className="flex flex-col aspect-squre items-center justify-center p-0">
                 <p className="my-1">3 x 3</p>
                 <Image
-                  src={`/lenna/laplacian_3.png`}
+                  src={`./lenna/laplacian_3.png`}
                   alt={`laplacian 3`}
                   width={500}
                   height={500}
@@ -57,7 +57,7 @@ export default function Home() {
               <CardContent className="flex flex-col aspect-squre items-center justify-center p-0">
                 <p className="my-1">5 x 5</p>
                 <Image
-                  src={`/lenna/laplacian_5.png`}
+                  src={`./lenna/laplacian_5.png`}
                   alt={`laplacian 5`}
                   width={500}
                   height={500}
