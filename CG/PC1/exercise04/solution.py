@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def change_color_scale():
-  img = cv2.imread("../lenna.png", cv2.IMREAD_UNCHANGED)
+  img = cv2.imread("./lenna.png", cv2.IMREAD_UNCHANGED)
   width, height = img.shape[:2]
 
   canvas = np.ones((width, height, 3), dtype=np.float32)
@@ -16,7 +16,7 @@ def change_color_scale():
 
   new_img = new_img.astype(np.uint8)
 
-  cv2.imwrite("output/lenna-colorscale.png", new_img)
+  cv2.imwrite("./exercise04/output/lenna-colorscale.png", new_img)
 
 
 change_color_scale()
