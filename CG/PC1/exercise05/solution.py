@@ -67,15 +67,25 @@ def laplacian(n: int) -> np.ndarray:
   return kernel.astype(np.float32)
 
 def convolution(img: np.ndarray, kernel: np.ndarray, padding: int):
-  width, height, canals = img.shape
-  out = np.zeros((width, height, canals), np.float32)
+  width, height = img.shape[:2]
+  isGray = len(img.shape) == 2
+
+  if isGray:
+    out = np.zeros((width, height), np.float32)
+  else:
+    out = np.zeros((width, height, 3), np.float32)
 
   for i in range(padding, width - padding):
     for j in range(padding, height - padding):
-      for k in range(canals):  
-        region = img[i-padding:i+padding+1, j-padding:j+padding+1, k]
+      if isGray:
+        region = img[i-padding:i+padding+1, j-padding:j+padding+1]
         filtered_value = np.sum(region * kernel)
-        out[i, j, k] = filtered_value
+        out[i, j] = filtered_value
+      else:
+        for k in range(3):  
+          region = img[i-padding:i+padding+1, j-padding:j+padding+1, k]
+          filtered_value = np.sum(region * kernel)
+          out[i, j, k] = filtered_value
       
   out = np.clip(out, 0, 255).astype(np.uint8)  
   return out
@@ -107,7 +117,8 @@ def filter(
     kernel = gaussian(kernel_size)
   elif type_kernel == 'laplacian':
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    # img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+    print(img.shape)
     kernel = laplacian(kernel_size)
 
   img = convolution(img, kernel, padding)
@@ -116,16 +127,14 @@ def filter(
   return img.astype(np.uint8)
 
 
-# for i in range(3, 26, 2):
-#   img = cv2.imread('../lenna.png') 
-#   filtered_img = filter(img, 'gaussian', i, 'reflex')
-#   cv2.imwrite(f'output/images/gaussian_{i}.png', filtered_img)
-#   print(f'Image processed with kernel size {i} and saved as gaussian_{i}.png')
+for i in range(3, 26, 2):
+  img = cv2.imread('output/images/lenna_gray.png') 
+  filtered_img = filter(img, 'gaussian', i, 'edge')
+  cv2.imwrite(f'output/images/gaussian_gray_{i}.png', filtered_img)
+  print(f'Image processed with kernel size {i} and saved as gaussian_gray_{i}.png')
 
-# img = cv2.imread('../lenna.png')
-# filtered_img = filter(img, 'laplacian', 5, 'edge')
-# cv2.imwrite('output/images/laplacian_5.png', filtered_img)
-
-# cv2.imshow('Laplacian Filter', filtered_img)
+# img = cv2.imread('output/images/lenna_gray.png')
+# filtered_img = filter(img, 'box', 25, 'edge')
+# cv2.imshow('Gaussian Filter', filtered_img)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
