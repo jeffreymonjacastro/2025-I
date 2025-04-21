@@ -7,6 +7,7 @@
 bool approxEqual(float a, float b, float epsilon = 1e-5f) {
   return std::fabs(a - b) < epsilon;
 }
+
 bool mbbEqual(const MBB &a, const MBB &b, float epsilon = 1e-5f) {
   return approxEqual(a.lower.x, b.lower.x, epsilon) &&
          approxEqual(a.lower.y, b.lower.y, epsilon) &&
@@ -159,6 +160,7 @@ bool checkTree(RNode *node, int maxEntries, bool isRoot, int currentDepth,
   }
   return ok;
 }
+
 void testTreeStructure(RTree &tree) {
   std::cout << "Verificando invariantes avanzadas del árbol..." << std::endl;
   int leafDepth = -1;
@@ -263,6 +265,64 @@ void testKNN(RTree &tree, const std::vector<Point> &allPoints) {
   }
   std::cout << "Pruebas de kNN completadas." << std::endl;
 }
+
+// int main() {
+//   RTree rtree;
+//   Point A(1,1);
+//   Point B(-1,-1);
+//   Point C(2,2);
+//   Point D(3,3);
+//   Point E(4,2);
+//   Point F(5,3);
+//   Point G(4,0);
+//   Point H(6,-1);
+//   Point I(7,3);
+//   Point J(8,2);
+//   Point K(9, -1);
+//   Point L(7, 0);
+//   rtree.insert(A);
+//   rtree.insert(B);
+//   rtree.insert(C);
+//   rtree.insert(D);
+//   rtree.insert(E);
+//   rtree.insert(F);
+//   rtree.insert(G);
+//   rtree.insert(H);
+//   rtree.insert(I);
+//   rtree.insert(J);
+//   rtree.insert(K);
+//   rtree.insert(L);
+//   return 0;
+// }
+
+// int main() {
+//   Point p1(1,1);
+//   Point p2(3,4);
+//   Point p3(5, -2);
+//   MBB mbb1(p1, p2);
+//   std::cout << "Semiperimeter: " << mbb1.semiPerimeter() << std::endl;
+//   std::cout << "Area: " << mbb1.area() << std::endl;
+//   std::cout << "Distance to p3: " << mbb1.distanceTo(p3) << std::endl;
+//   std::cout << "Delta Semiperimeter: " << mbb1.deltaSemiPerimeter(p3) << std::endl;
+//
+//   Point p4(2, 3);
+//   Point p5(4, 4);
+//   MBB mbb2(p4, p5);
+//   std::cout << "Intersects: " << mbb1.intersects(mbb2) << std::endl;
+//
+//   std::vector<Point> points = {p1, p2, p3};
+//   MBB mbb3 = MBB::computeFromPoints(points);
+//   std::cout << "MBB from points: {" << mbb3.lower.x << ", " << mbb3.lower.y
+//             << "} - {" << mbb3.upper.x << ", " << mbb3.upper.y << "}" << std::endl;
+//
+//   MBB mbb4;
+//   mbb4.expandToInclude(p3);
+//   mbb4.expandToInclude(p1);
+//   std::cout << "Expanded MBB: {" << mbb4.lower.x << ", " << mbb4.lower.y
+//             << "} - {" << mbb4.upper.x << ", " << mbb4.upper.y << "}" << std::endl;
+//
+//   return 0;
+// }
 
 int main() {
   std::srand(static_cast<unsigned int>(std::time(nullptr)));
