@@ -3,6 +3,16 @@
 
 using namespace std;
 
+// struct Segment {
+//   float x1, y1, x2, y2;
+//   Segment(float x1, float y1, float x2, float y2)
+//       : x1(x1), y1(y1), x2(x2), y2(y2) {}
+// };
+
+// pair<float, float> direction_vector(float x1, float y1, float x2, float y2) {
+//   return {x2 - x1, y2 - y1};
+// }
+
 float cross_product(float x1, float y1, float x2, float y2) {
   return x1 * y2 - x2 * y1;
 }
@@ -10,6 +20,7 @@ float cross_product(float x1, float y1, float x2, float y2) {
 int sgn(float num) { return (num > 0) - (num < 0); }
 
 //* Intersection between two segments in 2D
+
 bool segment_segment_intersects(float x1, float y1, float x2, float y2,
                                 float x3, float y3, float x4, float y4) {
 
@@ -61,15 +72,15 @@ bool segment_segment_intersects(float x1, float y1, float x2, float y2,
   return true;
 }
 
-//* Distance of point to a Line in 3D
-float distance_point_line(float lx, float ly, float lz, float dx, float dy,
-                          float dz, float px, float py, float pz) {
-  return 0;
-}
+// bool segment_segment_intersects(Segment s1, Segment s2) {
+//   pair<float, float> P1P2 = direction_vector(s1.x1, s1.y1, s1.x2, s1.y2);
+//   pair<float, float> P1P3 = direction_vector(s1.x1, s1.y1, s2.x1, s2.y1);
+
+// }
 
 int main() {
   // cout << segment_segment_intersects(1, 1, 2, 2, 2, 1, 1, 2) << endl;
   // cout << segment_segment_intersects(0, 1, 1, 0, 1, 1, 2, 2) << endl;
-  cout << segment_segment_intersects(1, 1, 2, 2, 2, 2, 3, 3) << endl;
+  cout << segment_segment_intersects(1, 1, 2, 2, 3, 3, 4, 4) << endl;
   return 0;
 }
