@@ -1,4 +1,5 @@
-#include <iostream>
+#include <bits/stdc++.h>
+
 using namespace std;
 #define cpu()                                                                  \
   ios::sync_with_stdio(false);                                                 \
@@ -7,7 +8,7 @@ using namespace std;
 #define lld long double
 const int mod = 1e9 + 7;
 
-void solve() {}
+void solve() { cout << "Hello World!" << endl; }
 
 int main() {
   cpu();
