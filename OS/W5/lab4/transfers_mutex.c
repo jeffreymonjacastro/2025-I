@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <pthread.h>
+
+#define N_THREADS 5
+#define N_TRANSFERS 10000000
+#define N_ACCOUNTS 10
+
+unsigned int accounts[N_ACCOUNTS] = { 0 };
+
+pthread_mutex_t mutex[N_ACCOUNTS];
+
+void *transfer(void *arg) {
+    int amount = *((int *) arg);
+
+    for (int i = 0; i < N_TRANSFERS; ++i) {
+        for (int j = 0; j < N_ACCOUNTS; ++j) {
+            pthread_mutex_lock(&mutex[j]);
+            accounts[j] += amount;
+            pthread_mutex_unlock(&mutex[j]);
+        }
+    }
+
+    return NULL;
+}
+
+void print_accounts () {
+	unsigned int total = 0;
+
+	for (int i = 1; i <= N_THREADS; ++i) {
+		total += i * 10 * N_TRANSFERS;
+	}
+
+	printf ("Each account should have a balance of: %8d\n", total);
+
+	for (int i = 0; i < N_ACCOUNTS; ++i) {
+		printf ("Account %2d: %5d\n", i, accounts[i]);
+	}
+}
+
+int main () {
+    pthread_t threads[N_THREADS];
+    int amounts[N_THREADS];
+
+    for (int i = 0; i < N_ACCOUNTS; ++i) {
+        pthread_mutex_init(&mutex[i], NULL);
+    }
+
+    for (int i = 0; i < N_THREADS; ++i) {
+        amounts[i] = (i + 1) * 10;
+        pthread_create (&threads[i], NULL, transfer, (void *) &amounts[i]);
+    }
+
+    for (int i = 0; i < N_THREADS; ++i) {
+        pthread_join (threads[i], NULL);
+    }
+	
+    print_accounts();
+
+    for (int i = 0; i < N_ACCOUNTS; ++i) {
+        pthread_mutex_destroy(&mutex[i]);
+    }
+}

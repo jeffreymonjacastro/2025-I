@@ -46,5 +46,5 @@ int main () {
         pthread_join (threads[i], NULL);
     }
 	
-    print_accounts ();
+    print_accounts();
 }
