@@ -13316,7 +13316,7 @@ uint64_t selfie_run(uint64_t machine)
 uint64_t selfie_run_mipsterOS(uint64_t machine)
 {
   uint64_t exit_code;
-  uint64_t *context1;
+  // uint64_t *context1;
   uint64_t n_concurrent = 0;
 
   reset_interpreter();
@@ -13340,12 +13340,12 @@ uint64_t selfie_run_mipsterOS(uint64_t machine)
   uint64_t total_processes = atoi(peek_argument(0));
 
   while (n_concurrent < total_processes){
-    context1 = create_context(MY_CONTEXT, 0);
-    boot_loader(context1);
+    current_context = create_context(MY_CONTEXT, 0);
+    boot_loader(current_context);
     n_concurrent = n_concurrent + 1;
   }
 
-  current_context = context1;
+  // current_context = context1;
 
   // current_context is ready to run
 
