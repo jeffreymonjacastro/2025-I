@@ -11,7 +11,8 @@
 # This is the Makefile of the selfie system.
 
 # Compiler flags
-CFLAGS := -Wall -Wextra -O3 -D'uint64_t=unsigned long'
+# CFLAGS := -Wall -Wextra -O3 -D'uint64_t=unsigned long'
+CFLAGS := -Wall -Wextra -g -D'uint64_t=unsigned long' #* For using GDB
 
 # Bootstrap selfie.c into selfie executable
 selfie: selfie.c

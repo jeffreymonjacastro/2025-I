@@ -40,7 +40,7 @@ void print_accounts () {
 int main () {
     pthread_t threads[N_THREADS];
     int amounts[N_THREADS];
-
+    
     for (int i = 0; i < N_ACCOUNTS; ++i) {
         pthread_mutex_init(&mutex[i], NULL);
     }

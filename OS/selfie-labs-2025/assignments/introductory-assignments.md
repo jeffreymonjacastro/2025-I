@@ -1,4 +1,4 @@
-# Introductory Assignments
+Introductory Assignments
 
 Welcome to the Introduction to Computer Science supplementary material. This document provides you with content, examples, and exercises to help you learn and understand the course material.
 
@@ -16,78 +16,78 @@ Welcome to the Introduction to Computer Science supplementary material. This doc
 ---
 
 - [Introductory Assignments](#introductory-assignments)
-	- [The following information is shared via the course's slack channel.](#the-following-information-is-shared-via-the-courses-slack-channel)
-	- [Resources](#resources)
+  - [The following information is shared via the course's slack channel.](#the-following-information-is-shared-via-the-courses-slack-channel)
+  - [Resources](#resources)
 - [Introduction](#introduction)
-	- [Bit Representation](#bit-representation)
-		- [Examples](#examples)
-	- [Decimal System](#decimal-system)
-		- [Examples](#examples-1)
-		- [Exercises](#exercises)
-	- [Binary Numbers](#binary-numbers)
-		- [Examples](#examples-2)
-		- [Exercises](#exercises-1)
-	- [MSB & LSB](#msb--lsb)
-		- [Examples](#examples-3)
-		- [Exercises](#exercises-2)
-	- [Byte](#byte)
-		- [Examples](#examples-4)
-		- [Exercises](#exercises-3)
-	- [ASCII](#ascii)
-		- [Examples](#examples-5)
-		- [Exercises](#exercises-4)
-	- [Unicode](#unicode)
-	- [Different Notations](#different-notations)
-		- [Examples](#examples-6)
-	- [Unary](#unary)
-		- [Examples](#examples-7)
-	- [Octal](#octal)
-		- [Examples](#examples-8)
-		- [Exercises](#exercises-5)
-	- [Nibble](#nibble)
-		- [Examples](#examples-9)
-	- [Hexadecimal](#hexadecimal)
-		- [Examples](#examples-10)
-		- [Exercises](#exercises-6)
-	- [Computation](#computation)
-	- [State Space](#state-space)
-		- [Examples](#examples-11)
-		- [Exercises](#exercises-7)
-	- [Software](#software)
-		- [Natural Numbers](#natural-numbers)
-	- [Binary Number Names & Prefixes](#binary-number-names--prefixes)
-		- [Examples](#examples-12)
-		- [Exercises](#exercises-8)
-	- [Signed and unsigned integer](#signed-and-unsigned-integer)
-		- [One's complement](#ones-complement)
-		- [Two's complement](#twos-complement)
-			- [From decimal digit into two's complement](#from-decimal-digit-into-twos-complement)
-			- [From two's complement into decimal](#from-twos-complement-into-decimal)
-		- [Numbers we can represent](#numbers-we-can-represent)
-		- [Exercises](#exercises-9)
-	- [Arithmetics](#arithmetics)
-		- [Integer arithmetics](#integer-arithmetics)
-			- [Examples](#examples-13)
-			- [Exercises](#exercises-10)
-		- [Arithmetic overflow](#arithmetic-overflow)
+  - [Bit Representation](#bit-representation)
+    - [Examples](#examples)
+  - [Decimal System](#decimal-system)
+    - [Examples](#examples-1)
+    - [Exercises](#exercises)
+  - [Binary Numbers](#binary-numbers)
+    - [Examples](#examples-2)
+    - [Exercises](#exercises-1)
+  - [MSB & LSB](#msb--lsb)
+    - [Examples](#examples-3)
+    - [Exercises](#exercises-2)
+  - [Byte](#byte)
+    - [Examples](#examples-4)
+    - [Exercises](#exercises-3)
+  - [ASCII](#ascii)
+    - [Examples](#examples-5)
+    - [Exercises](#exercises-4)
+  - [Unicode](#unicode)
+  - [Different Notations](#different-notations)
+    - [Examples](#examples-6)
+  - [Unary](#unary)
+    - [Examples](#examples-7)
+  - [Octal](#octal)
+    - [Examples](#examples-8)
+    - [Exercises](#exercises-5)
+  - [Nibble](#nibble)
+    - [Examples](#examples-9)
+  - [Hexadecimal](#hexadecimal)
+    - [Examples](#examples-10)
+    - [Exercises](#exercises-6)
+  - [Computation](#computation)
+  - [State Space](#state-space)
+    - [Examples](#examples-11)
+    - [Exercises](#exercises-7)
+  - [Software](#software)
+    - [Natural Numbers](#natural-numbers)
+  - [Binary Number Names & Prefixes](#binary-number-names--prefixes)
+    - [Examples](#examples-12)
+    - [Exercises](#exercises-8)
+  - [Signed and unsigned integer](#signed-and-unsigned-integer)
+    - [One's complement](#ones-complement)
+    - [Two's complement](#twos-complement)
+      - [From decimal digit into two's complement](#from-decimal-digit-into-twos-complement)
+      - [From two's complement into decimal](#from-twos-complement-into-decimal)
+    - [Numbers we can represent](#numbers-we-can-represent)
+    - [Exercises](#exercises-9)
+  - [Arithmetics](#arithmetics)
+    - [Integer arithmetics](#integer-arithmetics)
+      - [Examples](#examples-13)
+      - [Exercises](#exercises-10)
+    - [Arithmetic overflow](#arithmetic-overflow)
 - [Architecture](#architecture)
-	- [Binary vs. Decimal](#binary-vs-decimal)
-	- [Von Neumann architecture](#von-neumann-architecture)
-		- [Central Processing Unit (CPU)](#central-processing-unit-cpu)
-			- [Examples](#examples-14)
-			- [Exercises](#exercises-11)
-		- [Program Counter (PC)](#program-counter-pc)
-		- [Random access memory (RAM)](#random-access-memory-ram)
-			- [Examples](#examples-15)
-			- [Exercises](#exercises-12)
-		- [Memory-bus](#memory-bus)
-			- [Examples](#examples-16)
-	- [Code vs. Data](#code-vs-data)
+  - [Binary vs. Decimal](#binary-vs-decimal)
+  - [Von Neumann architecture](#von-neumann-architecture)
+    - [Central Processing Unit (CPU)](#central-processing-unit-cpu)
+      - [Examples](#examples-14)
+      - [Exercises](#exercises-11)
+    - [Program Counter (PC)](#program-counter-pc)
+    - [Random access memory (RAM)](#random-access-memory-ram)
+      - [Examples](#examples-15)
+      - [Exercises](#exercises-12)
+    - [Memory-bus](#memory-bus)
+      - [Examples](#examples-16)
+  - [Code vs. Data](#code-vs-data)
 - [Compilers](#compilers)
-	- [Compiler](#compiler)
-	- [The Emulator](#the-emulator)
-	- [Instructions](#instructions)
-	- [RISC-V](#risc-v)
+  - [Compiler](#compiler)
+  - [The Emulator](#the-emulator)
+  - [Instructions](#instructions)
+  - [RISC-V](#risc-v)
 
 ---
 
@@ -109,12 +109,11 @@ Here we can see that a series of 0's and 1's can be interpreted in different way
 
 ## Decimal System
 
-A decimal number is a number represented in base 10, in which there are ten possible values for each digit (0–9). When these digits are concatenated to make strings of numbers, they are interpreted column by column. Beginning at the far right and moving to the left, we have the 1's column, the 10's column, the 100's column, and so forth.  The one's column is 10^{0}=1, and the tens column is 10^{1}=10, the hundreds column is 10^{2}=100, and so on.
+A decimal number is a number represented in base 10, in which there are ten possible values for each digit (0–9). When these digits are concatenated to make strings of numbers, they are interpreted column by column. Beginning at the far right and moving to the left, we have the 1's column, the 10's column, the 100's column, and so forth. The one's column is 10^{0}=1, and the tens column is 10^{1}=10, the hundreds column is 10^{2}=100, and so on.
 
 ### Examples
 
 For example, with a 4-digit sequence of 1011, the decimal (base 10) interpretation looks as follows. For the far-right column, we take 1\*10^{0}=1, the second column from the right is 1\*10^{1}=10, the third column from the right 0\*10^{2}=0 and the far left column 1\*10^{3}=1000. When adding all four values 1+10+0+1000 together, we get the value 1011 as a decimal representation.
-
 
 | 4-digit sequence | 1         | 0         | 1         | 1         | Value  |
 | ---------------- | --------- | --------- | --------- | --------- | ------ |
@@ -138,7 +137,6 @@ Binary numbers interpreted that each bit (the name for a binary digit) holds the
 | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- |
 | 2^{7} | 2^{6} | 2^{5} | 2^{4} | 2^{3} | 2^{2} | 2^{1} | 2^{0} |
 | 128   | 64    | 32    | 16    | 8     | 4     | 2     | 1     |
-
 
 ### Examples
 
@@ -206,7 +204,8 @@ In the example with the value 170, the LSB is 0, representing an even value.
 - Is the value 111 even or odd?
 - Is the value 11101 even or odd?
 - Is the value 111110 even or odd?
- ## Byte
+
+## Byte
 
 Since a unit of eight bits is very common in computer systems, there is a well-known term for that unit called a byte.
 
@@ -233,10 +232,10 @@ Reference: [ASCII Table](ascii-table.md)
 
 ### Examples
 
-| Representation |    |     |     |     |     |
-|----------------|----|-----|-----|-----|-----|
-| **Decimal**    | 72 | 101 | 108 | 108 | 111 |
-| **ASCII**      | H  | e   | l   | l   | o   |
+| Representation |     |     |     |     |     |
+| -------------- | --- | --- | --- | --- | --- |
+| **Decimal**    | 72  | 101 | 108 | 108 | 111 |
+| **ASCII**      | H   | e   | l   | l   | o   |
 
 ### Exercises
 
@@ -251,7 +250,6 @@ Unicode can be implemented by different character encodings. The Unicode standar
 
 One of the most commonly used encodings is [UTF-8](https://en.wikipedia.org/wiki/UTF-8), a variable-width character encoding used for electronic communication.
 UTF-8 can encode all 1,112,064 valid character code points in Unicode using one to four one-byte (8-bit) code units. It was designed for backward compatibility with ASCII: the first 128 characters of Unicode, which correspond one-to-one with ASCII, are encoded using a single byte with the same binary value as ASCII and the most-significant-bit as an indicator for Unicode, so that valid ASCII text is valid UTF-8-encoded Unicode as well.
-
 
 So how many bits do we need to represent 120000 different characters?
 
@@ -275,7 +273,6 @@ For example, the character `U` in decimal is `85`, and the binary representation
 | Decimal     | 0,1,2,3,4,5,6,7,8,9             | 10                             | 10^{n}                 |
 | Hexadecimal | 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F | 16                             | 16^{n}                 |
 
-
 [Radix](https://en.wikipedia.org/wiki/Radix): The number of unique digits, including zero, represents numbers in a positional numeral system.
 
 ### Examples
@@ -287,7 +284,7 @@ For example, the character `U` in decimal is `85`, and the binary representation
 | 42   | Decimal     | 42             |
 | 42   | Hexadecimal | 0x2A           |
 | "42" | String      | 42             |
-| '*'  | ASCII       | 42             |
+| '\*' | ASCII       | 42             |
 
 ## Unary
 
@@ -407,7 +404,6 @@ The [Hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base 16) notation 
 | 14             | 1110                | E                  |
 | 15             | 1111                | F                  |
 
-
 When we write hexadecimal notation, we use 0x to emphasize that we talk about hexadecimal.
 
 ### Examples
@@ -417,7 +413,6 @@ For example, we can show the hexadecimal, binary and octal representation of the
 | Dec | Hex  | Bin      | Oct  |
 | --- | ---- | -------- | ---- |
 | 42  | 0x2A | 0b101010 | 0o52 |
-
 
 Further, we can convert the decimal number 2020 into hexadecimal:
 
@@ -440,7 +435,7 @@ The hexadecimal equivalent of the binary number 0b111 1110 0100 is 0x7E4.
 
 Computation is essentially a sequence of state transitions. A computer stores a very large but still finite amount of bits in memory and registers at any given time. The values of all these bits together are what we call the state of the machine. Then the processor executes one instruction, which directs it to change the values of a very small number of bits creating a new state. That process of change from one state to the next continues until the machine is turned off.
 
-[State](https://en.wikipedia.org/wiki/State_(computer_science)): The state of a digital logic circuit or computer program is a technical term for all the stored information, at a given instant in time, to which the circuit or program has access. Its current inputs and its state entirely determine the output of a digital circuit or computer program at any time.
+[State](<https://en.wikipedia.org/wiki/State_(computer_science)>): The state of a digital logic circuit or computer program is a technical term for all the stored information, at a given instant in time, to which the circuit or program has access. Its current inputs and its state entirely determine the output of a digital circuit or computer program at any time.
 
 Software on source and machine code level specifies for each state what the next state is. There are the data bits that are being changed and the code bits that determine that change. Input is typically modeled by data bits changed by something other than the processor, such as a keyboard.
 
@@ -597,25 +592,23 @@ The [one's complement](https://en.wikipedia.org/wiki/Signed_number_representatio
 We only use 7 bits for the value and the MSB for the sign with a simple sign bit.
 If the MSB is a 1, it represents a `-` (minus sign); else, it is a `+` (plus sign).
 
-
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   0   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |            41 |
-| bits       |   1   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |           -41 |
-
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  0  |  0  |  1  |  0  |  1  |  0  |  0  |  1  |            41 |
+| bits       |  1  |  0  |  1  |  0  |  1  |  0  |  0  |  1  |           -41 |
 
 **Reason why we don't use the one's complement in practice:**
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   0   |   0   |   0   |   0   |   0   |   0   |   0   |   0   |             0 |
-| bits       |   1   |   0   |   0   |   0   |   0   |   0   |   0   |   0   |            -0 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  0  |  0  |  0  |  0  |  0  |  0  |  0  |  0  |             0 |
+| bits       |  1  |  0  |  0  |  0  |  0  |  0  |  0  |  0  |            -0 |
 
 We get two representations for 0, but we only need one.
 
 ### Two's complement
 
-Integers are also commonly represented by using [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) notation, in which the left-most bit indicates the sign: If the leading bit is 1, we subtract 2^{n} to get the [integer](https://en.wikipedia.org/wiki/Integer_(computer_science)) corresponding to an n-bit number in this notation. Two's complement allows performing subtraction using an addition. For example, the arithmetic operation 42-7 is equal to 42+(-7), and plus-minus 7 is the two's complement of minus 7.
+Integers are also commonly represented by using [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) notation, in which the left-most bit indicates the sign: If the leading bit is 1, we subtract 2^{n} to get the [integer](<https://en.wikipedia.org/wiki/Integer_(computer_science)>) corresponding to an n-bit number in this notation. Two's complement allows performing subtraction using an addition. For example, the arithmetic operation 42-7 is equal to 42+(-7), and plus-minus 7 is the two's complement of minus 7.
 
 **Using the binary number system**:
 
@@ -629,7 +622,6 @@ Unsigned:
 - a signed byte can express the numbers -128 .. 127
 - two signed bytes can express the numbers -32768 .. 32767
 
-
 For example, -1 is the signed byte 0xff or 0b11111111. In this way, a signed byte can express the numbers -128 .. 127. That means we can use the formula -2^{n-1} to 2^{n-1}-1 to calculate the range.
 
 #### From decimal digit into two's complement
@@ -638,35 +630,33 @@ If we want to show a positive representation, we can show this just as in the on
 
 If we want to represent 41 in two's complement, we fill in the needed bits.
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   0   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |            41 |
-
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  0  |  0  |  1  |  0  |  1  |  0  |  0  |  1  |            41 |
 
 To show the value of -41 in two's complement, we need to follow a three-step plan.
 
 In the first step, we convert the decimal digit into the positive value in binary.
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   0   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |            41 |
-
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  0  |  0  |  1  |  0  |  1  |  0  |  0  |  1  |            41 |
 
 In the second step, we invert all binary digits so that a 0 converts into a 1 and a 1 converts into a 0.
 
 In the example with -41 that looks as follows:
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   1   |   1   |   0   |   1   |   0   |   1   |   1   |   0   |           -86 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  1  |  1  |  0  |  1  |  0  |  1  |  1  |  0  |           -86 |
 
 We got the MSB with 1 as the sign bit.
 
 In the third step, we need to add 1 to the result of step two.
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   1   |   1   |   0   |   1   |   0   |   1   |   1   |   1   |           -87 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  1  |  1  |  0  |  1  |  0  |  1  |  1  |  1  |           -87 |
 
 That means the value of -87 is the two's complement representation of -41.
 
@@ -678,9 +668,9 @@ If we can represent the highest value with 7 bits, we can represent 2^{7}=128 va
 
 For a two's complement representation, we need to follow a three-step plan:
 
-1) Convert the decimal digit into the positive representation of the value.
-2) We invert all digits. (0 -> 1 and 1 -> 0)
-3) We add 1 to the result of step two.
+1. Convert the decimal digit into the positive representation of the value.
+2. We invert all digits. (0 -> 1 and 1 -> 0)
+3. We add 1 to the result of step two.
 
 #### From two's complement into decimal
 
@@ -688,27 +678,27 @@ If we want to convert the two's complement representation of -41 into the decima
 
 Two's complement representation of -41:
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   1   |   1   |   0   |   1   |   0   |   1   |   1   |   1   |           -87 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  1  |  1  |  0  |  1  |  0  |  1  |  1  |  1  |           -87 |
 
 In the first step, add 1 to the two's complement representation.
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   1   |   1   |   0   |   1   |   0   |   1   |   1   |   0   |           -86 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  1  |  1  |  0  |  1  |  0  |  1  |  1  |  0  |           -86 |
 
 In the second step, invert all bits.
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   0   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |            41 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  0  |  0  |  1  |  0  |  1  |  0  |  0  |  1  |            41 |
 
 In the third step, add a leading sign bit.
 
-| bit values |  +/-  |  64   |  32   |  16   |   8   |   4   |   2   |   1   | Decimal Value |
-| :--------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ------------: |
-| bits       |   1   |   0   |   1   |   0   |   1   |   0   |   0   |   1   |           -41 |
+| bit values | +/- | 64  | 32  | 16  |  8  |  4  |  2  |  1  | Decimal Value |
+| :--------- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | ------------: |
+| bits       |  1  |  0  |  1  |  0  |  1  |  0  |  0  |  1  |           -41 |
 
 With these steps, we generate the decimal number -41 from the two's complement representation.
 
@@ -732,7 +722,6 @@ In the signed range (one's complement), we can represent:
 | 32   | -2^{32-1}-1 to 2^{32-1}-1 | -2,147,483,647 to 2,147,483,647                         |
 | 64   | -2^{64-1}-1 to 2^{64-1}-1 | -9,223,372,036,854,775,807 to 9,223,372,036,854,775,807 |
 
-
 In the signed range (two's complement), we can represent:
 
 | Bits | Base 2                  | Range                                                   |
@@ -747,6 +736,7 @@ In the signed range (two's complement), we can represent:
 **Range**
 
 How many numbers can we represent with 32 and 64 bit as
+
 - an unsigned integer?
 - a signed integer in one's complement?
 - a signed integer in two's complement?
@@ -754,14 +744,17 @@ How many numbers can we represent with 32 and 64 bit as
 **Convert**
 
 How can we represent the value -42 with the
+
 - one's complement?
 - two's complement?
 
 How can we represent the value -1 with the
+
 - one's complement?
 - two's complement?
 
 How can we represent the value -12 with the
+
 - one's complement?
 - two's complement?
 
@@ -818,6 +811,7 @@ In general, though, one adds two binary numbers, just like decimal numbers, digi
 #### Exercises
 
 Convert the decimal numbers into binary (8-bit representation) and add them together:
+
 - 42 + 101 = ?
 - 147 + 13 = ?
 - 13 + 37 = ?
@@ -868,20 +862,20 @@ The second reason is that we get a storage problem because decimal numbers need 
 
 Today, most general-purpose computers are based on what is known as the von Neumann model or von Neumann architecture.
 
-[Von Neumann architecture](https://en.wikipedia.org/wiki/Von_Neumann_architecture): A computer architecture, described in 1945 by the mathematician and physicist John von Neumann and others, for an electronic digital computer with parts consisting of a central processing unit (CPU) where arithmetic operations (that part is called an Arithmetic Logic Unit - ALU) are done, and processor registers (those supply operands, the object or quantity to operate on) to the ALU and store the results of ALU operations); a control unit containing an instruction register (to hold the currently executed instruction) and a *program counter* (indicates where a computer is in its program sequence); a memory to store both data and instructions (code); external mass storage; and input and output mechanisms.
+[Von Neumann architecture](https://en.wikipedia.org/wiki/Von_Neumann_architecture): A computer architecture, described in 1945 by the mathematician and physicist John von Neumann and others, for an electronic digital computer with parts consisting of a central processing unit (CPU) where arithmetic operations (that part is called an Arithmetic Logic Unit - ALU) are done, and processor registers (those supply operands, the object or quantity to operate on) to the ALU and store the results of ALU operations); a control unit containing an instruction register (to hold the currently executed instruction) and a _program counter_ (indicates where a computer is in its program sequence); a memory to store both data and instructions (code); external mass storage; and input and output mechanisms.
 
 **von Neumann architecture**
 
 - Central Processing Unit (CPU)
-	+ Arithmetic Logic Unit (ALU)
-		* that does arithmetic operations
-	+ Processor registers
-		* that supply operands, the object or quantity that is operated on
-	+ Control unit
-		* Instruction register
-			- to store the currently executed instruction
-		* Program counter
-			- indicates where a computer is in its program sequence
+  - Arithmetic Logic Unit (ALU)
+    - that does arithmetic operations
+  - Processor registers
+    - that supply operands, the object or quantity that is operated on
+  - Control unit
+    - Instruction register
+      - to store the currently executed instruction
+    - Program counter
+      - indicates where a computer is in its program sequence
 - Memory that stores data and instructions
 - External mass storage
 - Input and output mechanisms
@@ -898,42 +892,42 @@ In selfie, the von Neumann architecture is a 64-bit machine, which means the CPU
 
 The 32 general-purpose registers in selfie are defined as Global Constants:
 
-Global [Constant](https://en.wikipedia.org/wiki/Constant_(computer_programming)): A constant with global scope, meaning that it is visible (hence accessible) throughout the program and the program cannot alter its value during normal execution, i.e., the value is constant.
+Global [Constant](<https://en.wikipedia.org/wiki/Constant_(computer_programming)>): A constant with global scope, meaning that it is visible (hence accessible) throughout the program and the program cannot alter its value during normal execution, i.e., the value is constant.
 
 | Label | Register Address |
-| --- 	| ---	|
-|	ZR	|  = 0	|
-|	RA	|  = 1	|
-|	SP	|  = 2	|
-|	GP	|  = 3	|
-|	TP	|  = 4	|
-|	T0	|  = 5	|
-|	T1	|  = 6	|
-|	T2	|  = 7	|
-|	FP	|  = 8	|
-|	S1	|  = 9	|
-|	A0	|  = 10	|
-|	A1	|  = 11	|
-|	A2	|  = 12	|
-|	A3	|  = 13	|
-|	A4	|  = 14	|
-|	A5	|  = 15	|
-|	A6	|  = 16	|
-|	A7	|  = 17	|
-|	S2	|  = 18	|
-|	S3	|  = 19	|
-|	S4	|  = 20	|
-|	S5	|  = 21	|
-|	S6	|  = 22	|
-|	S7	|  = 23	|
-|	S8	|  = 24	|
-|	S9	|  = 25	|
-|	S10	|  = 26	|
-|	S11	|  = 27	|
-|	T3	|  = 28	|
-|	T4	|  = 29	|
-|	T5	|  = 30	|
-|	T6	|  = 31	|
+| ----- | ---------------- |
+| ZR    | = 0              |
+| RA    | = 1              |
+| SP    | = 2              |
+| GP    | = 3              |
+| TP    | = 4              |
+| T0    | = 5              |
+| T1    | = 6              |
+| T2    | = 7              |
+| FP    | = 8              |
+| S1    | = 9              |
+| A0    | = 10             |
+| A1    | = 11             |
+| A2    | = 12             |
+| A3    | = 13             |
+| A4    | = 14             |
+| A5    | = 15             |
+| A6    | = 16             |
+| A7    | = 17             |
+| S2    | = 18             |
+| S3    | = 19             |
+| S4    | = 20             |
+| S5    | = 21             |
+| S6    | = 22             |
+| S7    | = 23             |
+| S8    | = 24             |
+| S9    | = 25             |
+| S10   | = 26             |
+| S11   | = 27             |
+| T3    | = 28             |
+| T4    | = 29             |
+| T5    | = 30             |
+| T6    | = 31             |
 
 In the CPU, an [arithmetic logic unit](https://en.wikipedia.org/wiki/Arithmetic_logic_unit) (ALU) is a combinational digital circuit that performs arithmetic and [bitwise operations](https://en.wikipedia.org/wiki/Bitwise_operation) on integer binary numbers.
 The inputs to an ALU are the data to be operated on, called [operands](https://en.wikipedia.org/wiki/Operand), and a code indicating the operation to be performed; the ALU's output is the result of the performed operation.
@@ -984,7 +978,6 @@ The great thing about a von Neumann architecture is that it stores code and data
 
 How do we get to such numbers?
 
-
 When writing 4 GB in scientific notation, we get:
 
 2^{2} \* 2^{30} \* 2{3} = 2{35}
@@ -999,7 +992,7 @@ We know that 4 GB of memory are 2^{35} bit, but how is that memory split up into
 
 Most registers of a CPU have the same size, that is, accommodate the same number of bits. Usually, data goes back and forth between memory and registers in chunks of that size called machine words or just words.
 
-[Word](https://en.wikipedia.org/wiki/Word_(computer_architecture)): The natural unit of data used by a particular processor design. A word is a fixed-sized piece of data handled as a unit by the instruction set or the processor's hardware. The number of bits in a word (the word size, word width, or word length) is an essential characteristic of any specific processor design or computer architecture.
+[Word](<https://en.wikipedia.org/wiki/Word_(computer_architecture)>): The natural unit of data used by a particular processor design. A word is a fixed-sized piece of data handled as a unit by the instruction set or the processor's hardware. The number of bits in a word (the word size, word width, or word length) is an essential characteristic of any specific processor design or computer architecture.
 
 Usually, a single word has 32 bit, as we can see in `selfie.c`. That means a double word has 64 bit, but for simplification, when we talk about a word in selfie, we mean 64 bit.
 
@@ -1069,10 +1062,10 @@ Speed is generally characterized in terms of throughput, the amount of work done
 Imagine a fiber optic cable connecting, say, New York City and San Francisco, and a truck loaded with DVDs driving from New York City to San Francisco.
 Which one provides higher throughput and which one lower latency? Surprisingly, it may very well be possible that the truck offers higher throughput. However, delivering just a single bit by truck may take days. Thus the truck provides terrible latency not suitable to host, say, a Zoom call.
 
-| Performance | Unit                                                                                        |
-| ----------- | ------------------------------------------------------------------------------------------- |
-| throughput  | million instructions per second ([MIPS](https://en.wikipedia.org/wiki/Instructions_per_second))                                                      |
-| latency     | nanoseconds (ns), microseconds (us), milliseconds (ms), seconds (s), minutes (m), hours (h) |
+| Performance | Unit                                                                                            |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| throughput  | million instructions per second ([MIPS](https://en.wikipedia.org/wiki/Instructions_per_second)) |
+| latency     | nanoseconds (ns), microseconds (us), milliseconds (ms), seconds (s), minutes (m), hours (h)     |
 
 ## Code vs. Data
 
@@ -1083,7 +1076,6 @@ A computer cannot distinguish between code and data. It all depends on the conte
 ## Compiler
 
 Compiling selfie.c into an executable program is done by executing `make` in the terminal.
-
 
 ```sh
 make
@@ -1111,7 +1103,6 @@ Now we have a version of selfie that we can run on our machine.
 ```
 
 Selfie requires using at least one option to do anything useful and therefore responds with its usage pattern and then terminates without doing anything else.
-
 
 To do something useful, we compile selfie with its own compiler named starc that is invoked by the option `-c`.
 
@@ -1203,7 +1194,7 @@ synopsis: selfie.m { -c { source } | -o binary | [ -s | -S ] assembly | -l binar
 
 After loading `selfie.m`, the `-m 1` option directs mipster to emulate a computer with 1 megabyte of memory (abbreviated 1MB) for executing `selfie.m`. Since `selfie.m` is invoked without any options, which could appear after the `-m 1` option, it responds, just like selfie without options before, with its usage pattern and then terminates after that mipster terminates and outputs a summary of its built-in performance profiler.
 
-[Profiling](https://en.wikipedia.org/wiki/Profiling_(computer_programming)) A form of dynamic program analysis that measures, for example, the space (memory) or time complexity of a program, the usage of particular instructions, or the frequency and duration of function calls. Most commonly, profiling information serves to aid program optimization.
+[Profiling](<https://en.wikipedia.org/wiki/Profiling_(computer_programming)>) A form of dynamic program analysis that measures, for example, the space (memory) or time complexity of a program, the usage of particular instructions, or the frequency and duration of function calls. Most commonly, profiling information serves to aid program optimization.
 
 Profiling is also used to explain performance-related issues in selfie.
 

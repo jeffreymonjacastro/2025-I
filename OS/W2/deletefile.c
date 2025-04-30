@@ -20,8 +20,6 @@ static void myHandler(int signum) {
 int main() {
   fd = open(FILENAME, O_CREAT);
 
-  unsigned long int i = 0;
-
   int iRet;
   struct sigaction sAction;
   sAction.sa_flags = 0;

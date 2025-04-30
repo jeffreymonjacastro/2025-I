@@ -13312,6 +13312,111 @@ uint64_t selfie_run(uint64_t machine)
   return exit_code;
 }
 
+//! Assigment 01: processes
+uint64_t selfie_run_mipsterOS(uint64_t machine)
+{
+  uint64_t exit_code;
+  uint64_t *context1;
+  uint64_t n_concurrent = 0;
+
+  reset_interpreter();
+  reset_profiler();
+  reset_microkernel();
+
+  // Arguments
+  init_memory(atoi(peek_argument(0)));
+  
+  //! Assigment 01: processes
+  //! For two processes
+  // uint64_t *context1 = create_context(MY_CONTEXT, 0);
+  // uint64_t *context2 = create_context(MY_CONTEXT, 0);
+  
+  // boot_loader(context1);
+  // boot_loader(context2);
+  
+  // current_context = context1;
+
+  //! For n processes
+  uint64_t total_processes = atoi(peek_argument(0));
+
+  while (n_concurrent < total_processes){
+    context1 = create_context(MY_CONTEXT, 0);
+    boot_loader(context1);
+    n_concurrent = n_concurrent + 1;
+  }
+
+  current_context = context1;
+
+  // current_context is ready to run
+
+  run = 1;
+
+  printf("%s: %lu-bit %s executing %lu-bit RISC-U binary %s with %luMB physical memory", selfie_name,
+         SIZEOFUINT64INBITS,
+         (char *)*(MACHINES + machine),
+         WORDSIZEINBITS,
+         binary_name,
+         PHYSICALMEMORYSIZE / MEGABYTE);
+
+  if (GC_ON)
+  {
+    gc_init(current_context);
+
+    printf(", gcing every %lu mallocs, ", GC_PERIOD);
+    if (GC_REUSE)
+      printf("reusing memory");
+    else
+      printf("not reusing memory");
+  }
+
+  if (debug)
+  {
+    if (record)
+      printf(", and replay");
+    else
+      printf(", and debugger");
+  }
+
+  printf("\n%s: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n", selfie_name);
+
+  if (machine == MIPSTER)
+    exit_code = mipster(current_context);
+  else if (machine == HYPSTER)
+    exit_code = hypster(current_context);
+  else if (machine == MINSTER)
+    exit_code = minster(current_context);
+  else if (machine == MOBSTER)
+    exit_code = mobster(current_context);
+  else if (machine == MIXTER)
+    // change 0 to anywhere between 0% to 100% mipster over hypster
+    exit_code = mixter(current_context, 0);
+  else
+    exit_code = 0;
+
+  printf("\n%s: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n", selfie_name);
+
+  printf("%s: %lu-bit %s terminating %lu-bit RISC-U binary %s with exit code %ld\n", selfie_name,
+         SIZEOFUINT64INBITS,
+         (char *)*(MACHINES + machine),
+         WORDSIZEINBITS,
+         binary_name,
+         sign_extend(exit_code, SYSCALL_BITWIDTH));
+
+  print_profile();
+
+  run = 0;
+
+  record = 0;
+
+  debug_syscalls = 0;
+  debug = 0;
+
+  printf("%s: ################################################################################\n", selfie_name);
+
+  return exit_code;
+}
+
+
 // -----------------------------------------------------------------
 // ------------------- CONSOLE ARGUMENT SCANNER --------------------
 // -----------------------------------------------------------------
@@ -13419,6 +13524,8 @@ uint64_t selfie(uint64_t extras)
       {
         if (string_compare(argument, "-m"))
           return selfie_run(MIPSTER);
+        else if (string_compare(argument, "-x"))
+          return selfie_run_mipsterOS(MIPSTER);
         else if (string_compare(argument, "-d"))
           return selfie_run(DIPSTER);
         else if (string_compare(argument, "-r"))
@@ -13527,5 +13634,5 @@ int main(int argc, char **argv)
 
   exit_code = selfie(0);
 
-  return exit_selfie(exit_code, " [ ( -m | -d | -r | -y ) 0-4096 ... ]");
+  return exit_selfie(exit_code, " [ ( -m | -d | -r | -y | -x ) 0-4096 ... ]");
 }

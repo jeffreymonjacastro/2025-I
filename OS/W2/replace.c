@@ -8,8 +8,7 @@ static void myHandler(int signum) {
   printf("In myHandler with argument %d\n", signum);
 }
 
-int main() {
-  unsigned long int i = 0;
+int main(int argc, char* argv) {
   int iRet;
   struct sigaction sAction;
 
@@ -21,6 +20,8 @@ int main() {
     iRet = sigaction(i, &sAction, NULL);
     if (iRet != 0) {
       printf("Error in sigaction for signal %d\n", i);
+    } else {
+      printf("sigaction for signal %d succeeded\n", i);
     }
   }
 
