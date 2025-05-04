@@ -18,21 +18,21 @@ void futex_wake (int* addr) {
 int lock = 1;
 
 void *transfer(void *arg) {
-    int amount = *((int *) arg);
+  int amount = *((int *) arg);
 
-    for (int i = 0; i < N_TRANSFERS; ++i) {
-        for (int j = 0; j < N_ACCOUNTS; ++j) {
-            while (true) {
-                if (atomic_compare_exchange_strong(&lock, 1, 0)) {
-                    break;
-                }
-            }
-
-            accounts[j] += amount;
+  for (int i = 0; i < N_TRANSFERS; ++i) {
+    for (int j = 0; j < N_ACCOUNTS; ++j) {
+      while (true) {
+        if (atomic_compare_exchange_strong(&lock, 1, 0)) {
+          break;
         }
-    }
+      }
 
-    return NULL;
+      accounts[j] += amount;
+    }
+  }
+
+  return NULL;
 }
 
 void print_accounts () {

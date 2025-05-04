@@ -10,24 +10,24 @@ int i = 0, f = 0;
 int c = 0;
 int next = 0;
 
-int produce () {
+int produce() {
 	printf ("Producer, item = %d\n", ++next);
 	return next;
 };
 
-int consume (int *item) {
+int consume(int *item) {
 	int content = *item;
 	*item = -1;
 	printf ("Consumer, item = %d\n", content);
 	return content;
 };
 
-void *prod (void *arg) {
+void *prod(void *arg) {
 	while (1) {
 		sleep (1);
 		while (c == N); // Don't produce if buffer is full
 		f = (f + 1) % N;
-		buffer[f] = produce ();
+		buffer[f] = produce();
 		c++;
 	}
 }
@@ -37,8 +37,8 @@ void *cons (void *arg) {
 	while (1) {
 		sleep (1);
 		while (c == 0); // Don't consume if buffer is empty
-		i = (i + 1) %N;
-		item = consume (&buffer[i]);
+		i = (i + 1) % N;
+		item = consume(&buffer[i]);
 		c--;
 	}
 }

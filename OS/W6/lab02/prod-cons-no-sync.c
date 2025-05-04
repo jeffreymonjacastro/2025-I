@@ -26,7 +26,7 @@ void *prod (void *arg) {
 	while (1) {
 		sleep (1);
 		f = (f + 1) % N;
-		buffer[f] = produce ();
+		buffer[f] = produce();
 		c++;
 	}
 }
@@ -36,7 +36,7 @@ void *cons (void *arg) {
 	while (1) {
 		sleep (1);
 		i = (i + 1) %N;
-		item = consume (&buffer[i]);
+		item = consume(&buffer[i]);
 		c--;
 	}
 }

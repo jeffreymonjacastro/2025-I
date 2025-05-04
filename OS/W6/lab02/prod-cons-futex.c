@@ -41,7 +41,7 @@ void *prod (void *arg) {
 		}
 		f = (f + 1) % N;
 		buffer[f] = produce ();
-		c++;
+		c++; // make it atomic
 		if (c == 1) {
 			futex_wake (&c, 1);
 		}
