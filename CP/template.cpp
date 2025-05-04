@@ -8,7 +8,7 @@ using namespace std;
 #define lld long double
 const int mod = 1e9 + 7;
 
-void solve() { cout << "Hello World!" << endl; }
+void solve() {}
 
 int main() {
   cpu();
