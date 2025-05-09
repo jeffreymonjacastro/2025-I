@@ -28,9 +28,9 @@ intersection(INT_MIN, INT_MIN,
 
 y casos similares. También se hará lo mismo para double.
 
-> [!NOTE] \
-> [x] Implementado \
-> [ ] Testeado con casos esquina
+> [!NOTE]
+> - [x] Implementado \
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 2
 
