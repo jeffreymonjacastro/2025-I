@@ -29,8 +29,8 @@ intersection(INT_MIN, INT_MIN,
 y casos similares. También se hará lo mismo para double.
 
 > [!NOTE]
-> - [x] Implementado \
-> - [ ] Testeado con casos esquina
+> - [x] Implementado 
+> - [x] Testeado con casos esquina
 
 ## PROBLEMA 2
 
@@ -62,6 +62,10 @@ Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado
 exhaustivamente, con tests que incluirán casos en los que las coordenadas serán
 los máximos y/o mínimos valores representables
 
+> [!NOTE]
+> - [x] Implementado 
+> - [ ] Testeado con casos esquina
+
 ## PROBLEMA 3
 
 El prototipo de la función debe ser:
@@ -76,13 +80,17 @@ double distance_point_to_line_3D(
     )
 ```
 
+> [!NOTE]
+> - [x] Implementado 
+> - [ ] Testeado con casos esquina
+
 ## PROBLEMA 4
 
 El prototipo de la función debe ser:
 
 ```cpp
 template <typename T>
-bool insise_triangle(vector<vector<T>> const& vertices, T px, T py)
+bool inside_triangle(vector<vector<T>> const& vertices, T px, T py)
 ```
 
 Se garantiza que `vertices` tiene 3 elementos, cada uno de los cuales será un 
@@ -100,6 +108,10 @@ vector de 2 elementos de tipo T.
 Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado 
 exhaustivamente, con tests que incluirán casos en los que las coordenadas serán
 los máximos y/o mínimos valores representables
+
+> [!NOTE]
+> - [x] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 5
 
@@ -130,9 +142,11 @@ coordenadas x e y del vértice.
 `vertices[k][1]` será la coordenada y del vertice k del polígono.
 
 Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado 
-exhaustivamente, con tests que incluirán casos en los que las coordenadas serán
-los máximos y/o mínimos valores representables
+exhaustivamente, con tests que incluirán casos en los que las coordenadas serán los máximos y/o mínimos valores representables
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 6
 
@@ -157,6 +171,10 @@ vector<vector<T>> graham(vector<vector<T>> const& vertices,
 Como en todos los ejercicios, los vectores que describen puntos tendrán 2 
 elementos que se corresponderán con las coordenadas del punto siendo 
 representado.
+
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 7
 
@@ -188,6 +206,9 @@ extremos del segmento.
 `segments[k][2]` será la coordenada x del extremo 1 del segmento k \
 `segments[k][3]` será la coordenada y del extremo 1 del segmento k
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 8
 
@@ -221,11 +242,16 @@ coordenadas `x` e `y` del punto.
 `points[k][0]` será la coordenada x del punto k \
 `points[k][1]` será la coordenada y del punto k
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 9
 
 Simplemente adjunten una explicación o bien en .TXT o bien en .PDF
 
+> [!NOTE]
+> - [ ] Escrito 
 
 ## PROBLEMA 10
 
@@ -238,6 +264,10 @@ int num_of_triangularions(int n)
 NOTA: el número puede ser muy grande, al punto de no caber en un int. Para 
 evitar problemas, devolver el resultado **módulo 1000000007**. Se testeará la 
 correctitud **módulo 1000000007**.
+
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 11
 
@@ -266,6 +296,9 @@ coordenadas x e y del vértice.
 `vertices[k][0]` será la coordenada x del vertice k del polígono. \
 `vertices[k][1]` será la coordenada y del vertice k del polígono.
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 12
 
@@ -310,6 +343,10 @@ representa las coordenadas `x` e `y` de un vértice.
 `vertices2[k][0]` será la coordenada x del vertice k del polígono 2. \
 `vertices2[k][1]` será la coordenada y del vertice k del polígono 2.
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
+
 ## PROBLEMA 13
 
 El prototipo de la función debe ser:
@@ -338,6 +375,9 @@ coordenadas `x` e `y` del vértice.
 `vertices[k][0]` será la coordenada x del vertice k de la polilinea. \
 `vertices[k][1]` será la coordenada y del vertice k de la polilinea.
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 14
 
@@ -350,9 +390,11 @@ vector<vector<T>> triangles_based_simplification(vector<vector<T>> const& vertic
 ```
 
 `N` es el número de nodos que tiene que tener el resultado.
-La decisión de "qué nodo eliminar" debe basarse en el área del triangulo y en el tamaño
-del mayor de los ángulos del triángulo (triángulos "mas parecidos a una línea" deben
-eliminarse antes que triangulos "menos parecidos a una linea").
+La decisión de "qué nodo eliminar" debe basarse en el área del triangulo y en el tamaño del mayor de los ángulos del triángulo (triángulos "mas parecidos a una línea" deben eliminarse antes que triangulos "menos parecidos a una linea").
+
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 15
 
@@ -386,6 +428,9 @@ extremos del segmento.
 `segments[k][2]` será la coordenada x del extremo 1 del segmento k \
 `segments[k][3]` será la coordenada y del extremo 1 del segmento k
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 16
 
@@ -418,6 +463,9 @@ extremos del segmento.
 `segments[k][2]` será la coordenada x del extremo 1 del segmento k \
 `segments[k][3]` será la coordenada y del extremo 1 del segmento k
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 17
 
@@ -466,6 +514,9 @@ points[i] + k * directions[i]
 `directions[k][0]` será la componente x de la dirección k \
 `directions[k][1]` será la componente y de la dirección k
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 18
 
@@ -477,6 +528,9 @@ int maximum_possible_number_of_regions(int N)
 
 Devolver la respuesta **módulo 1000000007**
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 19
 
@@ -507,8 +561,15 @@ de 4 enteros, que serán las coordenadas de vértices "inferior izquierdo" y "su
 `rectangles[k][2]` será la coordenada x del punto superior derecho del rectangulo k \
 `rectangles[k][3]` será la coordenada y del punto superior derecho del rectangulo k
 
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
 
 ## PROBLEMA 20
 
 Este ejercicio se corregirá manualmente, por lo que no se establece un prototipo 
 para el mismo.
+
+> [!NOTE]
+> - [ ] Implementado 
+> - [ ] Testeado con casos esquina
