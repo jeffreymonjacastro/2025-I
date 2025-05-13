@@ -145,7 +145,7 @@ Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado
 exhaustivamente, con tests que incluirán casos en los que las coordenadas serán los máximos y/o mínimos valores representables
 
 > [!NOTE]
-> - [ ] Implementado 
+> - [x] Implementado 
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 6
@@ -297,7 +297,7 @@ coordenadas x e y del vértice.
 `vertices[k][1]` será la coordenada y del vertice k del polígono.
 
 > [!NOTE]
-> - [ ] Implementado 
+> - [x] Implementado 
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 12

@@ -7,36 +7,43 @@
 
 using namespace std;
 
-template <typename T> struct Point {
-  T x, y;
-  Point(T x, T y) : x(x), y(y) {}
-};
-
-template <typename T> struct Vector {
-  T x, y;
-  Vector(T x, T y) : x(x), y(y) {}
-
-  Vector unit_vector() {
-    double length = this->module();
-    return Vector(x / length, y / length, z / length);
-  }
-
-  double module() { return sqrt(x * x + y * y); }
-};
-
-template <typename T> struct Line {
-  Point p;
-  Vector v;
-  Line(Point p, Vector v) : p(p), v(v) {}
-};
-
-template <typename T> T cross_product(T x1, T y1, T x2, T y2) {
-  return x1 * y2 - x2 * y1;
-}
-
 template <typename T>
 bool inside_polygon(vector<vector<T>> const &vertices, T px, T py) {
-  cout << "Hello world" << endl;
+  int n = vertices.size();
+  bool inside = false;
+
+  for (int i = 0, j = n - 1; i < n; j = i++) {
+    T xi = vertices[i][0], yi = vertices[i][1];
+    T xj = vertices[j][0], yj = vertices[j][1];
+
+    if ((px == xi && py == yi) || (px == xj && py == yj)) {
+      return true;
+    }
+
+    if (yi == yj && py == yi && (px >= min(xi, xj) && px <= max(xi, xj))) {
+      return true;
+    }
+
+    if (yi == yj) {
+      continue;
+    }
+
+    bool is_between_y_edge = (yi > py) != (yj > py);
+
+    if (is_between_y_edge) {
+      T x_intersect = (xj - xi) * (py - yi) / (yj - yi) + xi;
+
+      if (px == x_intersect) {
+        return true;
+      }
+
+      if (px < x_intersect) {
+        inside = !inside;
+      }
+    }
+  }
+
+  return inside;
 }
 
 #endif
