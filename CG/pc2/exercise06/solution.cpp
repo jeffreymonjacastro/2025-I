@@ -1,4 +1,4 @@
-#include "jarvis.h"
+#include "jarvis_graham.h"
 
 int main() {
   int n = 6;
@@ -11,5 +11,5 @@ int main() {
   vertices[4] = {3, 1};
   vertices[5] = {2, 0};
 
-  jarvis(vertices, false);
+  graham(vertices, false);
 }

@@ -1,0 +1,199 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 0 0 420 520
+%%Creator: Marching Squares Generator
+%%Title: 16 Casos de Marching Squares
+%%EndComments
+
+% Función para dibujar un punto
+/drawpoint {
+  % x y radius color -> draws point
+  setgray newpath 3 1 roll 2 copy 3 -1 roll 0 360 arc fill
+} def
+
+% Función para dibujar línea
+/drawline {
+  % x1 y1 x2 y2 width -> draws line
+  setlinewidth newpath moveto lineto stroke
+} def
+
+% Función para dibujar cuadrado base
+/drawsquare {
+  % x y size -> draws square outline
+  0.3 setgray 1 setlinewidth newpath
+  3 copy moveto
+  2 copy 0 exch rlineto
+  2 copy exch 0 exch rlineto
+  0 exch neg rlineto
+  closepath stroke
+} def
+
+% Función para texto
+/drawtext {
+  % x y string -> draws text
+  0 setgray /Helvetica 10 selectfont moveto show
+} def
+
+% Case 0
+20 460 80 drawsquare
+20 540 3 1 drawpoint
+100 540 3 1 drawpoint
+100 460 3 1 drawpoint
+20 460 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+20 445 (Case 0) drawtext
+
+% Case 1
+120 460 80 drawsquare
+120 540 3 1 drawpoint
+200 540 3 1 drawpoint
+200 460 3 1 drawpoint
+120 460 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+120 500 160 460 stroke
+newpath 120 500 moveto 160 460 lineto stroke
+120 445 (Case 1) drawtext
+
+% Case 2
+220 460 80 drawsquare
+220 540 3 1 drawpoint
+300 540 3 1 drawpoint
+300 460 3 0 drawpoint
+220 460 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 260 460 moveto 300 500 lineto stroke
+220 445 (Case 2) drawtext
+
+% Case 3
+320 460 80 drawsquare
+320 540 3 1 drawpoint
+400 540 3 1 drawpoint
+400 460 3 0 drawpoint
+320 460 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 320 500 moveto 400 500 lineto stroke
+320 445 (Case 3) drawtext
+
+% Case 4
+20 340 80 drawsquare
+20 420 3 1 drawpoint
+100 420 3 0 drawpoint
+100 340 3 1 drawpoint
+20 340 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 100 380 moveto 60 420 lineto stroke
+20 325 (Case 4) drawtext
+
+% Case 5
+120 340 80 drawsquare
+120 420 3 1 drawpoint
+200 420 3 0 drawpoint
+200 340 3 1 drawpoint
+120 340 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 120 380 moveto 160 340 lineto stroke
+newpath 200 380 moveto 160 420 lineto stroke
+120 325 (Case 5) drawtext
+
+% Case 6
+220 340 80 drawsquare
+220 420 3 1 drawpoint
+300 420 3 0 drawpoint
+300 340 3 0 drawpoint
+220 340 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 260 340 moveto 260 420 lineto stroke
+220 325 (Case 6) drawtext
+
+% Case 7
+320 340 80 drawsquare
+320 420 3 1 drawpoint
+400 420 3 0 drawpoint
+400 340 3 0 drawpoint
+320 340 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 320 380 moveto 360 420 lineto stroke
+320 325 (Case 7) drawtext
+
+% Case 8
+20 220 80 drawsquare
+20 300 3 0 drawpoint
+100 300 3 1 drawpoint
+100 220 3 1 drawpoint
+20 220 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 60 300 moveto 20 260 lineto stroke
+20 205 (Case 8) drawtext
+
+% Case 9
+120 220 80 drawsquare
+120 300 3 0 drawpoint
+200 300 3 1 drawpoint
+200 220 3 1 drawpoint
+120 220 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 160 300 moveto 160 220 lineto stroke
+120 205 (Case 9) drawtext
+
+% Case 10
+220 220 80 drawsquare
+220 300 3 0 drawpoint
+300 300 3 1 drawpoint
+300 220 3 0 drawpoint
+220 220 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 260 300 moveto 220 260 lineto stroke
+newpath 260 220 moveto 300 260 lineto stroke
+220 205 (Case 10) drawtext
+
+% Case 11
+320 220 80 drawsquare
+320 300 3 0 drawpoint
+400 300 3 1 drawpoint
+400 220 3 0 drawpoint
+320 220 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 360 300 moveto 400 260 lineto stroke
+320 205 (Case 11) drawtext
+
+% Case 12
+20 100 80 drawsquare
+20 180 3 0 drawpoint
+100 180 3 0 drawpoint
+100 100 3 1 drawpoint
+20 100 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 20 140 moveto 100 140 lineto stroke
+20 85 (Case 12) drawtext
+
+% Case 13
+120 100 80 drawsquare
+120 180 3 0 drawpoint
+200 180 3 0 drawpoint
+200 100 3 1 drawpoint
+120 100 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 160 100 moveto 160 180 lineto stroke
+120 85 (Case 13) drawtext
+
+% Case 14
+220 100 80 drawsquare
+220 180 3 0 drawpoint
+300 180 3 0 drawpoint
+300 100 3 0 drawpoint
+220 100 3 1 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+newpath 260 100 moveto 220 140 lineto stroke
+220 85 (Case 14) drawtext
+
+% Case 15
+320 100 80 drawsquare
+320 180 3 0 drawpoint
+400 180 3 0 drawpoint
+400 100 3 0 drawpoint
+320 100 3 0 drawpoint
+0 0.7 1 setrgbcolor 2.5 setlinewidth
+320 85 (Case 15) drawtext
+
+
+showpage
+%%EOF

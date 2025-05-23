@@ -1,8 +1,10 @@
 #ifndef JARVIS_H
 #define JARVIS_H
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <stack>
 #include <vector>
 
 using namespace std;
@@ -26,6 +28,7 @@ template <typename T> void print_hull(const vector<vector<T>> &hull) {
   }
 }
 
+// JARVIS
 template <typename T>
 vector<vector<T>> jarvis(vector<vector<T>> const &vertices,
                          bool withInteriorPointsRemoval) {
@@ -71,9 +74,78 @@ vector<vector<T>> jarvis(vector<vector<T>> const &vertices,
 
   } while (curr != min_point);
 
-  print_hull(hull);
+  // print_hull(hull);
 
   return hull;
 }
+
+// GRAHAM
+template <typename T>
+vector<vector<T>> graham(vector<vector<T>> &vertices,
+                         bool withInteriorPointsRemoval) {
+  int n = vertices.size();
+
+  if (n < 3) {
+    return vertices;
+  }
+
+  int min_idx = 0;
+
+  for (int i = 1; i < n; i++) {
+    if (vertices[i][1] < vertices[min_idx][1] ||
+        (vertices[i][1] == vertices[min_idx][1] &&
+         vertices[i][0] < vertices[min_idx][0])) {
+      min_idx = i;
+    }
+  }
+
+  swap(vertices[0], vertices[min_idx]);
+
+  vector<T> min_point = vertices[0];
+
+  sort(vertices.begin() + 1, vertices.end(),
+       [&min_point](const vector<T> &a, const vector<T> &b) {
+         T cross = cross_product(min_point, a, b);
+         if (cross == 0) {
+           double dist_a = euclidean_distance(min_point, a);
+           double dist_b = euclidean_distance(min_point, b);
+           return dist_a < dist_b;
+         }
+         return cross > 0;
+       });
+
+  stack<vector<T>> hull;
+  hull.push(vertices[0]);
+  hull.push(vertices[1]);
+  hull.push(vertices[2]);
+
+  for (int i = 3; i < n; i++) {
+    while (hull.size() >= 2) {
+      vector<T> top = hull.top();
+      hull.pop();
+      vector<T> next_to_top = hull.top();
+
+      T cross = cross_product(next_to_top, top, vertices[i]);
+
+      if (cross > 0) {
+        hull.push(top);
+        break;
+      }
+    }
+    hull.push(vertices[i]);
+  }
+
+  vector<vector<T>> result;
+  while (!hull.empty()) {
+    result.push_back(hull.top());
+    hull.pop();
+  }
+
+  reverse(result.begin(), result.end());
+
+  print_hull(result);
+
+  return result;
+};
 
 #endif
