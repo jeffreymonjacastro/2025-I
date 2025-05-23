@@ -1,12 +1,11 @@
 # Nota PARA TODOS los problemas
 
-Los problemas cuyo prototipo es un template serán testeados con `<int>` y con 
-`<double>`. En todos los casos se testeará exhaustivamente, incluyendo 
-condiciones de borde que incluirán valores como los máximos y mínimos 
+Los problemas cuyo prototipo es un template serán testeados con `<int>` y con
+`<double>`. En todos los casos se testeará exhaustivamente, incluyendo
+condiciones de borde que incluirán valores como los máximos y mínimos
 representables, para confirmar ausencia de overflows/underflows.
 
 ## PROBLEMA 1
-
 
 El prototipo de la función debe ser:
 
@@ -15,12 +14,12 @@ template <typename T>
 bool intersection(T xa, T ya, T xb, T yb, T xc, T yc, T xd, T yd)
 ```
 
-Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado, entre otros 
+Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado, entre otros
 casos, con muchas condiciones de borde que incluirán casos con coordenadas cuyos
 valores serán máximos y/o mínimos representables. Por ejemplo, el caso
 
 ```cpp
-intersection(INT_MIN, INT_MIN, 
+intersection(INT_MIN, INT_MIN,
              INT_MAX, INT_MAX,
              INT_MIN, INT_MIN+1
              INT_MAX, INT_MAX-1)
@@ -29,7 +28,8 @@ intersection(INT_MIN, INT_MIN,
 y casos similares. También se hará lo mismo para double.
 
 > [!NOTE]
-> - [x] Implementado 
+>
+> - [x] Implementado
 > - [x] Testeado con casos esquina
 
 ## PROBLEMA 2
@@ -44,26 +44,26 @@ bool is_convex(vector<vector<T>> const& P)
 Se garantiza que cada elemento de P será un vector de 2 elementos de tipo T.
 
 `P[0][0]` será la coordenada x del punto p0 \
-`P[0][1]` será la coordenada y del punto p0 
+`P[0][1]` será la coordenada y del punto p0
 
 `P[1][0]` será la coordenada x del punto p1 \
-`P[1][1]` será la coordenada y del punto p1 
+`P[1][1]` será la coordenada y del punto p1
 
 `P[2][0]` será la coordenada x del punto p2 \
-`P[2][1]` será la coordenada y del punto p2 
+`P[2][1]` será la coordenada y del punto p2
 
 ...
 
 `P[k][0]` será la coordenada x del punto pk \
-`P[k][1]` será la coordenada y del punto pk 
+`P[k][1]` será la coordenada y del punto pk
 
-
-Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado 
+Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado
 exhaustivamente, con tests que incluirán casos en los que las coordenadas serán
 los máximos y/o mínimos valores representables
 
 > [!NOTE]
-> - [x] Implementado 
+>
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 3
@@ -71,7 +71,7 @@ los máximos y/o mínimos valores representables
 El prototipo de la función debe ser:
 
 ```cpp
-// devuelve la distancia desde P a la recta dada 
+// devuelve la distancia desde P a la recta dada
 // por el punto P1 y la direccion D
 double distance_point_to_line_3D(
     double p1x, double p1y, double p1z,  // punto P1
@@ -81,7 +81,8 @@ double distance_point_to_line_3D(
 ```
 
 > [!NOTE]
-> - [x] Implementado 
+>
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 4
@@ -93,7 +94,7 @@ template <typename T>
 bool inside_triangle(vector<vector<T>> const& vertices, T px, T py)
 ```
 
-Se garantiza que `vertices` tiene 3 elementos, cada uno de los cuales será un 
+Se garantiza que `vertices` tiene 3 elementos, cada uno de los cuales será un
 vector de 2 elementos de tipo T.
 
 `vertices[0][0]` será la coordenada x del vertice 0 del triangulo
@@ -105,12 +106,13 @@ vector de 2 elementos de tipo T.
 `vertices[2][0]` será la coordenada x del vertice 2 del triangulo
 `vertices[2][1]` será la coordenada y del vertice 2 del triangulo
 
-Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado 
+Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado
 exhaustivamente, con tests que incluirán casos en los que las coordenadas serán
 los máximos y/o mínimos valores representables
 
 > [!NOTE]
-> - [x] Implementado 
+>
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 5
@@ -122,8 +124,7 @@ template <typename T>
 bool inside_polygon(vector<vector<T>> const& vertices, T px, T py)
 ```
 
-
-Se garantiza que `vertices` describen un poligono no cruzado. Cada uno de los 
+Se garantiza que `vertices` describen un poligono no cruzado. Cada uno de los
 elementos en `vertices` es un vector de 2 elementos de tipo T que representa las
 coordenadas x e y del vértice.
 
@@ -141,11 +142,12 @@ coordenadas x e y del vértice.
 `vertices[k][0]` será la coordenada x del vertice k del polígono.\
 `vertices[k][1]` será la coordenada y del vertice k del polígono.
 
-Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado 
+Será testeado con T siendo `<int>` y siendo `<double>`. Será testeado
 exhaustivamente, con tests que incluirán casos en los que las coordenadas serán los máximos y/o mínimos valores representables
 
 > [!NOTE]
-> - [x] Implementado 
+>
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 6
@@ -159,24 +161,27 @@ vector<vector<T>> interior_points_removal(vector<vector<T>> const& vertices)
 
 // ejecuta jarvis, con o sin elinminación de puntos interiors (especificado vía un parametro)
 template <typename T>
-vector<vector<T>> jarvis(vector<vector<T>> const& vertices, 
+vector<vector<T>> jarvis(vector<vector<T>> const& vertices,
     bool withInteriorPointsRemoval)
 
 // ejecuta graham, con o sin elinminación de puntos interiors (especificado vía un parametro)
 template <typename T>
-vector<vector<T>> graham(vector<vector<T>> const& vertices, 
+vector<vector<T>> graham(vector<vector<T>> const& vertices,
     bool withInteriorPointsRemoval)
 ```
 
-Como en todos los ejercicios, los vectores que describen puntos tendrán 2 
-elementos que se corresponderán con las coordenadas del punto siendo 
+Como en todos los ejercicios, los vectores que describen puntos tendrán 2
+elementos que se corresponderán con las coordenadas del punto siendo
 representado.
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 7
+
+> ‼️Hard Problem‼️
 
 El prototipo tiene que ser:
 
@@ -207,10 +212,13 @@ extremos del segmento.
 `segments[k][3]` será la coordenada y del extremo 1 del segmento k
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 8
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
@@ -219,12 +227,12 @@ template <typename T>
 vector<int> closest_points(vector<vector<T>> const& points)
 ```
 
-La función tiene que retornar UN VECTOR DE DOS ELEMENTOS, ORDENADO DE MENOR A 
+La función tiene que retornar UN VECTOR DE DOS ELEMENTOS, ORDENADO DE MENOR A
 MAYOR. Los elementos en este retorno deberán ser LOS ÍNDICES DE LOS 2 PUNTOS QUE
 ESTÁN A LA MENOR DISTANCIA, EN EL ARRAY INPUT.
 
-Se garantiza que `points` tendrá al menos dos elementos, (por favor desmerecer 
-el caso N=1, es simplemente un error de tipeo en el enunciado). Cada uno de los 
+Se garantiza que `points` tendrá al menos dos elementos, (por favor desmerecer
+el caso N=1, es simplemente un error de tipeo en el enunciado). Cada uno de los
 elementos en `points` es un vector de 2 elementos de tipo T que representa las
 coordenadas `x` e `y` del punto.
 
@@ -243,7 +251,8 @@ coordenadas `x` e `y` del punto.
 `points[k][1]` será la coordenada y del punto k
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 9
@@ -251,7 +260,8 @@ coordenadas `x` e `y` del punto.
 Simplemente adjunten una explicación o bien en .TXT o bien en .PDF
 
 > [!NOTE]
-> - [ ] Escrito 
+>
+> - [ ] Escrito
 
 ## PROBLEMA 10
 
@@ -261,12 +271,13 @@ El prototipo de la función debe ser:
 int num_of_triangularions(int n)
 ```
 
-NOTA: el número puede ser muy grande, al punto de no caber en un int. Para 
-evitar problemas, devolver el resultado **módulo 1000000007**. Se testeará la 
+NOTA: el número puede ser muy grande, al punto de no caber en un int. Para
+evitar problemas, devolver el resultado **módulo 1000000007**. Se testeará la
 correctitud **módulo 1000000007**.
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 11
@@ -278,7 +289,7 @@ template <typename T>
 double area(vector<vector<T>> const& vertices)
 ```
 
-Se garantiza que `vertices` describen un poligono convexo. Cada uno de los 
+Se garantiza que `vertices` describen un poligono convexo. Cada uno de los
 elementos en `vertices` es un vector de 2 elementos de tipo T que representa las
 coordenadas x e y del vértice.
 
@@ -297,10 +308,13 @@ coordenadas x e y del vértice.
 `vertices[k][1]` será la coordenada y del vertice k del polígono.
 
 > [!NOTE]
-> - [x] Implementado 
+>
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 12
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
@@ -309,8 +323,8 @@ template <typename T>
 double area_of_intersection(vector<vector<T>> const& vertices1, vector<vector<T>> const& vertices2)
 ```
 
-Se garantiza que `vertices1` y `vertices2` describen polígonos convexos. Cada 
-uno de los elementos en ellos es un vector de 2 elementos de tipo T que 
+Se garantiza que `vertices1` y `vertices2` describen polígonos convexos. Cada
+uno de los elementos en ellos es un vector de 2 elementos de tipo T que
 representa las coordenadas `x` e `y` de un vértice.
 
 `vertices1[0][0]` será la coordenada x del vertice 0 del polígono 1. \
@@ -344,7 +358,8 @@ representa las coordenadas `x` e `y` de un vértice.
 `vertices2[k][1]` será la coordenada y del vertice k del polígono 2.
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 13
@@ -353,11 +368,11 @@ El prototipo de la función debe ser:
 
 ```cpp
 template <typename T>
-vector<vector<T>> douglas_peucker(vector<vector<T>> const& vertices, 
+vector<vector<T>> douglas_peucker(vector<vector<T>> const& vertices,
     double epsilon)
 ```
 
-Se garantiza que `vertices` describen una polilinea no cruzado. Cada uno de los 
+Se garantiza que `vertices` describen una polilinea no cruzado. Cada uno de los
 elementos en `vertices` es un vector de 2 elementos de tipo T que representa las
 coordenadas `x` e `y` del vértice.
 
@@ -376,7 +391,8 @@ coordenadas `x` e `y` del vértice.
 `vertices[k][1]` será la coordenada y del vertice k de la polilinea.
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 14
@@ -385,7 +401,7 @@ El prototipo de la función debe ser:
 
 ```cpp
 template <typename T>
-vector<vector<T>> triangles_based_simplification(vector<vector<T>> const& vertices, 
+vector<vector<T>> triangles_based_simplification(vector<vector<T>> const& vertices,
     int N)
 ```
 
@@ -393,17 +409,20 @@ vector<vector<T>> triangles_based_simplification(vector<vector<T>> const& vertic
 La decisión de "qué nodo eliminar" debe basarse en el área del triangulo y en el tamaño del mayor de los ángulos del triángulo (triángulos "mas parecidos a una línea" deben eliminarse antes que triangulos "menos parecidos a una linea").
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 15
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
 ```cpp
 bool can_go_without_crossing_segments(
-    vector<vector<double>> const& segments, 
-    double xa, double ya, 
+    vector<vector<double>> const& segments,
+    double xa, double ya,
     double xb, double yb)
 ```
 
@@ -429,10 +448,13 @@ extremos del segmento.
 `segments[k][3]` será la coordenada y del extremo 1 del segmento k
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 16
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
@@ -464,10 +486,13 @@ extremos del segmento.
 `segments[k][3]` será la coordenada y del extremo 1 del segmento k
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 17
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
@@ -478,7 +503,7 @@ int number_of_regions(
 )
 ```
 
-Cada elemento de `points` consistirá de 2 valores de tipo double, que 
+Cada elemento de `points` consistirá de 2 valores de tipo double, que
 corresponderán a las coordenadas de de un punto. El punto `points[i]` es un punto
 por el que pasa la recta `i`.
 
@@ -515,10 +540,13 @@ points[i] + k * directions[i]
 `directions[k][1]` será la componente y de la dirección k
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 18
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
@@ -529,10 +557,13 @@ int maximum_possible_number_of_regions(int N)
 Devolver la respuesta **módulo 1000000007**
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 19
+
+> ‼️Hard Problem‼️
 
 El prototipo de la función debe ser:
 
@@ -562,14 +593,18 @@ de 4 enteros, que serán las coordenadas de vértices "inferior izquierdo" y "su
 `rectangles[k][3]` será la coordenada y del punto superior derecho del rectangulo k
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 20
 
-Este ejercicio se corregirá manualmente, por lo que no se establece un prototipo 
+> ‼️Hard Problem‼️
+
+Este ejercicio se corregirá manualmente, por lo que no se establece un prototipo
 para el mismo.
 
 > [!NOTE]
-> - [ ] Implementado 
+>
+> - [ ] Implementado
 > - [ ] Testeado con casos esquina
