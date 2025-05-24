@@ -19,13 +19,15 @@ double euclidean_distance(const vector<T> &p0, const vector<T> &p1) {
   return sqrt(pow(p1[0] - p0[0], 2) + pow(p1[1] - p0[1], 2));
 }
 
-template <typename T> void print_hull(const vector<vector<T>> &hull) {
+template <typename T>
+void print_hull(const vector<vector<T>> &hull) {
   for (const auto &point : hull) {
     cout << point[0] << " " << point[1] << endl;
   }
 }
 
-template <typename T> auto make_comparator(const vector<T> &base_point) {
+template <typename T>
+auto make_comparator(const vector<T> &base_point) {
   return [base_point](const vector<T> &a, const vector<T> &b) -> bool {
     T cross = cross_product(base_point, a, b);
     if (cross == 0) {
@@ -46,8 +48,7 @@ bool inside_quadrilateral(const vector<T> &p, const vector<T> &a,
   T cross3 = cross_product(c, d, p);
   T cross4 = cross_product(d, a, p);
 
-  return (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0) ||
-         (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0);
+  return (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0) || (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0);
 }
 
 template <typename T>
@@ -169,8 +170,7 @@ vector<vector<T>> interior_points_removal(vector<vector<T>> const &vertices) {
 
 // JARVIS
 template <typename T>
-vector<vector<T>> jarvis(vector<vector<T>> const &vertices,
-                         bool withInteriorPointsRemoval) {
+vector<vector<T>> jarvis(vector<vector<T>> const &vertices, bool withInteriorPointsRemoval) {
   int n = vertices.size();
   if (n < 3) {
     return vertices;
@@ -230,8 +230,7 @@ vector<vector<T>> jarvis(vector<vector<T>> const &vertices,
 
 // GRAHAM
 template <typename T>
-vector<vector<T>> graham(vector<vector<T>> const &vertices,
-                         bool withInteriorPointsRemoval) {
+vector<vector<T>> graham(vector<vector<T>> const &vertices, bool withInteriorPointsRemoval) {
   int n = vertices.size();
 
   if (n < 3) {

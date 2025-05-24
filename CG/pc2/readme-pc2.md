@@ -261,7 +261,7 @@ Simplemente adjunten una explicación o bien en .TXT o bien en .PDF
 
 > [!NOTE]
 >
-> - [ ] Escrito
+> - [x] Escrito
 
 ## PROBLEMA 10
 
@@ -277,8 +277,8 @@ correctitud **módulo 1000000007**.
 
 > [!NOTE]
 >
-> - [ ] Implementado
-> - [ ] Testeado con casos esquina
+> - [x] Implementado
+> - [x] Testeado con casos esquina
 
 ## PROBLEMA 11
 
@@ -392,7 +392,7 @@ coordenadas `x` e `y` del vértice.
 
 > [!NOTE]
 >
-> - [ ] Implementado
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 14
