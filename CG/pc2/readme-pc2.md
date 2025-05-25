@@ -213,7 +213,7 @@ extremos del segmento.
 
 > [!NOTE]
 >
-> - [ ] Implementado
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 8
@@ -252,7 +252,7 @@ coordenadas `x` e `y` del punto.
 
 > [!NOTE]
 >
-> - [ ] Implementado
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 9
@@ -359,7 +359,7 @@ representa las coordenadas `x` e `y` de un vértice.
 
 > [!NOTE]
 >
-> - [ ] Implementado
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 13
@@ -410,7 +410,7 @@ La decisión de "qué nodo eliminar" debe basarse en el área del triangulo y en
 
 > [!NOTE]
 >
-> - [ ] Implementado
+> - [x] Implementado
 > - [ ] Testeado con casos esquina
 
 ## PROBLEMA 15
