@@ -1,0 +1,27 @@
+semaphore mutex = 1;
+semaphore wrt = 1;
+int readcount = 0;
+
+Reader () { 
+  wait(mutex); 
+  readcount++; 
+  if (readcount == 1)  
+    wait(wrt); 
+  signal(mutex); 
+
+  // LEER DATOS 
+
+  wait(mutex);
+  readcount--; 
+  if (readcount == 0) 
+    signal(wrt); 
+  signal(mutex); 
+}
+
+Writer () { 
+  wait(wrt); 
+
+  // ESCRIBIR DATOS 
+
+  signal(wrt); 
+}
