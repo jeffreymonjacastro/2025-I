@@ -1,0 +1,835 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 0 0 400 400
+%%Creator: C++ EPS Generator
+%%Title: Marching Squares
+%%EndComments
+
+% Dibujar círculo continuo
+0 0 1 setrgbcolor
+1 setlinewidth
+newpath
+200 200 100 0 360 arc
+stroke
+
+% Dibujar líneas de marching squares
+1 0 0 setrgbcolor
+1 setlinewidth
+newpath
+200 98 moveto
+198 100 lineto
+stroke
+newpath
+200 98 moveto
+202 100 lineto
+stroke
+newpath
+172 102 moveto
+170 104 lineto
+stroke
+newpath
+172 102 moveto
+176 102 lineto
+stroke
+newpath
+176 102 moveto
+180 102 lineto
+stroke
+newpath
+180 102 moveto
+184 102 lineto
+stroke
+newpath
+184 102 moveto
+188 102 lineto
+stroke
+newpath
+188 102 moveto
+192 102 lineto
+stroke
+newpath
+192 102 moveto
+196 102 lineto
+stroke
+newpath
+196 102 moveto
+198 100 lineto
+stroke
+newpath
+202 100 moveto
+204 102 lineto
+stroke
+newpath
+204 102 moveto
+208 102 lineto
+stroke
+newpath
+208 102 moveto
+212 102 lineto
+stroke
+newpath
+212 102 moveto
+216 102 lineto
+stroke
+newpath
+216 102 moveto
+220 102 lineto
+stroke
+newpath
+220 102 moveto
+224 102 lineto
+stroke
+newpath
+224 102 moveto
+228 102 lineto
+stroke
+newpath
+228 102 moveto
+230 104 lineto
+stroke
+newpath
+164 106 moveto
+162 108 lineto
+stroke
+newpath
+164 106 moveto
+168 106 lineto
+stroke
+newpath
+168 106 moveto
+170 104 lineto
+stroke
+newpath
+230 104 moveto
+232 106 lineto
+stroke
+newpath
+232 106 moveto
+236 106 lineto
+stroke
+newpath
+236 106 moveto
+238 108 lineto
+stroke
+newpath
+156 110 moveto
+154 112 lineto
+stroke
+newpath
+156 110 moveto
+160 110 lineto
+stroke
+newpath
+160 110 moveto
+162 108 lineto
+stroke
+newpath
+238 108 moveto
+240 110 lineto
+stroke
+newpath
+240 110 moveto
+244 110 lineto
+stroke
+newpath
+244 110 moveto
+246 112 lineto
+stroke
+newpath
+148 114 moveto
+146 116 lineto
+stroke
+newpath
+148 114 moveto
+152 114 lineto
+stroke
+newpath
+152 114 moveto
+154 112 lineto
+stroke
+newpath
+246 112 moveto
+248 114 lineto
+stroke
+newpath
+248 114 moveto
+252 114 lineto
+stroke
+newpath
+252 114 moveto
+254 116 lineto
+stroke
+newpath
+140 118 moveto
+138 120 lineto
+stroke
+newpath
+140 118 moveto
+144 118 lineto
+stroke
+newpath
+144 118 moveto
+146 116 lineto
+stroke
+newpath
+254 116 moveto
+256 118 lineto
+stroke
+newpath
+256 118 moveto
+260 118 lineto
+stroke
+newpath
+260 118 moveto
+262 120 lineto
+stroke
+newpath
+136 122 moveto
+134 124 lineto
+stroke
+newpath
+136 122 moveto
+138 120 lineto
+stroke
+newpath
+262 120 moveto
+264 122 lineto
+stroke
+newpath
+264 122 moveto
+266 124 lineto
+stroke
+newpath
+132 126 moveto
+130 128 lineto
+stroke
+newpath
+132 126 moveto
+134 124 lineto
+stroke
+newpath
+266 124 moveto
+268 126 lineto
+stroke
+newpath
+268 126 moveto
+270 128 lineto
+stroke
+newpath
+128 130 moveto
+126 132 lineto
+stroke
+newpath
+128 130 moveto
+130 128 lineto
+stroke
+newpath
+270 128 moveto
+272 130 lineto
+stroke
+newpath
+272 130 moveto
+274 132 lineto
+stroke
+newpath
+124 134 moveto
+122 136 lineto
+stroke
+newpath
+124 134 moveto
+126 132 lineto
+stroke
+newpath
+274 132 moveto
+276 134 lineto
+stroke
+newpath
+276 134 moveto
+278 136 lineto
+stroke
+newpath
+120 138 moveto
+118 140 lineto
+stroke
+newpath
+120 138 moveto
+122 136 lineto
+stroke
+newpath
+278 136 moveto
+280 138 lineto
+stroke
+newpath
+280 138 moveto
+282 140 lineto
+stroke
+newpath
+118 140 moveto
+118 144 lineto
+stroke
+newpath
+282 140 moveto
+282 144 lineto
+stroke
+newpath
+116 146 moveto
+114 148 lineto
+stroke
+newpath
+116 146 moveto
+118 144 lineto
+stroke
+newpath
+282 144 moveto
+284 146 lineto
+stroke
+newpath
+284 146 moveto
+286 148 lineto
+stroke
+newpath
+114 148 moveto
+114 152 lineto
+stroke
+newpath
+286 148 moveto
+286 152 lineto
+stroke
+newpath
+112 154 moveto
+110 156 lineto
+stroke
+newpath
+112 154 moveto
+114 152 lineto
+stroke
+newpath
+286 152 moveto
+288 154 lineto
+stroke
+newpath
+288 154 moveto
+290 156 lineto
+stroke
+newpath
+110 156 moveto
+110 160 lineto
+stroke
+newpath
+290 156 moveto
+290 160 lineto
+stroke
+newpath
+108 162 moveto
+106 164 lineto
+stroke
+newpath
+108 162 moveto
+110 160 lineto
+stroke
+newpath
+290 160 moveto
+292 162 lineto
+stroke
+newpath
+292 162 moveto
+294 164 lineto
+stroke
+newpath
+106 164 moveto
+106 168 lineto
+stroke
+newpath
+294 164 moveto
+294 168 lineto
+stroke
+newpath
+104 170 moveto
+102 172 lineto
+stroke
+newpath
+104 170 moveto
+106 168 lineto
+stroke
+newpath
+294 168 moveto
+296 170 lineto
+stroke
+newpath
+296 170 moveto
+298 172 lineto
+stroke
+newpath
+102 172 moveto
+102 176 lineto
+stroke
+newpath
+298 172 moveto
+298 176 lineto
+stroke
+newpath
+102 176 moveto
+102 180 lineto
+stroke
+newpath
+298 176 moveto
+298 180 lineto
+stroke
+newpath
+102 180 moveto
+102 184 lineto
+stroke
+newpath
+298 180 moveto
+298 184 lineto
+stroke
+newpath
+102 184 moveto
+102 188 lineto
+stroke
+newpath
+298 184 moveto
+298 188 lineto
+stroke
+newpath
+102 188 moveto
+102 192 lineto
+stroke
+newpath
+298 188 moveto
+298 192 lineto
+stroke
+newpath
+102 192 moveto
+102 196 lineto
+stroke
+newpath
+298 192 moveto
+298 196 lineto
+stroke
+newpath
+100 198 moveto
+98 200 lineto
+stroke
+newpath
+100 198 moveto
+102 196 lineto
+stroke
+newpath
+298 196 moveto
+300 198 lineto
+stroke
+newpath
+300 198 moveto
+302 200 lineto
+stroke
+newpath
+98 200 moveto
+100 202 lineto
+stroke
+newpath
+100 202 moveto
+102 204 lineto
+stroke
+newpath
+300 202 moveto
+298 204 lineto
+stroke
+newpath
+300 202 moveto
+302 200 lineto
+stroke
+newpath
+102 204 moveto
+102 208 lineto
+stroke
+newpath
+298 204 moveto
+298 208 lineto
+stroke
+newpath
+102 208 moveto
+102 212 lineto
+stroke
+newpath
+298 208 moveto
+298 212 lineto
+stroke
+newpath
+102 212 moveto
+102 216 lineto
+stroke
+newpath
+298 212 moveto
+298 216 lineto
+stroke
+newpath
+102 216 moveto
+102 220 lineto
+stroke
+newpath
+298 216 moveto
+298 220 lineto
+stroke
+newpath
+102 220 moveto
+102 224 lineto
+stroke
+newpath
+298 220 moveto
+298 224 lineto
+stroke
+newpath
+102 224 moveto
+102 228 lineto
+stroke
+newpath
+298 224 moveto
+298 228 lineto
+stroke
+newpath
+102 228 moveto
+104 230 lineto
+stroke
+newpath
+104 230 moveto
+106 232 lineto
+stroke
+newpath
+296 230 moveto
+294 232 lineto
+stroke
+newpath
+296 230 moveto
+298 228 lineto
+stroke
+newpath
+106 232 moveto
+106 236 lineto
+stroke
+newpath
+294 232 moveto
+294 236 lineto
+stroke
+newpath
+106 236 moveto
+108 238 lineto
+stroke
+newpath
+108 238 moveto
+110 240 lineto
+stroke
+newpath
+292 238 moveto
+290 240 lineto
+stroke
+newpath
+292 238 moveto
+294 236 lineto
+stroke
+newpath
+110 240 moveto
+110 244 lineto
+stroke
+newpath
+290 240 moveto
+290 244 lineto
+stroke
+newpath
+110 244 moveto
+112 246 lineto
+stroke
+newpath
+112 246 moveto
+114 248 lineto
+stroke
+newpath
+288 246 moveto
+286 248 lineto
+stroke
+newpath
+288 246 moveto
+290 244 lineto
+stroke
+newpath
+114 248 moveto
+114 252 lineto
+stroke
+newpath
+286 248 moveto
+286 252 lineto
+stroke
+newpath
+114 252 moveto
+116 254 lineto
+stroke
+newpath
+116 254 moveto
+118 256 lineto
+stroke
+newpath
+284 254 moveto
+282 256 lineto
+stroke
+newpath
+284 254 moveto
+286 252 lineto
+stroke
+newpath
+118 256 moveto
+118 260 lineto
+stroke
+newpath
+282 256 moveto
+282 260 lineto
+stroke
+newpath
+118 260 moveto
+120 262 lineto
+stroke
+newpath
+120 262 moveto
+122 264 lineto
+stroke
+newpath
+280 262 moveto
+278 264 lineto
+stroke
+newpath
+280 262 moveto
+282 260 lineto
+stroke
+newpath
+122 264 moveto
+124 266 lineto
+stroke
+newpath
+124 266 moveto
+126 268 lineto
+stroke
+newpath
+276 266 moveto
+274 268 lineto
+stroke
+newpath
+276 266 moveto
+278 264 lineto
+stroke
+newpath
+126 268 moveto
+128 270 lineto
+stroke
+newpath
+128 270 moveto
+130 272 lineto
+stroke
+newpath
+272 270 moveto
+270 272 lineto
+stroke
+newpath
+272 270 moveto
+274 268 lineto
+stroke
+newpath
+130 272 moveto
+132 274 lineto
+stroke
+newpath
+132 274 moveto
+134 276 lineto
+stroke
+newpath
+268 274 moveto
+266 276 lineto
+stroke
+newpath
+268 274 moveto
+270 272 lineto
+stroke
+newpath
+134 276 moveto
+136 278 lineto
+stroke
+newpath
+136 278 moveto
+138 280 lineto
+stroke
+newpath
+264 278 moveto
+262 280 lineto
+stroke
+newpath
+264 278 moveto
+266 276 lineto
+stroke
+newpath
+138 280 moveto
+140 282 lineto
+stroke
+newpath
+140 282 moveto
+144 282 lineto
+stroke
+newpath
+144 282 moveto
+146 284 lineto
+stroke
+newpath
+256 282 moveto
+254 284 lineto
+stroke
+newpath
+256 282 moveto
+260 282 lineto
+stroke
+newpath
+260 282 moveto
+262 280 lineto
+stroke
+newpath
+146 284 moveto
+148 286 lineto
+stroke
+newpath
+148 286 moveto
+152 286 lineto
+stroke
+newpath
+152 286 moveto
+154 288 lineto
+stroke
+newpath
+248 286 moveto
+246 288 lineto
+stroke
+newpath
+248 286 moveto
+252 286 lineto
+stroke
+newpath
+252 286 moveto
+254 284 lineto
+stroke
+newpath
+154 288 moveto
+156 290 lineto
+stroke
+newpath
+156 290 moveto
+160 290 lineto
+stroke
+newpath
+160 290 moveto
+162 292 lineto
+stroke
+newpath
+240 290 moveto
+238 292 lineto
+stroke
+newpath
+240 290 moveto
+244 290 lineto
+stroke
+newpath
+244 290 moveto
+246 288 lineto
+stroke
+newpath
+162 292 moveto
+164 294 lineto
+stroke
+newpath
+164 294 moveto
+168 294 lineto
+stroke
+newpath
+168 294 moveto
+170 296 lineto
+stroke
+newpath
+232 294 moveto
+230 296 lineto
+stroke
+newpath
+232 294 moveto
+236 294 lineto
+stroke
+newpath
+236 294 moveto
+238 292 lineto
+stroke
+newpath
+170 296 moveto
+172 298 lineto
+stroke
+newpath
+172 298 moveto
+176 298 lineto
+stroke
+newpath
+176 298 moveto
+180 298 lineto
+stroke
+newpath
+180 298 moveto
+184 298 lineto
+stroke
+newpath
+184 298 moveto
+188 298 lineto
+stroke
+newpath
+188 298 moveto
+192 298 lineto
+stroke
+newpath
+192 298 moveto
+196 298 lineto
+stroke
+newpath
+196 298 moveto
+198 300 lineto
+stroke
+newpath
+204 298 moveto
+202 300 lineto
+stroke
+newpath
+204 298 moveto
+208 298 lineto
+stroke
+newpath
+208 298 moveto
+212 298 lineto
+stroke
+newpath
+212 298 moveto
+216 298 lineto
+stroke
+newpath
+216 298 moveto
+220 298 lineto
+stroke
+newpath
+220 298 moveto
+224 298 lineto
+stroke
+newpath
+224 298 moveto
+228 298 lineto
+stroke
+newpath
+228 298 moveto
+230 296 lineto
+stroke
+newpath
+198 300 moveto
+200 302 lineto
+stroke
+newpath
+200 302 moveto
+202 300 lineto
+stroke
+
+showpage
+%%EOF
