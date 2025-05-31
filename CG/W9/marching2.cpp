@@ -1,5 +1,7 @@
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -34,7 +36,7 @@ struct Rectangle {
   }
 };
 
-double f(pdd point) {
+double fun(pdd point) {
   double x_center = 200.0;
   double y_center = 200.0;
   double radius = 100.0;
@@ -43,8 +45,10 @@ double f(pdd point) {
 
 class EPSGenerator {
 private:
-  int width, height;
-  string filename;
+  int xmin, ymin, xmax, ymax;
+  double precison;
+  std::function<double(pdd)> f;
+  function<double(pdd)> f;
 
   pdd getPoint(int point_index, Rectangle &rect) {
     pdd base_points[4] = {
@@ -67,8 +71,8 @@ private:
   }
 
 public:
-  EPSGenerator(const string &fname, int w = 400, int h = 400)
-      : filename(fname), width(w), height(h) {}
+  EPSGenerator(function<double(pdd)> f, const string &fname, int xmin, int ymin, int xmax, int ymax, double precision)
+      : f(f), filename(fname), xmin(xmin), ymin(ymin), xmax(xmax), ymax(ymax), precision(precision) {}
 
   void generate_eps(double div_h, double div_w) {
     ofstream file(filename);
@@ -80,7 +84,7 @@ public:
     }
 
     file << "%!PS-Adobe-3.0 EPSF-3.0\n";
-    file << "%%BoundingBox: 0 0 " << width << " " << height << "\n";
+    file << "%%BoundingBox: " << xmin << " " << ymin << " " << xmax << " " << ymax << "\n";
     file << "%%Creator: C++ EPS Generator\n";
     file << "%%Title: Marching Squares\n";
     file << "%%EndComments\n\n";
@@ -105,8 +109,8 @@ public:
   }
 
   void draw_function(ofstream &file, double div_h, double div_w) {
-    double delta_width = width / div_w;
-    double delta_height = height / div_h;
+    double delta_width = (xmax - xmin) / div_w;
+    double delta_height = (ymax - ymin) / div_h;
 
     for (int i = 0; i < div_h; i++) {
       for (int j = 0; j < div_w; j++) {
@@ -172,16 +176,16 @@ public:
         }
       }
     }
-    // Interpolación para mejorar
   }
 };
 
-int main() {
-  EPSGenerator generator("Marching_Squares3.eps", 400, 400);
-
+void draw_curve(function<double(pdd)> f, const string &filename, int xmin, int ymin, int xmax, int ymax, double precision) {
+  EPSGenerator generator(f, filename, xmin, ymin, xmax, ymax, precision);
   generator.generate_eps(100, 100);
+}
 
-  cout << "\nListo! Puedes abrir el archivo con un visor PostScript" << endl;
+int main() {
+  draw_curve(f, "Marching_Squares3.eps", 0, 0, 400, 400, 0.1);
 
   return 0;
 }
