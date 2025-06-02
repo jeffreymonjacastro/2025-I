@@ -13,7 +13,7 @@ using namespace std;
 
 const int mod = 1e9 + 7;
 
-void dijkstra(int src, vector<vector<pll>> &adj, vector<ll> &dist, vector<bool> &visited, vector<ll> &nways) {
+void dijkstra(int src, vector<vector<pll>> &adj, vector<ll> &dist, vector<bool> &visited, vector<ll> &parent) {
   priority_queue<pll, vector<pll>, greater<pll>> pq;
   dist[src] = 0;
   pq.push({0, src});
@@ -31,22 +31,28 @@ void dijkstra(int src, vector<vector<pll>> &adj, vector<ll> &dist, vector<bool> 
       continue;
 
     for (auto &[v, w] : adj[u]) {
-      if (d + w == dist[v]) {
-        nways[v] = nways[v] + 1;
-      } else if (d + w < dist[v]) {
-        nways[v] = 1;
+      if (d + w < dist[v]) {
         dist[v] = d + w;
+        parent[v] = u;
         pq.push({dist[v], v});
       }
     }
   }
 }
 
+void print_path(int u, vector<ll> &parent) {
+  if (u == -1) {
+    return;
+  }
+  print_path(parent[u], parent);
+  cout << u << " ";
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
 
-  vector<vector<pll>> adj(n);
+  vector<vector<pll>> adj(n + 1);
 
   for (int i = 0; i < m; i++) {
     int u, v, w;
@@ -55,15 +61,18 @@ void solve() {
     adj[v].push_back({u, w});
   }
 
-  vector<ll> dist(n, LLONG_MAX);
-  vector<bool> visited(n, false);
-  vector<ll> nways(n, -1);
+  vector<ll> dist(n + 1, LLONG_MAX);
+  vector<bool> visited(n + 1, false);
+  vector<ll> parent(n + 1, -1);
 
-  dijkstra(0, adj, dist, visited, nways);
+  dijkstra(1, adj, dist, visited, parent);
 
-  for (int i = 0; i < n; i++) {
-    cout << "Dist from 0 to " << i << ": " << dist[i] << ", Number of ways: " << nways[i] << endl;
+  if (dist[n] == LLONG_MAX) {
+    cout << "-1";
+    return;
   }
+
+  print_path(n, parent);
 }
 
 int main() {

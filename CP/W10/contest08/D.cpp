@@ -1,110 +1,77 @@
 #include <bits/stdc++.h>
+
 using namespace std;
-
-template <typename A, typename B> ostream &operator<<(ostream &os, const pair<A, B> &p) {
-  return os << '(' << p.first << ", " << p.second << ')';
-}
-template <typename T_container, typename T = typename enable_if<
-                                    !is_same<T_container, string>::value,
-                                    typename T_container::value_type>::type>
-ostream &operator<<(ostream &os, const T_container &v) {
-  os << '{';
-  string sep;
-  for (const T &x : v)
-    os << sep << x, sep = ", ";
-  return os << '}';
-}
-void dbg_out() { cerr << endl; }
-template <typename Head, typename... Tail> void dbg_out(Head H, Tail... T) {
-  cerr << ' ' << H;
-  dbg_out(T...);
-}
-#ifdef LOCAL
-#define dbg(...) cerr << "(" << #__VA_ARGS__ << "):", dbg_out(__VA_ARGS__)
-#else
-#define dbg(...)
-#endif
-
-#define ar array
+#define cpu()                  \
+  ios::sync_with_stdio(false); \
+  cin.tie(nullptr);
 #define ll long long
-#define ld long double
-#define sza(x) ((int)x.size())
-#define all(a) (a).begin(), (a).end()
+#define lld long double
+#define pii pair<int, int>
+#define pll pair<ll, ll>
+#define f first
+#define s second
 
-const int MAX_N = 1e5 + 5;
-const ll MOD = 10000007;
-const ll INF = 1e9;
-const ld EPS = 1e-9;
-
-auto binpow = [](ll a, ll b, ll m) {
-  ll res = 1;
-  while (b > 0) {
-    if (b & 1)
-      res = res * a;
-    a = a * a;
-    b >>= 1;
-  }
-  return res;
-};
+const int mod = 1e9 + 7;
 
 void solve() {
-    int n;
-    cin >> n;
-    
-    vector<vector<ll>> mat(n, vector<ll>(n));
+  int n;
+  cin >> n;
+  vector<vector<int>> dist(n, vector<int>(n));
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      cin >> dist[i][j];
+    }
+  }
+
+  vector<int> vertex(n);
+
+  for (int i = 0; i < n; i++) {
+    cin >> vertex[i];
+    vertex[i]--;
+  }
+  reverse(vertex.begin(), vertex.end());
+
+  vector<bool> active(n, false);
+
+  function<ll()> sumar = [&]() {
+    ll suma = 0;
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cin >> mat[i][j];
+      for (int j = 0; j < n; j++) {
+        if (active[i] && active[j] && i != j) {
+          suma += dist[i][j];
         }
+      }
     }
-    
-    vector<int> orden(n);
+    return suma;
+  };
+
+  vector<ll> res;
+
+  for (int k : vertex) {
+    active[k] = true;
     for (int i = 0; i < n; i++) {
-        cin >> orden[i];
-        orden[i]--;
+      for (int j = 0; j < n; j++) {
+        dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+      }
     }
-    
-    vector<bool> usado(n, false);
-    vector<ll> respuestas;
-    
-    // procesar en orden inverso
-    for (int paso = n - 1; paso >= 0; paso--) {
-        int k = orden[paso];
-        usado[k] = true;
-        
-        // actualizar floyd warshall con el nuevo vertice k
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                mat[i][j] = min(mat[i][j], mat[i][k] + mat[k][j]);
-            }
-        }
-        
-        // calcular suma de caminos entre vertices activos
-        ll suma = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (usado[i] && usado[j]) {
-                    suma += mat[i][j];
-                }
-            }
-        }
-        
-        respuestas.push_back(suma);
-    }
-    
-    // imprimir en orden correcto
-    reverse(all(respuestas));
-    for (int i = 0; i < n; i++) {
-        cout << respuestas[i];
-        if (i < n - 1) cout << " ";
-    }
-    cout << "\n";
+
+    res.push_back(sumar());
+  }
+
+  reverse(res.begin(), res.end());
+
+  for (ll x : res) {
+    cout << x << " ";
+  }
 }
 
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    
+  cpu();
+  int t;
+  t = 1;
+  // cin >> t;
+  while (t--)
     solve();
+  return 0;
 }

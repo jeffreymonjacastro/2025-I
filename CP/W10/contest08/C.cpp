@@ -13,75 +13,91 @@ using namespace std;
 
 const int mod = 1e9 + 7;
 
+void floydWarshall(vector<vector<int>> &dist) {
+  int n = dist.size();
+  for (int k = 0; k < n; k++) {
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX) {
+          dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+        }
+      }
+    }
+  }
+}
+
 void solve() {
   string s, t;
   cin >> s >> t;
 
-  cout << s << t;
+  if (s.size() != t.size()) {
+    cout << -1 << endl;
+    return;
+  }
 
   int n;
   cin >> n;
 
-  vector<vector<pll>> adj(26);
+  vector<vector<int>> dist(26, vector<int>(26, INT_MAX));
 
   char a, b;
   int w;
 
   for (int i = 0; i < n; i++) {
     cin >> a >> b >> w;
-    adj[a - 'a'].push_back({b - 'a', w});
+    dist[a - 'a'][b - 'a'] = min(dist[a - 'a'][b - 'a'], w);
   }
-
-  vector<vector<ll>> dist(26, vector<ll>(26, LLONG_MAX));
 
   for (int i = 0; i < 26; i++) {
     dist[i][i] = 0;
-    for (auto [v, w] : adj[i]) {
-      dist[i][v] = min(dist[i][v], w);
-    }
   }
 
-  for (int k = 0; k < 26; k++) {
-    for (int i = 0; i < 26; i++) {
-      for (int j = 0; j < 26; j++) {
-        if (dist[i][k] != LLONG_MAX && dist[k][j] != LLONG_MAX) {
-          dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+  floydWarshall(dist);
+
+  ll total_cost = 0;
+  string res;
+
+  for (int i = 0; i < s.size(); i++) {
+    if (s[i] == t[i]) {
+      res += s[i];
+      continue;
+    }
+
+    int id_s = s[i] - 'a';
+    int id_t = t[i] - 'a';
+
+    int case1 = dist[id_s][id_t];
+    int case2 = dist[id_t][id_s];
+    int case3 = INT_MAX;
+    char new_char;
+
+    for (int j = 0; j < 26; j++) {
+      if (dist[id_s][j] != INT_MAX && dist[id_t][j] != INT_MAX) {
+        if (case3 > dist[id_s][j] + dist[id_t][j]) {
+          case3 = dist[id_s][j] + dist[id_t][j];
+          new_char = 'a' + j;
         }
       }
     }
-  }
 
-  ll ans = 0;
-  string res = s;
-
-  for (int i = 0; i < s.size(); i++) {
-    if (s[i] == t[i])
-      continue;
-
-    int a = s[i] - 'a';
-    int b = t[i] - 'a';
-
-    ll min_cost = LLONG_MAX;
-    char best_char = 'a';
-
-    for (int j = 0; j < 26; j++) {
-      ll cost = dist[a][j] + dist[b][j];
-      if (cost < min_cost) {
-        min_cost = cost;
-        best_char = 'a' + j;
-      }
-    }
-
-    if (min_cost == LLONG_MAX) {
+    if (case1 == INT_MAX && case2 == INT_MAX && case3 == INT_MAX) {
       cout << -1 << endl;
       return;
     }
 
-    ans += min_cost;
-    res[i] = best_char;
+    if (case1 <= case2 && case1 <= case3) {
+      total_cost += case1;
+      res += t[i];
+    } else if (case2 <= case1 && case2 <= case3) {
+      total_cost += case2;
+      res += s[i];
+    } else {
+      total_cost += case3;
+      res += new_char;
+    }
   }
 
-  cout << ans << endl;
+  cout << total_cost << endl;
   cout << res << endl;
 }
 

@@ -4,20 +4,21 @@
 #include "Point.h"
 
 struct MBB {
-  Point minCorner, maxCorner;
+    Point minCorner, maxCorner;
 
-  MBB()
+    MBB() 
       : minCorner(), maxCorner() {}
-  explicit MBB(const Point &p)
+    explicit MBB(const Point& p) 
       : minCorner(p), maxCorner(p) {}
-  MBB(const Point &min, const Point &max)
+    MBB(const Point& min, const Point& max)
       : minCorner(min), maxCorner(max) {}
-  MBB(const MBB &other)
-      : minCorner(other.minCorner), maxCorner(other.maxCorner) {}
+    MBB(const MBB& other)
+        : minCorner(other.minCorner), maxCorner(other.maxCorner) {}
 
-  void expandToInclude(const MBB &other);
-  void expandToInclude(const Point &p);
-  static float maxDist(const Point &p, const MBB &box);
+    void expandToInclude(const MBB& other);
+    void expandToInclude(const Point& p);
+    static float maxDist(const Point& p, const MBB& box);
+
 };
 
 #endif // MBB_H

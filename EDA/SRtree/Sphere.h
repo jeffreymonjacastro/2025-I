@@ -4,17 +4,17 @@
 #include "Point.h"
 
 struct Sphere {
-  Point center;
-  float radius;
+    Point center;
+    float radius;
 
-  Sphere()
+    Sphere() 
       : center(), radius(0.0f) {}
 
-  Sphere(const Point &c, float r)
+    Sphere(const Point& c, float r)
       : center(c), radius(r) {}
 
-  void expandToInclude(const Sphere &other);
-  void expandToInclude(const Point &p);
+    void expandToInclude(const Sphere& other);
+    void expandToInclude(const Point& p);
 };
 
 #endif // SPHERE_H
