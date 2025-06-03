@@ -5,6 +5,10 @@ using namespace std;
   cin.tie(nullptr);
 #define ll long long
 #define lld long double
+#define pll pair<ll, ll>
+#define f first
+#define s second
+
 const int mod = 998244353;
 
 ll binPow(ll a, ll b) {
@@ -33,15 +37,29 @@ void solve() {
     cin >> q[i];
   }
 
-  vector<ll> dp(n, 0);
+  vector<ll> r(n, 0);
+  r[0] = (binPow(2, p[0]) + binPow(2, q[0])) % mod;
 
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j <= i; j++) {
-        }
+  pll maxp = {0, p[0]};
+  pll maxq = {0, q[0]};
+
+  for (int i = 1; i < n; i++) {
+    if (p[i] > maxp.s) {
+      maxp = {i, p[i]};
+    }
+
+    if (q[i] > maxq.s) {
+      maxq = {i, q[i]};
+    }
+
+    ll temp = (binPow(2, maxp.s) + binPow(2, q[i - maxp.f])) % mod;
+    ll temq = (binPow(2, maxq.s) + binPow(2, p[i - maxq.f])) % mod;
+
+    r[i] = max(temp, temq);
   }
 
   for (int i = 0; i < n; i++) {
-    cout << dp[i] << " ";
+    cout << r[i] << " ";
   }
   cout << "\n";
 }

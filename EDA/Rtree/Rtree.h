@@ -430,7 +430,7 @@ public:
     return nullptr;
   };
 
-  void balancePoints(RNode* other, uint minEntries) {
+  void balancePoints(RNode *other, uint minEntries) {
     while (this->points.size() < minEntries && !other->points.empty()) {
       Point p = other->points.back();
       this->points.push_back(p);
@@ -438,7 +438,7 @@ public:
     }
   }
 
-  void balanceNodes(RNode* other, uint minEntries) {
+  void balanceNodes(RNode *other, uint minEntries) {
     while (this->children.size() < minEntries && !other->children.empty()) {
       RNode *child = other->children.back();
       this->children.push_back(child);
@@ -446,7 +446,7 @@ public:
     }
   }
 
-  void search(const MBB &query, std::vector<Point>& res) const {
+  void search(const MBB &query, std::vector<Point> &res) const {
     const float tol = 1e-6f;
 
     if (this->isLeaf) {
