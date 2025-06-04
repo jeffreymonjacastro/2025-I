@@ -14,14 +14,15 @@
 
 int main() {
   Point p0({0.0f, 0.0f});
-  Point p1({1.0f, 1.0f});
-  Point p2({0.0f, 2.0f});
+  Point p1({0.0f, 1.0f});
+  Point p2({0.0f, 4.0f});
+  Point p3({0.0f, 5.0f});
 
   SRTree tree(3);
   tree.insert(p0);
-  std::cout << "Root: " << *tree.getRoot() << std::endl;
   tree.insert(p1);
-  std::cout << "Root: " << *tree.getRoot() << std::endl;
   tree.insert(p2);
-  std::cout << "Root: " << *tree.getRoot() << std::endl;
+  tree.insert(p3);
+  std::cout << "Root:\n"
+            << *tree.getRoot() << std::endl;
 }

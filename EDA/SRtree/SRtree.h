@@ -40,7 +40,7 @@ public:
   void setIsLeaf(bool isLeaf) { _isLeaf = isLeaf; }
 
   void expandSphere(const Point &point);
-  void expandSphere(const Sphere &sphere);
+  void expandSphere(const SRNode &child);
 
   void addPoint(Point *point);
   void addChild(SRNode *child);
@@ -90,8 +90,8 @@ void SRNode::expandSphere(const Point &point) {
 
   // Calcular el nuevo radio
   // r = min(ds, dr)
-  // ds = max(|x - ck| + rk)
-  // dr = MAXDIST(x, Rk)
+  // ds = max(|x - Ck|)
+  // dr = MAXDIST(x, CR)
 
   float r = 0.0f;
   float ds = 0.0f;
@@ -100,21 +100,26 @@ void SRNode::expandSphere(const Point &point) {
   for (auto &p : this->_points) {
     float dist = Point::distance(center, *p);
     ds = std::max(ds, dist);
+    dr = std::max(dr, MBB::maxDist(*p, this->_boundingBox));
   }
 
-  dr = MBB::maxDist(point, this->_boundingBox);
   r = std::min(ds, dr);
 
   this->_boundingSphere = Sphere(center, r);
 }
 
-void SRNode::expandSphere(const Sphere &sphere) {
-  // Hallar el centro como el promedio ponderado de las esferas
+void SRNode::expandSphere(const SRNode &child) {
+  // Hallar el centro como el promedio ponderado de los centros de los hijos
   Point center;
   for (auto &c : this->_children) {
-    center += c->getBoundingSphere().center * c->getNumChildren();
+    center += c->getBoundingSphere().center * c->getNumPoints();
   }
-  center /= this->getNumChildren();
+  center /= this->getNumPoints();
+
+  // Calcular el nuevo radio
+  // r = min(ds, dr)
+  // ds = max(|x - Ck| + Rk)
+  // dr = MAXDIST(x, CR)
 
   float r = 0.0f;
   float ds = 0.0f;
@@ -125,31 +130,42 @@ void SRNode::expandSphere(const Sphere &sphere) {
     float childRadius = c->getBoundingSphere().radius;
     float dist = Point::distance(center, childCenter);
     ds = std::max(ds, dist + childRadius);
+    dr = std::max(dr, MBB::maxDist(childCenter, this->_boundingBox));
   }
 
-  dr = MBB::maxDist(sphere.center, this->_boundingBox);
   r = std::min(ds, dr);
 
   this->_boundingSphere = Sphere(center, r);
 }
 
 void SRNode::addPoint(Point *point) {
-  _points.push_back(point);
+  this->_points.push_back(point);
 
-  if (_points.size() == 1) {
-    _boundingBox = MBB(*point);
-    _boundingSphere = Sphere(*point, 0.0f);
+  if (this->getNumPoints() == 1) {
+    this->_boundingBox = MBB(*point);
+    this->_boundingSphere = Sphere(*point, 0.0f);
   } else {
-    _boundingBox.expandToInclude(*point);
+    this->_boundingBox.expandToInclude(*point);
     this->expandSphere(*point);
   }
 }
 
 void SRNode::addChild(SRNode *child) {
-  _children.push_back(child);
+  // Añadir los puntos de este nodo a la esfera
+  for (auto &p : child->getPoints()) {
+    this->addPoint(p);
+  }
+
+  this->_children.push_back(child);
   child->setParent(this);
-  _boundingBox.expandToInclude(child->getBoundingBox());
-  this->expandSphere(child->getBoundingSphere());
+
+  if (this->_children.size() == 1) {
+    this->_boundingBox = child->getBoundingBox();
+    this->_boundingSphere = child->getBoundingSphere();
+  } else {
+    this->_boundingBox.expandToInclude(child->getBoundingBox());
+    this->expandSphere(*child);
+  }
 }
 
 SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
@@ -172,6 +188,8 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
     }
     variance /= n;
 
+    // std::cout << "Dimension " << i << ": media = " << mean << ", varianza = " << variance << "\n";
+
     if (variance > maxVariance) {
       maxVariance = variance;
       splitDim = i;
@@ -187,21 +205,24 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
 
   // Evaluar divisiones
   float minCost = std::numeric_limits<float>::max();
-  std::size_t idx;
 
-  for (std::size_t i = MIN_PARTITION * n; i <= MAX_PARTITION * n; ++i) {
-    Sphere leftSphere, rightSphere;
+  std::size_t minIdx = floor(MIN_PARTITION * n);
+  std::size_t maxIdx = ceil(MAX_PARTITION * n);
+  std::size_t idx = minIdx;
+
+  for (std::size_t i = minIdx; i <= maxIdx; ++i) {
+    SRNode left, right;
     float leftCost, rightCost;
 
     for (std::size_t j = 0; j < i; ++j) {
-      leftSphere.expandToInclude(*sortedPoints[j]);
-      leftCost = pow(leftSphere.radius, DIM);
+      left.addPoint(sortedPoints[j]);
     }
+    leftCost = pow(left.getBoundingSphere().radius, DIM);
 
     for (std::size_t j = i; j < n; ++j) {
-      rightSphere.expandToInclude(*sortedPoints[j]);
-      rightCost = pow(rightSphere.radius, DIM);
+      right.addPoint(sortedPoints[j]);
     }
+    rightCost = pow(right.getBoundingSphere().radius, DIM);
 
     if (leftCost + rightCost < minCost) {
       minCost = leftCost + rightCost;
@@ -209,25 +230,23 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
     }
   }
 
-  // Crear los nuevos nodos
-  SRNode *leftNode = new SRNode();
-  SRNode *rightNode = new SRNode();
+  // Crear el nuevo nodo
+  SRNode *newNode = new SRNode();
 
-  leftNode->setIsLeaf(true);
-  rightNode->setIsLeaf(true);
-  leftNode->setParent(this->getParent());
-  rightNode->setParent(this->getParent());
+  newNode->setParent(this->getParent());
+  newNode->setIsLeaf(true);
+
+  this->_points.clear();
 
   for (std::size_t i = 0; i < idx; ++i) {
-    leftNode->addPoint(sortedPoints[i]);
+    this->addPoint(sortedPoints[i]);
   }
 
   for (std::size_t i = idx; i < sortedPoints.size(); ++i) {
-    rightNode->addPoint(sortedPoints[i]);
+    newNode->addPoint(sortedPoints[i]);
   }
 
-  *this = *leftNode;
-  return rightNode;
+  return newNode;
 }
 
 SRNode *SRNode::chooseSubtree(const Point &point) {
@@ -244,8 +263,8 @@ SRNode *SRNode::insert(const Point &_data, std::size_t maxEntries) {
 
     // Si el nodo hoja está lleno, hacer un split
     this->addPoint(new Point(_data));
-
     SRNode *newNode = splitLeaf(maxEntries);
+
     return newNode;
   }
 
@@ -267,13 +286,24 @@ SRNode &SRNode::operator=(const SRNode &other) {
 }
 
 std::ostream &operator<<(std::ostream &os, const SRNode &node) {
-  os << "SRNode:\n- Bounding Box: " << node._boundingBox
-     << "- Bounding Sphere: " << node._boundingSphere
-     << "- Points: ";
+  static int indentLevel = 0;
+  std::string indent(indentLevel * 2, ' ');
+
+  os << indent << "- Bounding Box: " << node._boundingBox;
+  os << indent << "- Bounding Sphere: " << node._boundingSphere;
+  os << indent << "- Points: ";
   for (const auto &point : node._points) {
     os << *point << "; ";
   }
-  os << "\n- Children: " << node._children.size();
+  os << "\n";
+
+  os << indent << "- Children:\n";
+  ++indentLevel;
+  for (const auto &child : node._children) {
+    os << *child;
+  }
+  --indentLevel;
+
   return os;
 }
 
@@ -295,8 +325,6 @@ void SRTree::insert(const Point &point) {
     SRNode *newRoot = new SRNode();
     newRoot->setIsLeaf(false);
     newRoot->setParent(nullptr);
-    newRoot->setBoundingBox(_root->getBoundingBox());
-    newRoot->setBoundingSphere(_root->getBoundingSphere());
     newRoot->addChild(_root);
     newRoot->addChild(child);
     _root = newRoot;

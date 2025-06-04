@@ -52,10 +52,17 @@ void solve() {
       maxq = {i, q[i]};
     }
 
-    ll temp = (binPow(2, maxp.s) + binPow(2, q[i - maxp.f])) % mod;
-    ll temq = (binPow(2, maxq.s) + binPow(2, p[i - maxq.f])) % mod;
-
-    r[i] = max(temp, temq);
+    if (maxp.s > maxq.s) {
+      r[i] = (binPow(2, maxp.s) + binPow(2, q[i - maxp.f])) % mod;
+    } else if (maxp.s < maxq.s) {
+      r[i] = (binPow(2, maxq.s) + binPow(2, p[i - maxq.f])) % mod;
+    } else {
+      if (q[i - maxp.f] > p[i - maxq.f]) {
+        r[i] = (binPow(2, maxp.s) + binPow(2, q[i - maxp.f])) % mod;
+      } else {
+        r[i] = (binPow(2, maxq.s) + binPow(2, p[i - maxq.f])) % mod;
+      }
+    }
   }
 
   for (int i = 0; i < n; i++) {
