@@ -6,10 +6,11 @@
 struct Sphere {
   Point center;
   float radius;
+  float minradius;
 
-  Sphere() : center(), radius(0.0f) {}
+  Sphere() : center(), radius(0.0f), minradius(0.0f) {}
 
-  Sphere(const Point &c, float r) : center(c), radius(r) {}
+  Sphere(const Point &c, float r, float minr) : center(c), radius(r), minradius(minr) {}
 
   void expandToInclude(const Sphere &other);
   void expandToInclude(const Point &p);
@@ -61,7 +62,7 @@ Sphere &Sphere::operator=(const Sphere &other) {
 }
 
 std::ostream &operator<<(std::ostream &os, const Sphere &sphere) {
-  os << "Sphere: (c = " << sphere.center << ", r = " << sphere.radius << ")\n";
+  os << "(c = " << sphere.center << ", r = " << sphere.radius << ")\n";
   return os;
 }
 

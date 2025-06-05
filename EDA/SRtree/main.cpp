@@ -87,7 +87,7 @@ void collectPointsFromSubtree(const SRNode *node, std::vector<Point *> &outPoint
 bool testBoundingVolumes(const SRTree &tree) {
   const SRNode *root = tree.getRoot();
   if (!root) {
-    std::cerr << "[ERROR] Test 1 (Bounding Volumes): El árbol está vacío.\n";
+    std::cerr << "[ERROR] Test 1 (Bounding Volumes): El arbol esta vacio.\n";
     return false;
   }
 
@@ -102,6 +102,17 @@ bool testBoundingVolumes(const SRTree &tree) {
     const MBB &box = node->getBoundingBox();
     for (Point *pptr : ptsUnder) {
       if (!pointInBox(*pptr, box)) {
+        // std::cout << "ERROR Bounding box";
+        // for (std::size_t i = 0; i < DIM; ++i) {
+        //   if ((*pptr)[i] < box.minCorner[i] - FLOAT_TOL) {
+        //     std::cout << " Punto " << (*pptr)[i] << " esta por debajo del limite en dimension " << i
+        //               << " (min=" << box.minCorner[i] << ", max=" << box.maxCorner[i] << ")\n";
+        //   } else if ((*pptr)[i] > box.maxCorner[i] + FLOAT_TOL) {
+        //     std::cout << " Punto " << (*pptr)[i] << " esta por encima del limite en dimension " << i
+        //               << " (min=" << box.minCorner[i] << ", max=" << box.maxCorner[i] << ")\n";
+        //   }
+        // }
+
         allOK = false;
         break;
       }
@@ -111,6 +122,9 @@ bool testBoundingVolumes(const SRTree &tree) {
     const Sphere &sph = node->getBoundingSphere();
     for (Point *pptr : ptsUnder) {
       if (!pointInSphere(*pptr, sph)) {
+        // std::cout << "ERROR Bounding sphere: Punto " << *pptr << " no esta en esfera "
+        //           << "centro=" << sph.center << " radio=" << sph.radius << std::endl;
+        // std::cout << "Distancia del punto al centro: " << Point::distance(*pptr, sph.center) << std::endl;
         allOK = false;
         break;
       }
@@ -127,9 +141,9 @@ bool testBoundingVolumes(const SRTree &tree) {
   recurse(root, "root");
 
   if (allOK) {
-    std::cout << "[OK] Test 1 (Bounding Volumes) pasó correctamente.\n";
+    std::cout << "[OK] Test 1 (Bounding Volumes) paso correctamente.\n";
   } else {
-    std::cout << "[ERROR] Test 1 (Bounding Volumes) falló.\n";
+    std::cout << "[ERROR] Test 1 (Bounding Volumes) fallo.\n";
   }
   return allOK;
 }
@@ -151,9 +165,9 @@ bool testSearch(const SRTree &tree, const std::vector<Point> &allPoints) {
   }
 
   if (allOK) {
-    std::cout << "[OK] Test 2 (Search) pasó correctamente.\n";
+    std::cout << "[OK] Test 2 (Search) paso correctamente.\n";
   } else {
-    std::cout << "[ERROR] Test 2 (Search) falló :'c.\n";
+    std::cout << "[ERROR] Test 2 (Search) fallo :'c.\n";
   }
   return allOK;
 }
@@ -203,7 +217,7 @@ bool testRangeQueryBox(const SRTree &tree, const std::vector<Point> &allPoints) 
   }
 
   if (failures == 0) {
-    std::cout << "[OK] Test 3 (rangeQuery MBB) pasó todos los subtests ("
+    std::cout << "[OK] Test 3 (rangeQuery MBB) paso todos los subtests ("
               << NUM_TESTS << "/" << NUM_TESTS << ").\n";
   } else {
     std::cout << "[ERROR] Test 3 (rangeQuery MBB): fallaron "
@@ -228,7 +242,7 @@ bool testRangeQuerySphere(const SRTree &tree, const std::vector<Point> &allPoint
   for (int t = 0; t < NUM_TESTS; ++t) {
     const Point &centro = allPoints[distIdx(gen)];
     float radius = distRad(gen);
-    Sphere sph(centro, radius);
+    Sphere sph(centro, radius, radius);
 
     // SR-Tree
     std::vector<Point *> ptrs = tree.rangeQuery(sph);
@@ -253,7 +267,7 @@ bool testRangeQuerySphere(const SRTree &tree, const std::vector<Point> &allPoint
   }
 
   if (failures == 0) {
-    std::cout << "[OK] Test 4 (rangeQuery Sphere) pasó todos los subtests ("
+    std::cout << "[OK] Test 4 (rangeQuery Sphere) paso todos los subtests ("
               << NUM_TESTS << "/" << NUM_TESTS << ").\n";
   } else {
     std::cout << "[ERROR] Test 4 (rangeQuery Sphere): fallaron "
@@ -296,6 +310,13 @@ bool testKNearestNeighbors(const SRTree &tree, const std::vector<Point> &allPoin
       bruteDists.push_back(distList[i].first);
     }
 
+    // std::cout << "k = " << k << "\n";
+    // std::cout << "Brute distances: ";
+    // for (float d : bruteDists) {
+    //   std::cout << d << " ";
+    // }
+    // std::cout << "\n";
+
     // SR-Tree
     std::vector<float> treeDists;
     treeDists.reserve(treeNbrs.size());
@@ -304,13 +325,19 @@ bool testKNearestNeighbors(const SRTree &tree, const std::vector<Point> &allPoin
     }
     std::sort(treeDists.begin(), treeDists.end());
 
+    // std::cout << "Tree distances: ";
+    // for (float d : treeDists) {
+    //   std::cout << d << " ";
+    // }
+    // std::cout << "\n";
+
     if (!sameDistanceList(treeDists, bruteDists)) {
       failures++;
     }
   }
 
   if (failures == 0) {
-    std::cout << "[OK] Test 5 (k-NearestNeighbors) pasó todos los subtests ("
+    std::cout << "[OK] Test 5 (k-NearestNeighbors) paso todos los subtests ("
               << NUM_TESTS << "/" << NUM_TESTS << ").\n";
   } else {
     std::cout << "[ERROR] Test 5 (k-NearestNeighbors): fallaron "
@@ -320,46 +347,51 @@ bool testKNearestNeighbors(const SRTree &tree, const std::vector<Point> &allPoin
   return allOK;
 }
 
-// int main() {
-//     bool overallOK = true;
+int main() {
+  bool overallOK = true;
 
-//     constexpr std::size_t NUM_POINTS  = 1000;
-//     constexpr std::size_t MAX_ENTRIES =   18;
+  constexpr std::size_t NUM_POINTS = 1000;
+  constexpr std::size_t MAX_ENTRIES = 18;
 
-//     std::vector<Point> allPoints;
-//     allPoints.reserve(NUM_POINTS);
-//     std::mt19937 genPts(55555);
+  std::vector<Point> allPoints;
+  allPoints.reserve(NUM_POINTS);
+  std::mt19937 genPts(55555);
 
-//     for (std::size_t i = 0; i < NUM_POINTS; ++i) {
-//         allPoints.push_back(Point::random(0.0f, 1.0f));
-//     }
+  for (std::size_t i = 0; i < NUM_POINTS; ++i) {
+    allPoints.push_back(Point::random(0.0f, 1.0f));
+  }
 
-//     SRTree tree(MAX_ENTRIES);
-//     for (const Point& p : allPoints) {
-//         tree.insert(p);
-//     }
+  SRTree tree(MAX_ENTRIES);
+  for (const Point &p : allPoints) {
+    tree.insert(p);
+  }
 
-//     // Ejecutar los tests
-//     std::cout << "=== TEST 1: Bounding Volumes ===\n";
-//     if (!testBoundingVolumes(tree)) overallOK = false;
+  // Ejecutar los tests
+  std::cout << "=== TEST 1: Bounding Volumes ===\n";
+  if (!testBoundingVolumes(tree))
+    overallOK = false;
 
-//     std::cout << "\n=== TEST 2: Search ===\n";
-//     if (!testSearch(tree, allPoints)) overallOK = false;
+  std::cout << "\n=== TEST 2: Search ===\n";
+  if (!testSearch(tree, allPoints))
+    overallOK = false;
 
-//     std::cout << "\n=== TEST 3: rangeQuery(MBB) ===\n";
-//     if (!testRangeQueryBox(tree, allPoints)) overallOK = false;
+  std::cout << "\n=== TEST 3: rangeQuery(MBB) ===\n";
+  if (!testRangeQueryBox(tree, allPoints))
+    overallOK = false;
 
-//     std::cout << "\n=== TEST 4: rangeQuery(Sphere) ===\n";
-//     if (!testRangeQuerySphere(tree, allPoints)) overallOK = false;
+  std::cout << "\n=== TEST 4: rangeQuery(Sphere) ===\n";
+  if (!testRangeQuerySphere(tree, allPoints))
+    overallOK = false;
 
-//     std::cout << "\n=== TEST 5: k-NearestNeighbors ===\n";
-//     if (!testKNearestNeighbors(tree, allPoints)) overallOK = false;
+  std::cout << "\n=== TEST 5: k-NearestNeighbors ===\n";
+  if (!testKNearestNeighbors(tree, allPoints))
+    overallOK = false;
 
-//     if (overallOK) {
-//         std::cout << "\n>>> TODOS LOS TESTS PASARON!! <<<\nAun puedes aprobar :D\n";
-//         return 0;
-//     } else {
-//         std::cout << "\n>>> ALGÚN TEST FALLÓ <<<\nRevisa las fechas de retiro\n";
-//         return 1;
-//     }
-// }
+  if (overallOK) {
+    std::cout << "\n>>> TODOS LOS TESTS PASARON!! <<<\nAun puedes aprobar :D\n";
+    return 0;
+  } else {
+    std::cout << "\n>>> ALGUN TEST FALLO <<<\nRevisa las fechas de retiro\n";
+    return 1;
+  }
+}

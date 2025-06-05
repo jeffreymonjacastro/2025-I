@@ -6,8 +6,8 @@
 #include <random>
 #include <stdexcept>
 
-// constexpr std::size_t DIM = 768;
-constexpr std::size_t DIM = 2;
+constexpr std::size_t DIM = 768;
+// constexpr std::size_t DIM = 2;
 constexpr float EPSILON = 1e-8f;
 
 class Point {

@@ -19,14 +19,14 @@ struct MBB {
 };
 
 void MBB::expandToInclude(const MBB &other) {
-  for (std::size_t i = 0; i < DIM; ++i) {
+  for (std::size_t i = 0; i < DIM; i++) {
     minCorner[i] = std::min(minCorner[i], other.minCorner[i]);
     maxCorner[i] = std::max(maxCorner[i], other.maxCorner[i]);
   }
 }
 
 void MBB::expandToInclude(const Point &p) {
-  for (std::size_t i = 0; i < DIM; ++i) {
+  for (std::size_t i = 0; i < DIM; i++) {
     minCorner[i] = std::min(minCorner[i], p[i]);
     maxCorner[i] = std::max(maxCorner[i], p[i]);
   }
@@ -35,7 +35,7 @@ void MBB::expandToInclude(const Point &p) {
 float MBB::maxDist(const Point &p, const MBB &box) {
   float maxDistance = 0.0f;
 
-  for (std::size_t i = 0; i < DIM; ++i) {
+  for (std::size_t i = 0; i < DIM; i++) {
     float distToMin = std::fabs(p[i] - box.minCorner[i]);
     float distToMax = std::fabs(p[i] - box.maxCorner[i]);
     float maxDistInDim = std::max(distToMin, distToMax);
@@ -45,7 +45,7 @@ float MBB::maxDist(const Point &p, const MBB &box) {
 }
 
 std::ostream &operator<<(std::ostream &os, const MBB &box) {
-  os << "MBB: " << box.minCorner << " to " << box.maxCorner << "\n";
+  os << box.minCorner << " to " << box.maxCorner << "\n";
   return os;
 }
 
