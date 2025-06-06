@@ -15,13 +15,15 @@
 #define MIN_PARTITION 0.4
 #define MAX_PARTITION 0.6
 
+using namespace std;
+
 class SRNode {
 private:
   MBB _boundingBox;
   Sphere _boundingSphere;
   SRNode *_parent;
-  std::vector<Point *> _points;
-  std::vector<SRNode *> _children;
+  vector<Point *> _points;
+  vector<SRNode *> _children;
   bool _isLeaf;
 
 public:
@@ -30,10 +32,10 @@ public:
 
   const MBB &getBoundingBox() const { return _boundingBox; }
   const Sphere &getBoundingSphere() const { return _boundingSphere; }
-  const std::vector<Point *> &getPoints() const { return _points; }
-  const std::vector<SRNode *> &getChildren() const { return _children; }
-  std::size_t getNumPoints() const;
-  std::size_t getNumChildren() const { return _children.size(); }
+  const vector<Point *> &getPoints() const { return _points; }
+  const vector<SRNode *> &getChildren() const { return _children; }
+  size_t getNumPoints() const;
+  size_t getNumChildren() const { return _children.size(); }
 
   void setBoundingBox(const MBB &box) { _boundingBox = box; }
   void setBoundingSphere(const Sphere &sphere) { _boundingSphere = sphere; }
@@ -46,47 +48,47 @@ public:
   void addPoint(Point *point);
   void addChild(SRNode *child);
 
-  SRNode *splitLeaf(std::size_t maxEntries);
-  SRNode *splitNode(std::size_t maxEntries);
+  SRNode *splitLeaf(size_t maxEntries);
+  SRNode *splitNode(size_t maxEntries);
 
   SRNode *chooseSubtree(const Point &point);
 
   void recalculateBoundingBox();
 
-  friend std::ostream &operator<<(std::ostream &os, const SRNode &node);
+  friend ostream &operator<<(ostream &os, const SRNode &node);
 
   // Insert algorithm
-  SRNode *insert(const Point &_data, std::size_t maxEntries);
+  SRNode *insert(const Point &_data, size_t maxEntries);
 };
 
 class SRTree {
 private:
   SRNode *_root;
-  std::size_t _maxEntries;
+  size_t _maxEntries;
 
 public:
   SRTree() : _maxEntries(15), _root(nullptr) {}
-  explicit SRTree(std::size_t maxEntries) : _maxEntries(maxEntries), _root(nullptr) {}
+  explicit SRTree(size_t maxEntries) : _maxEntries(maxEntries), _root(nullptr) {}
 
   SRNode *getRoot() const { return _root; }
 
   void recalculateTree(SRNode *node);
   void insert(const Point &point);
   bool search(const Point &point) const;
-  std::vector<Point *> rangeQuery(const MBB &box) const;
-  std::vector<Point *> rangeQuery(const Sphere &sphere) const;
+  vector<Point *> rangeQuery(const MBB &box) const;
+  vector<Point *> rangeQuery(const Sphere &sphere) const;
 
   // k-nearest neighbors search
-  std::vector<Point *> kNearestNeighbors(const Point &q, std::size_t k) const;
+  vector<Point *> kNearestNeighbors(const Point &q, size_t k) const;
 };
 
 // ================== SRNode ========================
 
-std::size_t SRNode::getNumPoints() const {
+size_t SRNode::getNumPoints() const {
   if (this->_isLeaf) {
     return this->_points.size();
   } else {
-    std::size_t total = 0;
+    size_t total = 0;
     for (auto &child : this->_children) {
       total += child->getNumPoints();
     }
@@ -102,7 +104,7 @@ void SRNode::recalculateBoundingBox() {
 
     this->_boundingBox = MBB(*this->_points[0]);
 
-    for (std::size_t i = 1; i < this->_points.size(); ++i) {
+    for (size_t i = 1; i < this->_points.size(); ++i) {
       this->_boundingBox.expandToInclude(*this->_points[i]);
     }
   } else {
@@ -112,7 +114,7 @@ void SRNode::recalculateBoundingBox() {
 
     this->_boundingBox = this->_children[0]->getBoundingBox();
 
-    for (std::size_t i = 1; i < this->_children.size(); ++i) {
+    for (size_t i = 1; i < this->_children.size(); ++i) {
       this->_boundingBox.expandToInclude(this->_children[i]->getBoundingBox());
     }
   }
@@ -132,18 +134,18 @@ void SRNode::expandSphere(const Point &point) {
   // dr = MAXDIST(x, CR)
 
   float r = 0.0f;
-  float minr = std::numeric_limits<float>::max();
+  float minr = numeric_limits<float>::max();
   float ds = 0.0f;
   float dr = 0.0f;
 
   for (auto &p : this->_points) {
     float dist = Point::distance(center, *p);
-    ds = std::max(ds, dist);
-    dr = std::max(dr, MBB::maxDist(*p, this->_boundingBox));
-    minr = std::min(minr, dist);
+    ds = max(ds, dist);
+    dr = max(dr, MBB::maxDist(*p, this->_boundingBox));
+    minr = min(minr, dist);
   }
 
-  r = std::min(ds, dr);
+  r = min(ds, dr);
 
   this->_boundingSphere = Sphere(center, r, minr);
 }
@@ -151,7 +153,7 @@ void SRNode::expandSphere(const Point &point) {
 void SRNode::expandSphere(const SRNode &child) {
   // Hallar el centro como el promedio ponderado de los centros de los hijos
   Point center;
-  std::size_t totalChildPoints = 0;
+  size_t totalChildPoints = 0;
   for (auto &c : this->_children) {
     center += c->getBoundingSphere().center * c->getNumPoints();
     totalChildPoints += c->getNumPoints();
@@ -164,7 +166,7 @@ void SRNode::expandSphere(const SRNode &child) {
   // dr = MAXDIST(x, CR)
 
   float r = 0.0f;
-  float minr = std::numeric_limits<float>::max();
+  float minr = numeric_limits<float>::max();
   float ds = 0.0f;
   float dr = 0.0f;
 
@@ -172,12 +174,12 @@ void SRNode::expandSphere(const SRNode &child) {
     Point childCenter = c->getBoundingSphere().center;
     float childRadius = c->getBoundingSphere().radius;
     float dist = Point::distance(center, childCenter);
-    ds = std::max(ds, dist + childRadius);
-    dr = std::max(dr, MBB::maxDist(center, c->getBoundingBox()));
-    minr = std::min(minr, std::max(dist - childRadius, 0.0f));
+    ds = max(ds, dist + childRadius);
+    dr = max(dr, MBB::maxDist(center, c->getBoundingBox()));
+    minr = min(minr, max(dist - childRadius, 0.0f));
   }
 
-  r = std::min(ds, dr);
+  r = min(ds, dr);
 
   this->_boundingSphere = Sphere(center, r, minr);
 }
@@ -185,7 +187,7 @@ void SRNode::expandSphere(const SRNode &child) {
 void SRNode::addPoint(Point *point) {
   this->_points.push_back(point);
 
-  // std::cout << "AddPoint: " << this->_points.size() << " puntos en el nodo.\n";
+  // cout << "AddPoint: " << this->_points.size() << " puntos en el nodo.\n";
 
   if (this->getNumPoints() < 2) {
     this->_boundingBox = MBB(*point);
@@ -209,10 +211,10 @@ void SRNode::addChild(SRNode *child) {
   }
 }
 
-SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
+SRNode *SRNode::splitLeaf(size_t maxEntries) {
   // Hallar la dimensión con mayor varianza
-  float maxVariance = -std::numeric_limits<float>::max();
-  std::size_t splitDim = 0;
+  float maxVariance = -numeric_limits<float>::max();
+  size_t splitDim = 0;
   float n = this->getNumPoints();
 
   for (int i = 0; i < DIM; i++) {
@@ -229,7 +231,7 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
     }
     variance /= n;
 
-    // std::cout << "Dimension " << i << ": media = " << mean << ", varianza = " << variance << "\n";
+    // cout << "Dimension " << i << ": media = " << mean << ", varianza = " << variance << "\n";
 
     if (variance > maxVariance) {
       maxVariance = variance;
@@ -237,37 +239,37 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
     }
   }
 
-  // std::cout << "SplitLeaf - Dimension con mayor varianza: " << splitDim << " (varianza = " << maxVariance << ")\n";
+  // cout << "SplitLeaf - Dimension con mayor varianza: " << splitDim << " (varianza = " << maxVariance << ")\n";
 
   // Ordenar los puntos por la dimensión de mayor varianza
-  std::vector<Point *> sortedPoints = _points;
+  vector<Point *> sortedPoints = _points;
 
-  std::sort(sortedPoints.begin(), sortedPoints.end(), [splitDim](const Point *a, const Point *b) {
+  sort(sortedPoints.begin(), sortedPoints.end(), [splitDim](const Point *a, const Point *b) {
     return (*a)[splitDim] < (*b)[splitDim];
   });
 
   // Evaluar divisiones
-  float minCost = std::numeric_limits<float>::max();
+  float minCost = numeric_limits<float>::max();
 
-  std::size_t minIdx = floor(MIN_PARTITION * n);
-  std::size_t maxIdx = ceil(MAX_PARTITION * n);
-  std::size_t idx = minIdx;
+  size_t minIdx = floor(MIN_PARTITION * n);
+  size_t maxIdx = ceil(MAX_PARTITION * n);
+  size_t idx = minIdx;
 
-  for (std::size_t i = minIdx; i <= maxIdx; ++i) {
+  for (size_t i = minIdx; i <= maxIdx; ++i) {
     SRNode left, right;
     float leftCost, rightCost;
 
-    for (std::size_t j = 0; j < i; ++j) {
+    for (size_t j = 0; j < i; ++j) {
       left.addPoint(sortedPoints[j]);
     }
     leftCost = left.getBoundingSphere().radius;
 
-    for (std::size_t j = i; j < n; ++j) {
+    for (size_t j = i; j < n; ++j) {
       right.addPoint(sortedPoints[j]);
     }
     rightCost = right.getBoundingSphere().radius;
 
-    // std::cout << "Evaluando division en indice " << i << " minCost = " << minCost << "newCost = "
+    // cout << "Evaluando division en indice " << i << " minCost = " << minCost << "newCost = "
     // << leftCost + rightCost << "\n";
 
     if (leftCost + rightCost < minCost) {
@@ -276,7 +278,7 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
     }
   }
 
-  // std::cout << "Mejor division en indice " << idx << " (costo = " << minCost << ")\n";
+  // cout << "Mejor division en indice " << idx << " (costo = " << minCost << ")\n";
 
   // Crear el nuevo nodo
   SRNode *newNode = new SRNode();
@@ -286,15 +288,9 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
 
   // Resetear el nodo actual
   this->_points.clear();
-  // this->_boundingBox = MBB();
-  // this->_boundingSphere = Sphere();
-
-  // for (std::size_t i = 0; i < idx; ++i) {
-  //   this->addPoint(sortedPoints[i]);
-  // }
 
   bool first = true;
-  for (std::size_t i = 0; i < idx; ++i) {
+  for (size_t i = 0; i < idx; ++i) {
     if (first) {
       this->_boundingBox = MBB(*sortedPoints[i]);
       this->_boundingSphere = Sphere(*sortedPoints[i], 0.0f, 0.0f);
@@ -305,20 +301,20 @@ SRNode *SRNode::splitLeaf(std::size_t maxEntries) {
     }
   }
 
-  for (std::size_t i = idx; i < sortedPoints.size(); ++i) {
+  for (size_t i = idx; i < sortedPoints.size(); ++i) {
     newNode->addPoint(sortedPoints[i]);
   }
 
-  // std::cout << "Split: " << this->getNumPoints() << " -> "
-  // << newNode->getNumPoints() << " (idx=" << idx << ")" << std::endl;
+  // cout << "Split: " << this->getNumPoints() << " -> "
+  // << newNode->getNumPoints() << " (idx=" << idx << ")" << endl;
 
   return newNode;
 }
 
-SRNode *SRNode::splitNode(std::size_t maxEntries) {
+SRNode *SRNode::splitNode(size_t maxEntries) {
   // Hallar la dimensión con mayor varianza de los centros de los hijos
-  float maxVariance = -std::numeric_limits<float>::max();
-  std::size_t splitDim = 0;
+  float maxVariance = -numeric_limits<float>::max();
+  size_t splitDim = 0;
   float n = this->getNumChildren();
 
   for (int i = 0; i < DIM; i++) {
@@ -341,32 +337,32 @@ SRNode *SRNode::splitNode(std::size_t maxEntries) {
     }
   }
 
-  // std::cout << "SplitNode - Dimension con mayor varianza: " << splitDim << " (varianza = " << maxVariance << ")\n";
+  // cout << "SplitNode - Dimension con mayor varianza: " << splitDim << " (varianza = " << maxVariance << ")\n";
 
   // Ordenar los hijos por la dimensión de mayor varianza
-  std::vector<SRNode *> sortedChildren = _children;
+  vector<SRNode *> sortedChildren = _children;
 
-  std::sort(sortedChildren.begin(), sortedChildren.end(), [splitDim](const SRNode *a, const SRNode *b) {
+  sort(sortedChildren.begin(), sortedChildren.end(), [splitDim](const SRNode *a, const SRNode *b) {
     return a->getBoundingSphere().center[splitDim] < b->getBoundingSphere().center[splitDim];
   });
 
   // Evaluar divisiones
-  float minCost = std::numeric_limits<float>::max();
+  float minCost = numeric_limits<float>::max();
 
-  std::size_t minIdx = floor(MIN_PARTITION * n);
-  std::size_t maxIdx = ceil(MAX_PARTITION * n);
-  std::size_t idx = minIdx;
+  size_t minIdx = floor(MIN_PARTITION * n);
+  size_t maxIdx = ceil(MAX_PARTITION * n);
+  size_t idx = minIdx;
 
-  for (std::size_t i = minIdx; i <= maxIdx; ++i) {
+  for (size_t i = minIdx; i <= maxIdx; ++i) {
     SRNode left, right;
     float leftCost, rightCost;
 
-    for (std::size_t j = 0; j < i; ++j) {
+    for (size_t j = 0; j < i; ++j) {
       left.addChild(sortedChildren[j]);
     }
     leftCost = left.getBoundingSphere().radius;
 
-    for (std::size_t j = i; j < n; ++j) {
+    for (size_t j = i; j < n; ++j) {
       right.addChild(sortedChildren[j]);
     }
     rightCost = right.getBoundingSphere().radius;
@@ -386,15 +382,9 @@ SRNode *SRNode::splitNode(std::size_t maxEntries) {
   // Resetear el nodo actual
   this->_children.clear();
   this->_points.clear();
-  // this->_boundingBox = MBB();
-  // this->_boundingSphere = Sphere();
-
-  // for (std::size_t i = 0; i < idx; ++i) {
-  //   this->addChild(sortedChildren[i]);
-  // }
 
   bool first = true;
-  for (std::size_t i = 0; i < idx; ++i) {
+  for (size_t i = 0; i < idx; ++i) {
     if (first) {
       this->_boundingBox = sortedChildren[i]->getBoundingBox();
       this->_boundingSphere = sortedChildren[i]->getBoundingSphere();
@@ -406,7 +396,7 @@ SRNode *SRNode::splitNode(std::size_t maxEntries) {
     }
   }
 
-  for (std::size_t i = idx; i < sortedChildren.size(); ++i) {
+  for (size_t i = idx; i < sortedChildren.size(); ++i) {
     newNode->addChild(sortedChildren[i]);
   }
 
@@ -415,7 +405,7 @@ SRNode *SRNode::splitNode(std::size_t maxEntries) {
 
 SRNode *SRNode::chooseSubtree(const Point &point) {
   SRNode *bestChild = nullptr;
-  float minDist = std::numeric_limits<float>::max();
+  float minDist = numeric_limits<float>::max();
 
   for (auto &child : this->getChildren()) {
     // Distancia entre el punto y el centro del hijo
@@ -426,7 +416,7 @@ SRNode *SRNode::chooseSubtree(const Point &point) {
       minDist = dist;
       bestChild = child;
     } else if (dist == minDist) {
-      // Si hay empate, elegir el que tenga el área mínima
+      // Si hay empate, elegir el que tenga el radio mínimo
       if (child->getBoundingSphere().radius < bestChild->getBoundingSphere().radius) {
         bestChild = child;
       }
@@ -437,12 +427,12 @@ SRNode *SRNode::chooseSubtree(const Point &point) {
     // Si el mejor hijo es una hoja, devolverlo
     return bestChild;
   } else {
-    // Si no es una hoja, seguir buscando en sus hijos
+    // Si no es una hoja, seguir buscando
     return bestChild->chooseSubtree(point);
   }
 }
 
-SRNode *SRNode::insert(const Point &_data, std::size_t maxEntries) {
+SRNode *SRNode::insert(const Point &_data, size_t maxEntries) {
   if (this->getIsLeaf()) {
     if (this->getNumPoints() < maxEntries) {
       // Si el nodo hoja no está lleno, agregar el punto
@@ -483,9 +473,9 @@ SRNode *SRNode::insert(const Point &_data, std::size_t maxEntries) {
   return nullptr;
 }
 
-std::ostream &operator<<(std::ostream &os, const SRNode &node) {
+ostream &operator<<(ostream &os, const SRNode &node) {
   static int indentLevel = 0;
-  std::string indent(indentLevel * 2, ' ');
+  string indent(indentLevel * 2, ' ');
 
   os << indent << "- Bounding Box: " << node._boundingBox;
   os << indent << "- Bounding Sphere: " << node._boundingSphere;
@@ -550,7 +540,7 @@ bool SRTree::search(const Point &point) const {
     return false;
   }
 
-  std::priority_queue<std::pair<float, const SRNode *>, std::vector<std::pair<float, const SRNode *>>, std::greater<std::pair<float, const SRNode *>>> pq;
+  priority_queue<pair<float, const SRNode *>, vector<pair<float, const SRNode *>>, greater<pair<float, const SRNode *>>> pq;
 
   // Agregar la raíz con distancia 0 (o distancia real al centro)
   float rootDist = Point::distance(point, _root->getBoundingSphere().center);
@@ -560,24 +550,11 @@ bool SRTree::search(const Point &point) const {
     auto [dist, node] = pq.top();
     pq.pop();
 
-    bool inBoundingBox = true;
-    for (std::size_t i = 0; i < DIM; ++i) {
-      if (point[i] < node->getBoundingBox().minCorner[i] - EPSILON ||
-          point[i] > node->getBoundingBox().maxCorner[i] + EPSILON) {
-        inBoundingBox = false;
-        break;
-      }
-    }
-
-    if (!inBoundingBox) {
-      continue;
-    }
-
     if (node->getIsLeaf()) {
       for (const Point *p : node->getPoints()) {
         bool match = true;
-        for (std::size_t i = 0; i < DIM; ++i) {
-          if (std::abs((*p)[i] - point[i]) > EPSILON) {
+        for (size_t i = 0; i < DIM; ++i) {
+          if (abs((*p)[i] - point[i]) > EPSILON) {
             match = false;
             break;
           }
@@ -597,13 +574,13 @@ bool SRTree::search(const Point &point) const {
   return false;
 }
 
-std::vector<Point *> SRTree::rangeQuery(const MBB &box) const {
+vector<Point *> SRTree::rangeQuery(const MBB &box) const {
   if (!_root) {
     return {};
   }
 
-  std::function<bool(const MBB &)> intersects = [&box](const MBB &other) {
-    for (std::size_t i = 0; i < DIM; ++i) {
+  function<bool(const MBB &)> intersects = [&box](const MBB &other) {
+    for (size_t i = 0; i < DIM; ++i) {
       if (box.maxCorner[i] < other.minCorner[i] || box.minCorner[i] > other.maxCorner[i]) {
         return false;
       }
@@ -611,8 +588,8 @@ std::vector<Point *> SRTree::rangeQuery(const MBB &box) const {
     return true;
   };
 
-  std::function<bool(const Point &)> pointInBox = [&box](const Point &p) {
-    for (std::size_t i = 0; i < DIM; ++i) {
+  function<bool(const Point &)> pointInBox = [&box](const Point &p) {
+    for (size_t i = 0; i < DIM; ++i) {
       if (p[i] < box.minCorner[i] - EPSILON || p[i] > box.maxCorner[i] + EPSILON) {
         return false;
       }
@@ -620,16 +597,16 @@ std::vector<Point *> SRTree::rangeQuery(const MBB &box) const {
     return true;
   };
 
-  std::function<float(const Point &)> distanceToBoxCenter = [&box](const Point &p) {
+  function<float(const Point &)> distanceToBoxCenter = [&box](const Point &p) {
     Point boxCenter;
-    for (std::size_t i = 0; i < DIM; ++i) {
+    for (size_t i = 0; i < DIM; ++i) {
       boxCenter[i] = (box.minCorner[i] + box.maxCorner[i]) / 2.0f;
     }
     return Point::distance(p, boxCenter);
   };
 
-  std::vector<Point *> res;
-  std::priority_queue<std::pair<float, const SRNode *>, std::vector<std::pair<float, const SRNode *>>, std::greater<std::pair<float, const SRNode *>>> pq;
+  vector<Point *> res;
+  priority_queue<pair<float, const SRNode *>, vector<pair<float, const SRNode *>>, greater<pair<float, const SRNode *>>> pq;
 
   if (intersects(_root->getBoundingBox())) {
     pq.push({0.0f, _root});
@@ -658,23 +635,23 @@ std::vector<Point *> SRTree::rangeQuery(const MBB &box) const {
   return res;
 }
 
-std::vector<Point *> SRTree::rangeQuery(const Sphere &sphere) const {
+vector<Point *> SRTree::rangeQuery(const Sphere &sphere) const {
   if (!_root) {
     return {};
   }
 
-  std::function<bool(const Sphere &)> intersects = [&sphere](const Sphere &other) {
+  function<bool(const Sphere &)> intersects = [&sphere](const Sphere &other) {
     float dist = Point::distance(sphere.center, other.center);
     return dist <= (sphere.radius + other.radius);
   };
 
-  std::function<bool(const Point &)> pointInSphere = [&sphere](const Point &p) {
+  function<bool(const Point &)> pointInSphere = [&sphere](const Point &p) {
     float dist = Point::distance(p, sphere.center);
     return dist <= sphere.radius + EPSILON;
   };
 
-  std::vector<Point *> res;
-  std::priority_queue<std::pair<float, const SRNode *>, std::vector<std::pair<float, const SRNode *>>, std::greater<std::pair<float, const SRNode *>>> pq;
+  vector<Point *> res;
+  priority_queue<pair<float, const SRNode *>, vector<pair<float, const SRNode *>>, greater<pair<float, const SRNode *>>> pq;
 
   if (intersects(_root->getBoundingSphere())) {
     pq.push({0.0f, _root});
@@ -702,7 +679,7 @@ std::vector<Point *> SRTree::rangeQuery(const Sphere &sphere) const {
   return res;
 }
 
-std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) const {
+vector<Point *> SRTree::kNearestNeighbors(const Point &q, size_t k) const {
   struct KNN {
     Point *p;
     float dist;
@@ -718,11 +695,11 @@ std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) co
     return {};
   }
 
-  std::priority_queue<KNN> L;
-  float Dk = std::numeric_limits<float>::max();
+  priority_queue<KNN> L;
+  float Dk = numeric_limits<float>::max();
 
-  std::function<void(Point *, float, std::size_t, float &)> insertKNN;
-  insertKNN = [&L](Point *point, float distance, std::size_t k, float &Dk) {
+  function<void(Point *, float, size_t, float &)> insertKNN;
+  insertKNN = [&L](Point *point, float distance, size_t k, float &Dk) {
     if (L.size() < k) {
       L.push(KNN(point, distance));
       if (L.size() == k) {
@@ -735,8 +712,8 @@ std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) co
     }
   };
 
-  std::function<void(const Point &, std::size_t, const SRNode *, float &)> fndftrav;
-  fndftrav = [&](const Point &q, std::size_t k, const SRNode *e, float &Dk) {
+  function<void(const Point &, size_t, const SRNode *, float &)> fndftrav;
+  fndftrav = [&](const Point &q, size_t k, const SRNode *e, float &Dk) {
     if (e->getIsLeaf()) {
       Point Mp = e->getBoundingSphere().center;
 
@@ -761,7 +738,7 @@ std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) co
       }
     } else {
       // MEANORPIVOTDIST
-      std::vector<std::pair<float, const SRNode *>> activeList;
+      vector<pair<float, const SRNode *>> activeList;
 
       for (const SRNode *child : e->getChildren()) {
         Point Mp = child->getBoundingSphere().center;
@@ -770,10 +747,10 @@ std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) co
       }
 
       // Ordenar
-      std::sort(activeList.begin(), activeList.end());
+      sort(activeList.begin(), activeList.end());
 
       // Pruning Rule 5: Solo para k=1 y si mejora la estimación
-      if (k == 1 && Dk == std::numeric_limits<float>::max()) {
+      if (k == 1 && Dk == numeric_limits<float>::max()) {
         for (const auto &[distQMp, child] : activeList) {
           float rp_min = child->getBoundingSphere().minradius;
           float possibleBest = distQMp + rp_min;
@@ -807,7 +784,7 @@ std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) co
   // FNDFTRAV
   fndftrav(q, k, _root, Dk);
 
-  std::vector<Point *> res;
+  vector<Point *> res;
 
   res.reserve(L.size());
   while (!L.empty()) {
@@ -815,7 +792,7 @@ std::vector<Point *> SRTree::kNearestNeighbors(const Point &q, std::size_t k) co
     L.pop();
   }
 
-  std::reverse(res.begin(), res.end());
+  reverse(res.begin(), res.end());
 
   return res;
 }
