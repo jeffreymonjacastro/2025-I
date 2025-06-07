@@ -20,7 +20,29 @@ ll binPow(ll a, ll b) {
   return result;
 }
 
-void solve() {}
+void solve() {
+  int n;
+  cin >> n;
+
+  vector<int> a(n);
+
+  for (int i = 0; i < n; i++) {
+    cin >> a[i];
+  }
+
+  sort(a.begin(), a.end());
+
+  int idx = 0;
+  for (int x = 0; x <= n; x++) {
+    auto it = lower_bound(a.begin(), a.end(), x);
+    int count = a.end() - it;
+    if (count >= x) {
+      idx = x;
+    }
+  }
+
+  cout << idx << "\n";
+}
 
 int main() {
   cpu();

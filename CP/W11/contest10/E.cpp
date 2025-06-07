@@ -7,6 +7,7 @@ using namespace std;
 #define ll long long
 #define lld long double
 const int mod = 1e9 + 7;
+const double eps = 1e-6;
 
 ll binPow(ll a, ll b) {
   a %= mod;
@@ -20,7 +21,18 @@ ll binPow(ll a, ll b) {
   return result;
 }
 
-void solve() {}
+void solve() {
+  int n, d, h;
+  cin >> n >> d >> h;
+
+  vector<int> y(n);
+
+  for (int i = 0; i < n; i++) {
+    cin >> y[i];
+  }
+
+  double area = 0.0;
+}
 
 int main() {
   cpu();

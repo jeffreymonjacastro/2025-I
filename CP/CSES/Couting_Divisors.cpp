@@ -8,50 +8,42 @@ using namespace std;
 #define lld long double
 const int mod = 1e9 + 7;
 
-ll binPow(ll a, ll b) {
-  a %= mod;
-  ll result = 1;
-  while (b > 0) {
-    if (b & 1LL)
-      result = (result * a) % mod;
-    a = (a * a) % mod;
-    b >>= 1;
-  }
-  return result;
-}
+const int MAX_N = 1e6;
+// max_div[i] contains the largest prime that goes into i
+int max_div[MAX_N + 1];
 
 void solve() {
-  int n;
-  cin >> n;
+  int x;
+  cin >> x;
 
-  unordered_map<int, int> m;
-
-  auto factor = [&](int n) -> void {
-    for (int i = 2; i * i <= n; i++) {
-      while (n % i == 0) {
-        m[i]++;
-        n /= i;
-      }
+  int div_num = 1;
+  while (x != 1) {
+    /*
+     * get the largest prime that can divide x and see
+     * how many times it goes into x (stored in count)
+     */
+    int prime = max_div[x];
+    int count = 0;
+    while (x % prime == 0) {
+      count++;
+      x /= prime;
     }
-
-    if (n > 1)
-      m[n]++;
-  };
-
-  factor(n);
-
-  int cnt = 0;
-
-  for (auto [a, b] : m) {
-    cout << a << ": " << b << "\n";
-    cnt += b;
+    div_num *= count + 1;
   }
-
-  cout << binPow(2, cnt) - 1 << "\n";
+  cout << div_num << '\n';
 }
 
 int main() {
   cpu();
+
+  for (int i = 2; i <= MAX_N; i++) {
+    if (max_div[i] == 0) {
+      for (int j = i; j <= MAX_N; j += i) {
+        max_div[j] = i;
+      }
+    }
+  }
+
   int t;
   t = 1;
   cin >> t;

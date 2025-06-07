@@ -20,7 +20,27 @@ ll binPow(ll a, ll b) {
   return result;
 }
 
-void solve() {}
+void solve() {
+  int n, l;
+  cin >> n >> l;
+
+  vector<int> a(n - 1);
+  map<int, int> circular;
+
+  for (int i = 0; i < n - 1; i++) {
+    cin >> a[i];
+  }
+
+  int count = 0;
+
+  for (int i = 0; i < n - 1; i++) {
+    if (a[i] < l) {
+      count++;
+    }
+  }
+
+  cout << count << "\n";
+}
 
 int main() {
   cpu();

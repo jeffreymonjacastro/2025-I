@@ -12,12 +12,7 @@ void solve() {
   int k;
   cin >> k;
 
-  if (100 % k == 0) {
-    cout << 100 / k << "\n";
-    return;
-  }
-
-  cout << 100 << "\n";
+  cout << 100 / gcd(k, 100) << "\n";
 }
 
 int main() {

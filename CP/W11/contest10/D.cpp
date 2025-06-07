@@ -20,7 +20,26 @@ ll binPow(ll a, ll b) {
   return result;
 }
 
-void solve() {}
+void solve() {
+  ll ax, ay, bx, by, cx, cy;
+  cin >> ax >> ay >> bx >> by >> cx >> cy;
+
+  ll cross = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
+
+  if (cross == 0) {
+    cout << "No\n";
+    return;
+  }
+
+  ll dist1 = (bx - ax) * (bx - ax) + (by - ay) * (by - ay);
+  ll dist2 = (cx - bx) * (cx - bx) + (cy - by) * (cy - by);
+
+  if (dist1 == dist2) {
+    cout << "Yes\n";
+  } else {
+    cout << "No\n";
+  }
+}
 
 int main() {
   cpu();
