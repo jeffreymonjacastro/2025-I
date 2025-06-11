@@ -8,25 +8,47 @@ using namespace std;
 #define lld long double
 const int mod = 1e9 + 7;
 
-ll binPow(ll a, ll b) {
-  a %= mod;
-  ll result = 1;
-  while (b > 0) {
-    if (b & 1LL)
-      result = (result * a) % mod;
-    a = (a * a) % mod;
-    b >>= 1;
-  }
-  return result;
-}
+const int MAX_N = 1e7;
 
-void solve() {}
+vector<bool> is_prime(MAX_N + 1, true);
+vector<int> primes;
+
+void solve() {
+  int n;
+  cin >> n;
+
+  int cnt = 0;
+
+  for (int i = 1; i <= n; i++) {
+    for (int prime : primes) {
+      if (i * prime <= n) {
+        cnt++;
+      } else {
+        break;
+      }
+    }
+  }
+
+  cout << cnt << "\n";
+}
 
 int main() {
   cpu();
+
+  is_prime[0] = is_prime[1] = false;
+  for (int i = 2; i <= MAX_N; i++) {
+    if (is_prime[i]) {
+      primes.push_back(i);
+      if ((long long)i * i <= MAX_N) {
+        for (int j = i * i; j <= MAX_N; j += i)
+          is_prime[j] = false;
+      }
+    }
+  }
+
   int t;
   t = 1;
-  // cin >> t;
+  cin >> t;
   while (t--)
     solve();
   return 0;
