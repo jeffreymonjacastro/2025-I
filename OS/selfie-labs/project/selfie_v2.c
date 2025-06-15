@@ -485,8 +485,6 @@ uint64_t MAX_INTEGER_LENGTH = 20;    // maximum number of characters in an unsig
 uint64_t MAX_STRING_LENGTH = 128;    // maximum number of characters in a string
 
 uint64_t DEFAULT_LOCK_OWNER = (uint64_t)-1;
-uint64_t DEFAULT_PRIORITY = (uint64_t)30;
-
 // ------------------------ GLOBAL VARIABLES -----------------------
 
 char character; // most recently read character
@@ -1317,6 +1315,9 @@ void implement_sched(uint64_t *context);
 void emit_fork();
 void implement_fork(uint64_t *context);
 
+void emit_wait();
+void implement_wait(uint64_t *context);
+
 void emit_lock();
 void implement_lock(uint64_t *context);
 
@@ -1343,6 +1344,7 @@ uint64_t SYSCALL_BRK = 214;
 uint64_t SYSCALL_ID = 170;
 uint64_t SYSCALL_SCHED = 27;
 uint64_t SYSCALL_FORK = 23;
+uint64_t SYSCALL_WAIT = 24;
 uint64_t SYSCALL_LOCK = 31;
 uint64_t SYSCALL_UNLOCK = 32;
 uint64_t SYSCALL_PRIORITY_SET = 33;
@@ -2233,6 +2235,10 @@ void swap(uint64_t *c1, uint64_t *c2);
 void sort_contexts();
 // void print_context(uint64_t *context);
 
+//* Syscall wait
+void use_context(uint64_t* context);
+void add_to_waiting_list(uint64_t *context, uint64_t *waiting_contexts);
+
 uint64_t *new_context();
 
 void init_context(uint64_t *context, uint64_t *parent, uint64_t *vctxt);
@@ -2283,6 +2289,7 @@ uint64_t *delete_context(uint64_t *context, uint64_t *from);
 // | 33 | ptr_parent      | pointer to parent
 // | 34 | priority        | process' current priority
 // | 35 | prev_priority   | process' priority before donation
+// | 36 | children        | number of running children
 
 // number of entries of a machine context:
 // 14 uint64_t + 6 uint64_t* + 1 char* + 7 uint64_t + 2 uint64_t* + 2 uint64_t entries
@@ -2373,6 +2380,7 @@ uint64_t get_id(uint64_t *context) { return *(context + 32); }
 uint64_t* get_ptr_parent(uint64_t *context) { return (uint64_t *)*(context + 33); }
 uint64_t get_priority(uint64_t *context) { return *(context + 34); }
 uint64_t get_prev_priority(uint64_t *context) { return *(context + 35); }
+uint64_t get_children(uint64_t *context) { return *(context + 36); }
 
 void set_next_context(uint64_t *context, uint64_t *next) { *context = (uint64_t)next; }
 void set_prev_context(uint64_t *context, uint64_t *prev) { *(context + 1) = (uint64_t)prev; }
@@ -2413,6 +2421,7 @@ void set_id(uint64_t *context, uint64_t new_pid) { *(context + 32) = new_pid; }
 void set_ptr_parent(uint64_t *context, uint64_t* parent) { *(context + 33) = (uint64_t)parent; }
 void set_priority(uint64_t *context, uint64_t priority) { *(context + 34) = priority; }
 void set_prev_priority(uint64_t *context, uint64_t prev_priority) { *(context + 35) = prev_priority; }
+void set_children(uint64_t *context, uint64_t children) { *(context + 36) = children; }
 
 // -----------------------------------------------------------------
 // -------------------------- MICROKERNEL --------------------------
@@ -2454,6 +2463,7 @@ uint64_t *current_context = (uint64_t *)0; // context currently running
 
 uint64_t *used_contexts = (uint64_t *)0; // doubly-linked list of used contexts
 uint64_t *free_contexts = (uint64_t *)0; // singly-linked list of free contexts
+uint64_t *waiting_children_contexts = (uint64_t *)0; // singly-linked list of contexts waiting for children to finish
 
 uint64_t gen_id = 0; // general autoincremente id for processes
 // ------------------------- INITIALIZATION ------------------------
@@ -6907,6 +6917,8 @@ void selfie_compile()
   emit_sched();
 
   emit_fork();
+  emit_wait();
+
   emit_lock();
   emit_unlock();
 
@@ -8260,6 +8272,7 @@ void implement_exit(uint64_t *context)
 {
   // parameter
   uint64_t signed_int_exit_code;
+  uint64_t* parent_context;
 
   if (debug_syscalls)
   {
@@ -8272,7 +8285,22 @@ void implement_exit(uint64_t *context)
 
   set_exit_code(context, sign_shrink(signed_int_exit_code, SYSCALL_BITWIDTH));
 
-  used_contexts = delete_context (context, used_contexts);
+  used_contexts = delete_context(context, used_contexts);
+
+  parent_context = get_ptr_parent(context);
+
+  if (parent_context != (uint64_t *)0)
+  {
+    set_children(parent_context, get_children(parent_context) - (uint64_t)1);
+
+    if (get_children(parent_context) == (uint64_t)0)
+    {
+      // no more children, so parent can exit
+      set_exit_code(parent_context, get_exit_code(context));
+      waiting_children_contexts = delete_context(parent_context, waiting_children_contexts);
+      use_context(parent_context);
+    }
+  }
 }
 
 void emit_priority_set()
@@ -8363,6 +8391,7 @@ void implement_priority_set(uint64_t *context)
   uint64_t new_priority;
   new_priority = *(get_regs(context) + REG_A0);
 
+  set_prev_priority(context, get_priority(context));
   set_priority(context, new_priority);
 
   sort_contexts();
@@ -8388,7 +8417,6 @@ void implement_get_pid(uint64_t *context)
   set_pc(context,get_pc(context)+INSTRUCTIONSIZE);  
 }
 
-
 void emit_sched()
 {
   create_symbol_table_entry(GLOBAL_TABLE, string_copy("sched_class"),
@@ -8410,19 +8438,6 @@ void implement_sched(uint64_t *context)
   set_pc(context,get_pc(context)+INSTRUCTIONSIZE);  
 }
 
-void emit_lock()
-{
-  create_symbol_table_entry(GLOBAL_TABLE, string_copy("lock"),
-                            0, PROCEDURE, VOID_T, 0, code_size);
-
-  emit_addi(REG_A7, REG_ZR, SYSCALL_LOCK);
-
-  emit_ecall();
-
-  emit_jalr(REG_ZR, REG_RA, 0);
-}
-
-
 void emit_fork(){
   create_symbol_table_entry(GLOBAL_TABLE, string_copy("fork"),
                             0, PROCEDURE, UINT64_T, 0, code_size);
@@ -8433,7 +8448,6 @@ void emit_fork(){
 
   emit_jalr(REG_ZR, REG_RA, 0);
 }
-
 
 void implement_fork(uint64_t *context){
   uint64_t *child_c;
@@ -8446,6 +8460,10 @@ void implement_fork(uint64_t *context){
 
   // 1. new context 
   child_c = create_context(MY_CONTEXT, 0);
+
+  // Increment num of children
+  set_children(context, get_children(context) + (uint64_t)1);
+
   set_lowest_lo_page(child_c, get_lowest_lo_page(context));
   set_highest_lo_page(child_c, get_highest_lo_page(context));
   set_lowest_hi_page(child_c, get_lowest_hi_page(context));
@@ -8494,7 +8512,6 @@ void implement_fork(uint64_t *context){
     bgn = bgn + WORDSIZE;
   }
 
-  sort_contexts();
 
   // 4. values for return
   *(child_regs+REG_A0) = 0; // return for child is 0
@@ -8503,6 +8520,76 @@ void implement_fork(uint64_t *context){
   set_ptr_parent(child_c, context);
 }
 
+void emit_wait()
+{
+  create_symbol_table_entry(GLOBAL_TABLE, string_copy("wait"),
+                            0, PROCEDURE, VOID_T, 1, code_size);
+
+  // exit code | wstatus
+  emit_load(REG_A0, REG_SP, 0);
+
+  emit_addi(REG_SP, REG_SP, WORDSIZE);
+
+  emit_addi(REG_A7, REG_ZR, SYSCALL_WAIT);
+
+  emit_ecall();
+
+  emit_jalr(REG_ZR, REG_RA, 0);
+}
+
+void use_context(uint64_t *context){
+  // push front context in used_contexts
+
+  set_next_context(context, used_contexts);
+  set_prev_context(context, (uint64_t *)0);
+
+  if (used_contexts != (uint64_t *)0)
+    set_prev_context(used_contexts, context);
+
+  sort_contexts();
+}
+
+void add_to_waiting_list(uint64_t *context, uint64_t *waiting_contexts){
+  // push front new context in waiting_contexts
+  set_next_context(context, waiting_contexts);
+  set_prev_context(context, (uint64_t *)0);
+  waiting_contexts = context;
+}
+
+// uint64_t *remove_context(uint64_t *context, uint64_t *from){
+//   // Same as delete_context
+//   if (get_next_context(context) != (uint64_t *)0)
+//     set_prev_context(get_next_context(context), get_prev_context(context));
+
+//   if (get_prev_context(context) != (uint64_t *)0){
+//     set_next_context(get_prev_context(context), get_next_context(context));
+//     set_prev_context(context, (uint64_t *)0);
+//   } else
+//     from = get_next_context(context);
+
+//   set_next_context(context, (uint64_t *)0);
+
+//   return from;
+// }
+
+void implement_wait(uint64_t *context)
+{
+  // Parent has childrens
+  used_contexts = delete_context(context, used_contexts);
+  add_to_waiting_list(context, waiting_children_contexts);
+}
+
+void emit_lock()
+{
+  create_symbol_table_entry(GLOBAL_TABLE, string_copy("lock"),
+                            0, PROCEDURE, VOID_T, 0, code_size);
+
+  emit_addi(REG_A7, REG_ZR, SYSCALL_LOCK);
+
+  emit_ecall();
+
+  emit_jalr(REG_ZR, REG_RA, 0);
+}
 
 void implement_lock(uint64_t *context)
 {
@@ -8534,21 +8621,16 @@ void emit_unlock()
   emit_jalr(REG_ZR, REG_RA, 0);
 }
 
-
 void implement_unlock(uint64_t *context)
 {
   if (LOCK_OWNER == get_id(context))
   {
     LOCK_OWNER = DEFAULT_LOCK_OWNER;
-
-    if (get_prev_priority(context) != DEFAULT_PRIORITY)
-      set_priority(context, get_prev_priority(context));
-
+    set_priority(context, get_prev_priority(context));
     sort_contexts();
   }
   set_pc(context,get_pc(context)+INSTRUCTIONSIZE);  
 }
-
 
 void emit_read()
 {
@@ -11240,7 +11322,8 @@ void do_ecall()
       write_register(REG_A0);
     } else if (*(registers + REG_A7) == SYSCALL_FORK){
       write_register(REG_A0);
-    }
+    } 
+    else if (*(registers + REG_A7) == SYSCALL_WAIT) {}
     else if (*(registers + REG_A7) == SYSCALL_LOCK){}
     else if (*(registers + REG_A7) == SYSCALL_UNLOCK){}
     else if (*(registers + REG_A7) == SYSCALL_PRIORITY_SET){}
@@ -12383,10 +12466,12 @@ void init_context(uint64_t *context, uint64_t *parent, uint64_t *vctxt)
     set_pt(context, zmalloc(NUMBEROFPAGES / NUMBEROFLEAFPTES * sizeof(uint64_t *)));
   
   //* Syscall priority_set
-  set_priority(context, DEFAULT_PRIORITY);
-  set_prev_priority(context, DEFAULT_PRIORITY);
+  set_priority(context, (uint64_t) 30);
+  set_prev_priority(context, (uint64_t) 30);
 
   set_id(context, gen_id); gen_id = gen_id+1;
+  set_children(context, (uint64_t)0);
+
   // reset page table cache
   set_lowest_lo_page(context, 0);
   set_highest_lo_page(context, get_lowest_lo_page(context));
@@ -13065,6 +13150,8 @@ uint64_t handle_system_call(uint64_t *context)
     implement_get_pid(context);
   else if (a7 == SYSCALL_FORK)
     implement_fork(context);
+  else if (a7 == SYSCALL_WAIT)
+    implement_wait(context);
   else if (a7 == SYSCALL_LOCK)
     implement_lock(context);
   else if (a7 == SYSCALL_UNLOCK)
