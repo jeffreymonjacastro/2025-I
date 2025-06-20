@@ -21,41 +21,34 @@ ll binPow(ll a, ll b) {
   return result;
 }
 
+bool foo(ll a, ll b, ll x) {
+  if (a < b)
+    swap(a, b);
+  if (a == x || b == x)
+    return true;
+  if (x > a)
+    return false;
+  while (true) {
+    if (b == 0)
+      return a == x;
+    if (x % b == a % b)
+      return true;
+    a %= b;
+    if (a < b)
+      swap(a, b);
+    if (x > a)
+      return false;
+    if (a == x || b == x)
+      return true;
+  }
+  return false;
+}
+
 void solve() {
   ll a, b, x;
   cin >> a >> b >> x;
 
-  if (x > max(a, b)) {
-    cout << "NO" << "\n";
-    return;
-  }
-
-  if (x == a || x == b) {
-    cout << "YES" << "\n";
-    return;
-  }
-
-  if (a < b)
-    swap(a, b);
-
-  function<bool(ll, ll)> gcd = [&](ll a, ll b) -> bool {
-    if (b == 0)
-      return false;
-
-    if (a == x || b == x)
-      return true;
-
-    if (a - b == x || b - a == x)
-      return true;
-
-    return gcd(a, a - b);
-  };
-
-  if (gcd(a, b)) {
-    cout << "YES" << "\n";
-  } else {
-    cout << "NO" << "\n";
-  }
+  cout << (foo(a, b, x) ? "YES" : "NO") << "\n";
 }
 
 int main() {

@@ -7,7 +7,6 @@ using namespace std;
 #define ll long long
 #define lld long double
 const int mod = 1e9 + 7;
-const double eps = 1e-6;
 
 ll binPow(ll a, ll b) {
   a %= mod;
@@ -22,33 +21,26 @@ ll binPow(ll a, ll b) {
 }
 
 void solve() {
-  ll n, d, h, temp;
-  lld b, ans, inter;
-  cin >> n >> d >> h;
+  ll n, p = 1, ans;
+  cin >> n;
 
-  vector<ll> v(n);
-
-  for (int i = 0; i < n; i++)
-    cin >> v[i];
-
-  b = (lld)d * h / 2.0;
-  ans = n * b;
-
-  for (int i = 1; i < n; i++) {
-    temp = v[i] - v[i - 1];
-    if (temp < h) {
-      inter = (lld)d * (h - temp) * (h - temp) / (2.0 * h);
-      ans -= inter;
-    }
+  if (n == 3) {
+    cout << 24 << "\n";
+    return;
   }
-  cout << fixed << setprecision(7) << ans << "\n";
+
+  for (int i = 0; i < n - 4; i++)
+    p *= 4;
+
+  ans = 12 * (3 * n - 1) * p;
+  cout << ans << "\n";
 }
 
 int main() {
   cpu();
   int t;
   t = 1;
-  cin >> t;
+  // cin >> t;
   while (t--)
     solve();
   return 0;
