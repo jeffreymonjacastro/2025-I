@@ -21,6 +21,7 @@ std::string randomString(std::mt19937 &gen, std::size_t len = 9) {
     s.push_back(alphabet[d(gen)]);
   return s;
 }
+
 void collectObjects(const MNode *node, std::vector<const Object *> &out) {
   if (node->isLeaf()) {
     for (const Object *o : node->objects())
@@ -30,6 +31,7 @@ void collectObjects(const MNode *node, std::vector<const Object *> &out) {
       collectObjects(child, out);
   }
 }
+
 bool subtreeContains(const MNode *node, const Object *obj) {
   if (node->isLeaf()) {
     return std::find(node->objects().begin(), node->objects().end(), obj) != node->objects().end();
