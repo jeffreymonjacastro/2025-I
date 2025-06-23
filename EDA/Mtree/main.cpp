@@ -224,7 +224,7 @@ int main() {
   data.reserve(N);
   for (std::size_t i = 0; i < N; ++i) {
     auto s = std::make_unique<Object>(randomString(gen));
-    tree.insert(*s);
+    tree.insert(s.get());
     data.push_back(std::move(s));
   }
 
@@ -233,9 +233,9 @@ int main() {
   bool ok3 = testRangeQuery(tree, data, gen);
   bool ok4 = testKNN(tree, data, gen);
 
-  std::cout << "TEST 1 (regiones).............. " << (ok1 ? "OK" : "FAIL") << '\n';
-  std::cout << "TEST 2 (search)................ " << (ok2 ? "OK" : "FAIL") << '\n';
-  std::cout << "TEST 3 (rangeQuery)............ " << (ok3 ? "OK" : "FAIL") << '\n';
+  // std::cout << "TEST 1 (regiones).............. " << (ok1 ? "OK" : "FAIL") << '\n';
+  // std::cout << "TEST 2 (search)................ " << (ok2 ? "OK" : "FAIL") << '\n';
+  // std::cout << "TEST 3 (rangeQuery)............ " << (ok3 ? "OK" : "FAIL") << '\n';
   std::cout << "TEST 4 (k-NN).................. " << (ok4 ? "OK" : "FAIL") << '\n';
 
   if (ok1 && ok2 && ok3 && ok4)
