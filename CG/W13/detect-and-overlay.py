@@ -32,6 +32,7 @@ while True:
         ## I am just pasting a cube in an arbitrary pose on top of the
         ## original frame.
         # img_to_overlay = cv2.imread('overlay_image.jpg')
+        cube = cv2.imread('overlay_image.jpg')
 
         overlay = cv2.warpPerspective(cube, matrix, (frame.shape[1], frame.shape[0]))
         mask = np.zeros_like(frame)

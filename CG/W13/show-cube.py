@@ -5,30 +5,34 @@ def draw_3d_cube(frame, homography_matrix, marker_size):
     """
     Dibuja un cubo 3D sobre el marcador detectado usando las coordenadas del archivo PLY
     """
-    # Definir los vértices del cubo basados en el archivo PLY (escalados al tamaño del marcador)
-    scale = marker_size[0] / 4  # Escalar el cubo al tamaño del marcador
-    height = scale * 1.5  # Altura del cubo
+    # Definir los vértices del cubo con una escala más apropiada
+    size = min(marker_size) * 0.3  # Hacer el cubo más pequeño
+    height = size * 0.8  # Altura del cubo más proporcionada
     
-    # Vértices del cubo en 3D (x, y, z)
+    # Vértices del cubo en 3D (x, y, z) - coordenadas relativas al marcador
     cube_3d = np.float32([
-        [-1, -1, 0],    # Base inferior
-        [1, -1, 0],     
-        [1, 1, 0],      
-        [-1, 1, 0],     
-        [-1, -1, -height], # Base superior (z negativo para que se vea hacia arriba)
-        [1, -1, -height],  
-        [1, 1, -height],   
-        [-1, 1, -height]   
-    ]) * scale
+        # Base inferior (z=0)
+        [0, 0, 0],
+        [size, 0, 0],
+        [size, size, 0],
+        [0, size, 0],
+        # Base superior (z negativo para que se vea hacia arriba)
+        [0, 0, -height],
+        [size, 0, -height],
+        [size, size, -height],
+        [0, size, -height]
+    ])
     
-    # Mover el cubo al centro del marcador
-    cube_3d[:, 0] += marker_size[1] / 2  # Centrar en x
-    cube_3d[:, 1] += marker_size[0] / 2  # Centrar en y
+    # Centrar el cubo en el marcador
+    offset_x = (marker_size[1] - size) / 2
+    offset_y = (marker_size[0] - size) / 2
+    cube_3d[:, 0] += offset_x
+    cube_3d[:, 1] += offset_y
     
-    # Parámetros de la cámara (aproximados - en una aplicación real deberías calibrar)
+    # Parámetros de la cámara mejorados
     camera_matrix = np.array([
-        [800, 0, frame.shape[1]/2],
-        [0, 800, frame.shape[0]/2],
+        [frame.shape[1], 0, frame.shape[1]/2],
+        [0, frame.shape[1], frame.shape[0]/2],
         [0, 0, 1]
     ], dtype=np.float32)
     
@@ -71,33 +75,44 @@ def draw_3d_cube(frame, homography_matrix, marker_size):
         cube_2d, _ = cv2.projectPoints(cube_3d, rvec, tvec, camera_matrix, dist_coeffs)
         cube_2d = np.int32(cube_2d).reshape(-1, 2)
         
-        # Definir las caras del cubo basadas en el archivo PLY
+        # Definir las caras del cubo correctamente
         faces = [
-            [3, 2, 1, 0],  # Base inferior
-            [0, 1, 5, 4],  # Cara frontal
-            [2, 3, 7, 6],  # Cara trasera
-            [4, 7, 3, 0],  # Cara izquierda
-            [1, 2, 6, 5],   # Cara derecha
-            [4, 5, 6, 7],  # Base superior  
+            [0, 1, 2, 3],  # Base inferior
+            [4, 7, 6, 5],  # Base superior  
+            [0, 4, 5, 1],  # Cara frontal
+            [2, 6, 7, 3],  # Cara trasera
+            [0, 3, 7, 4],  # Cara izquierda
+            [1, 5, 6, 2]   # Cara derecha
         ]
         
-        # Colores para cada cara (BGR)
+        # Colores para cada cara (BGR) - más suaves
         colors = [
-            (0, 0, 255),     # Rojo - base inferior
-            (0, 255, 0),     # Verde - base superior
-            (255, 0, 0),     # Azul - frontal
-            (0, 255, 255),   # Amarillo - trasera
-            (255, 0, 255),   # Magenta - izquierda
-            (255, 255, 0)    # Cian - derecha
+            (100, 100, 255),  # Rojo claro - base inferior
+            (100, 255, 100),  # Verde claro - base superior
+            (255, 100, 100),  # Azul claro - frontal
+            (100, 255, 255),  # Amarillo claro - trasera
+            (255, 100, 255),  # Magenta claro - izquierda
+            (255, 255, 100)   # Cian claro - derecha
         ]
         
-        # Dibujar las caras del cubo
+        # Dibujar las caras del cubo con mejor validación
         for i, face in enumerate(faces):
             pts = cube_2d[face]
-            # Verificar que todos los puntos estén dentro del frame
-            if all(0 <= pt[0] < frame.shape[1] and 0 <= pt[1] < frame.shape[0] for pt in pts):
-                cv2.fillPoly(frame, [pts], colors[i])
-                cv2.polylines(frame, [pts], True, (0, 0, 0), 2)  # Contorno negro
+            # Verificar que todos los puntos estén dentro del frame con margen
+            margin = 50
+            if all(-margin <= pt[0] <= frame.shape[1] + margin and 
+                   -margin <= pt[1] <= frame.shape[0] + margin for pt in pts):
+                # Asegurar que los puntos sean válidos
+                valid_pts = []
+                for pt in pts:
+                    x = max(0, min(frame.shape[1] - 1, int(pt[0])))
+                    y = max(0, min(frame.shape[0] - 1, int(pt[1])))
+                    valid_pts.append([x, y])
+                
+                if len(valid_pts) == 4:
+                    valid_pts = np.array(valid_pts, dtype=np.int32)
+                    cv2.fillPoly(frame, [valid_pts], colors[i])
+                    cv2.polylines(frame, [valid_pts], True, (0, 0, 0), 2)
         
         # Dibujar las aristas del cubo para mayor claridad
         edges = [
@@ -108,10 +123,20 @@ def draw_3d_cube(frame, homography_matrix, marker_size):
         
         for edge in edges:
             pt1, pt2 = cube_2d[edge[0]], cube_2d[edge[1]]
-            # Verificar que los puntos estén dentro del frame
-            if (0 <= pt1[0] < frame.shape[1] and 0 <= pt1[1] < frame.shape[0] and
-                0 <= pt2[0] < frame.shape[1] and 0 <= pt2[1] < frame.shape[0]):
-                cv2.line(frame, tuple(pt1), tuple(pt2), (0, 0, 0), 2)
+            # Verificar que los puntos estén dentro del frame con margen
+            margin = 50
+            if (-margin <= pt1[0] <= frame.shape[1] + margin and 
+                -margin <= pt1[1] <= frame.shape[0] + margin and
+                -margin <= pt2[0] <= frame.shape[1] + margin and 
+                -margin <= pt2[1] <= frame.shape[0] + margin):
+                
+                # Asegurar que los puntos sean válidos
+                x1 = max(0, min(frame.shape[1] - 1, int(pt1[0])))
+                y1 = max(0, min(frame.shape[0] - 1, int(pt1[1])))
+                x2 = max(0, min(frame.shape[1] - 1, int(pt2[0])))
+                y2 = max(0, min(frame.shape[0] - 1, int(pt2[1])))
+                
+                cv2.line(frame, (x1, y1), (x2, y2), (0, 0, 0), 2)
 
 # Carga de imagen
 marker_image = cv2.imread('marker.png', cv2.IMREAD_GRAYSCALE)
@@ -148,7 +173,7 @@ while True:
         matches = bf.match(des_marker, des_frame)
         matches = sorted(matches, key=lambda x: x.distance)
 
-        if len(matches) > 125:
+        if len(matches) > 100:  # Reducir el umbral para mejor detección
             try:
                 src_pts = np.float32([kp_marker[m.queryIdx].pt for m in matches]).reshape(-1, 1, 2)
                 dst_pts = np.float32([kp_frame[m.trainIdx].pt for m in matches]).reshape(-1, 1, 2)
