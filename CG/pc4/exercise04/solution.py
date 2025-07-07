@@ -16,7 +16,7 @@ def stitch_images(
     full_path_output_image: str
 ):
     imgs = []
-    for filename in full_path_input_image:
+    for i, filename in enumerate(full_path_input_image):
         img = cv2.imread(filename)
         if img is not None:
             imgs.append(img)
@@ -25,137 +25,209 @@ def stitch_images(
         print("Not enough images to stitch.")
         return False
     
-    # Solo implementamos para los parámetros específicos solicitados
-    if (blender == Blender.FeatherBlender and 
-        features_finder == FeaturesFinder.SIFT and 
-        features_matcher == FeaturesMatcher.BestOf2NearestRange and 
-        warper == Warper.Plane):
+    detector = cv2.SIFT.create()
+
+    for i, img in enumerate(imgs):
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        kp, desc = detector.detectAndCompute(gray, None)
+        print(f"Imagen {i+1}: {len(kp)} keypoints detectados")
+    
+    try:
+        stitcher = cv2.Stitcher.create(cv2.Stitcher_PANORAMA)
         
-        # 1. Crear detector SIFT
-        detector = cv2.SIFT.create()
+        stitcher.setRegistrationResol(0.5)  
+        stitcher.setSeamEstimationResol(0.1)  
+        stitcher.setCompositingResol(1.0)  
+        stitcher.setPanoConfidenceThresh(0.7)  
         
-        # 2. Detectar keypoints y descriptores en todas las imágenes
-        keypoints = []
-        descriptors = []
+        if warper == Warper.Cylindrical:
+            stitcher.setWarper(cv2.CylindricalWarper())
+            print("Usando warper cilíndrico...")
+        elif warper == Warper.Spherical:
+            stitcher.setWarper(cv2.SphericalWarper())
+            print("Usando warper esférico...")
+        else: 
+            print("Usando warper plano...")
         
-        for img in imgs:
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            kp, desc = detector.detectAndCompute(gray, None)
-            keypoints.append(kp)
-            descriptors.append(desc)
+        print("\nIniciando el proceso de stitching...")
         
-        # 3. Crear matcher BF (Brute Force) para BestOf2NearestRange
-        matcher = cv2.BFMatcher()
+        status, panorama = stitcher.stitch(imgs)
         
-        # 4. Para simplificar, haremos stitching de solo las primeras dos imágenes
-        if len(imgs) >= 2:
-            # Encontrar matches entre las dos primeras imágenes
-            matches = matcher.knnMatch(descriptors[0], descriptors[1], k=2)
+        if status == cv2.Stitcher_OK:
+            print("✓ Stitching exitoso!")
+            panorama_cropped = crop_black_borders(panorama)
             
-            # Aplicar ratio test (Lowe's ratio test)
-            good_matches = []
-            for match_pair in matches:
-                if len(match_pair) == 2:
-                    m, n = match_pair
-                    if m.distance < 0.7 * n.distance:
-                        good_matches.append(m)
-            
-            if len(good_matches) > 10:
-                # Extraer puntos correspondientes
-                src_pts = np.float32([keypoints[0][m.queryIdx].pt for m in good_matches]).reshape(-1, 1, 2)
-                dst_pts = np.float32([keypoints[1][m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
-                
-                # Encontrar homografía usando RANSAC
-                homography, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
-                
-                if homography is not None:
-                    # Warping plano (Plane warper)
-                    h1, w1 = imgs[0].shape[:2]
-                    h2, w2 = imgs[1].shape[:2]
-                    
-                    # Calcular las esquinas de la primera imagen transformada
-                    corners1 = np.float32([[0, 0], [w1, 0], [w1, h1], [0, h1]]).reshape(-1, 1, 2)
-                    corners1_transformed = cv2.perspectiveTransform(corners1, homography)
-                    
-                    # Combinar con las esquinas de la segunda imagen
-                    corners2 = np.float32([[0, 0], [w2, 0], [w2, h2], [0, h2]]).reshape(-1, 1, 2)
-                    all_corners = np.concatenate((corners1_transformed, corners2), axis=0)
-                    
-                    # Encontrar el bounding box del resultado
-                    [x_min, y_min] = np.int32(all_corners.min(axis=0).ravel())
-                    [x_max, y_max] = np.int32(all_corners.max(axis=0).ravel())
-                    
-                    # Matriz de traslación para evitar coordenadas negativas
-                    translation_dist = [-x_min, -y_min]
-                    H_translation = np.array([[1, 0, translation_dist[0]], [0, 1, translation_dist[1]], [0, 0, 1]])
-                    
-                    # Aplicar warping a la primera imagen
-                    output_img = cv2.warpPerspective(imgs[0], H_translation.dot(homography), 
-                                                   (x_max - x_min, y_max - y_min))
-                    
-                    # Colocar la segunda imagen en la posición correcta
-                    output_img[translation_dist[1]:h2 + translation_dist[1], 
-                             translation_dist[0]:w2 + translation_dist[0]] = imgs[1]
-                    
-                    # Blending simple usando FeatherBlender (implementación básica)
-                    # Crear máscara para blending suave en la zona de solapamiento
-                    mask1 = np.zeros((y_max - y_min, x_max - x_min), dtype=np.uint8)
-                    cv2.fillPoly(mask1, [np.int32(corners1_transformed + translation_dist)], 255)
-                    
-                    mask2 = np.zeros((y_max - y_min, x_max - x_min), dtype=np.uint8)
-                    mask2[translation_dist[1]:h2 + translation_dist[1], 
-                          translation_dist[0]:w2 + translation_dist[0]] = 255
-                    
-                    # Zona de solapamiento
-                    overlap = cv2.bitwise_and(mask1, mask2)
-                    
-                    # Aplicar blending suave en la zona de solapamiento
-                    if np.any(overlap):
-                        # Crear pesos para blending gradual
-                        distance_transform = cv2.distanceTransform(overlap, cv2.DIST_L2, 5)
-                        if distance_transform.max() > 0:
-                            weights = distance_transform / distance_transform.max()
-                            
-                            # Aplicar blending en la zona de solapamiento
-                            warped_img1 = cv2.warpPerspective(imgs[0], H_translation.dot(homography), 
-                                                            (x_max - x_min, y_max - y_min))
-                            
-                            for i in range(3):  # Para cada canal de color
-                                overlap_region = overlap > 0
-                                output_img[overlap_region, i] = (
-                                    weights[overlap_region] * warped_img1[overlap_region, i] + 
-                                    (1 - weights[overlap_region]) * imgs[1][
-                                        overlap_region[translation_dist[1]:h2 + translation_dist[1], 
-                                                     translation_dist[0]:w2 + translation_dist[0]], i
-                                    ]
-                                )
-                    
-                    # Guardar la imagen resultante
-                    cv2.imwrite(full_path_output_image, output_img)
-                    print(f"Panorama guardado en: {full_path_output_image}")
-                    return True
-                else:
-                    print("No se pudo encontrar una homografía válida.")
-                    return False
-            else:
-                print("No hay suficientes matches de buena calidad.")
-                return False
+            cv2.imwrite(full_path_output_image, panorama_cropped)
+            print(f"✓ Panorama guardado en: {full_path_output_image}")
+            print(f"Dimensiones finales: {panorama_cropped.shape}")
+            return True
         else:
-            print("Se necesitan al menos 2 imágenes.")
-            return False
-    else:
-        print("Esta implementación solo soporta: FeatherBlender + SIFT + BestOf2NearestRange + Plane")
+            error_messages = {
+                cv2.Stitcher_ERR_NEED_MORE_IMGS: "Se necesitan más imágenes",
+                cv2.Stitcher_ERR_HOMOGRAPHY_EST_FAIL: "Fallo en estimación de homografía",
+                cv2.Stitcher_ERR_CAMERA_PARAMS_ADJUST_FAIL: "Fallo en ajuste de parámetros de cámara"
+            }
+            print(f"✗ Error en el stitching: {error_messages.get(status, f'Código {status}')}")
+            
+            print("\nIntentando con diferentes configuraciones...")
+            return stitch_fallback(imgs, full_path_output_image)
+            
+    except Exception as e:
+        print(f"✗ Error durante el stitching: {e}")
+        print("Intentando método alternativo...")
+        return stitch_fallback(imgs, full_path_output_image)
+
+def crop_black_borders(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    _, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
+    
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    if contours:
+        largest_contour = max(contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(largest_contour)
+        
+        cropped = image[y:y+h, x:x+w]
+        return cropped
+    
+    return image
+
+def stitch_fallback(imgs, output_path):
+    try:
+        modes = [cv2.Stitcher_PANORAMA, cv2.Stitcher_SCANS]
+        mode_names = ["PANORAMA", "SCANS"]
+        
+        for mode, mode_name in zip(modes, mode_names):
+            print(f"\n--- Probando modo {mode_name} ---")
+            stitcher = cv2.Stitcher.create(mode)
+            
+            stitcher.setRegistrationResol(0.6)
+            stitcher.setSeamEstimationResol(0.1) 
+            stitcher.setCompositingResol(1.0)
+            stitcher.setPanoConfidenceThresh(0.8)  
+            
+            orders = [
+                [0, 1, 2, 3],  
+                [3, 2, 1, 0],  
+                [1, 0, 2, 3],  
+                [0, 2, 1, 3],  
+                [2, 1, 0, 3],  
+                [0, 1, 3, 2],  
+                [1, 2, 0, 3],  
+                [1, 2, 3, 0],  
+            ]
+            
+            for order in orders:
+                try:
+                    reordered_imgs = [imgs[j] for j in order]
+                    print(f"  Probando orden: {[i+1 for i in order]}")
+                    
+                    status, panorama = stitcher.stitch(reordered_imgs)
+                    
+                    if status == cv2.Stitcher_OK:
+                        panorama_cropped = crop_black_borders(panorama)
+                        cv2.imwrite(output_path, panorama_cropped)
+                        print(f"  ✓ ¡ÉXITO! Modo {mode_name}, orden {[i+1 for i in order]}")
+                        print(f"  ✓ Guardado en: {output_path}")
+                        return True
+                    else:
+                        print(f"  ✗ Falló con código {status}")
+                        
+                except Exception as e:
+                    print(f"  ✗ Error: {e}")
+                    continue
+        
+        print(f"\n--- Probando con resolución reducida ---")
+        resized_imgs = []
+        for img in imgs:
+            height, width = img.shape[:2]
+            if width > 800:  
+                scale = 800.0 / width
+                new_width = int(width * scale)
+                new_height = int(height * scale)
+                resized_img = cv2.resize(img, (new_width, new_height))
+                resized_imgs.append(resized_img)
+            else:
+                resized_imgs.append(img)
+        
+        warpers = [
+            (cv2.PlaneWarper(), "Plane"),
+            (cv2.CylindricalWarper(), "Cylindrical"),
+            (cv2.SphericalWarper(), "Spherical"),
+        ]
+        
+        for warper, warper_name in warpers:
+            print(f"  Probando warper {warper_name}...")
+            stitcher = cv2.Stitcher.create(cv2.Stitcher_PANORAMA)
+            stitcher.setWarp(warper)
+            stitcher.setRegistrationResol(0.5)
+            stitcher.setSeamEstimationResol(0.1)
+            
+            for order in [[0,1,2,3], [3,2,1,0], [0,1,3,2], [1,0,2,3]]:
+                try:
+                    reordered_imgs = [resized_imgs[j] for j in order]
+                    status, panorama = stitcher.stitch(reordered_imgs)
+                    
+                    if status == cv2.Stitcher_OK:
+                        panorama_cropped = crop_black_borders(panorama)
+                        cv2.imwrite(output_path, panorama_cropped)
+                        print(f"  ✓ ¡ÉXITO! Warper {warper_name}, orden {[i+1 for i in order]}")
+                        return True
+                        
+                except Exception:
+                    continue
+        
+        print(f"\n--- Probando sin imagen 4 (perspectiva diferente) ---")
+        try:
+            subset_imgs = [imgs[0], imgs[1], imgs[2]] 
+            stitcher = cv2.Stitcher.create(cv2.Stitcher_PANORAMA)
+            stitcher.setRegistrationResol(0.6)
+            stitcher.setSeamEstimationResol(0.1)
+            
+            status, partial_panorama = stitcher.stitch(subset_imgs)
+            
+            if status == cv2.Stitcher_OK:
+                print("  ✓ Stitching parcial exitoso (imágenes 1,2,3)")
+                try:
+                    final_imgs = [partial_panorama, imgs[3]]  
+                    status2, final_panorama = stitcher.stitch(final_imgs)
+                    
+                    if status2 == cv2.Stitcher_OK:
+                        panorama_cropped = crop_black_borders(final_panorama)
+                        cv2.imwrite(output_path, panorama_cropped)
+                        print("  ✓ ¡ÉXITO! Agregada imagen 4 al panorama parcial")
+                        return True
+                    else:
+                        panorama_cropped = crop_black_borders(partial_panorama)
+                        cv2.imwrite(output_path, panorama_cropped)
+                        print("  ⚠ Guardado panorama parcial (imágenes 1,2,3 sin imagen 4)")
+                        return True
+                except Exception:
+                    # Guardar panorama parcial como último recurso
+                    panorama_cropped = crop_black_borders(partial_panorama)
+                    cv2.imwrite(output_path, panorama_cropped)
+                    print("  ⚠ Guardado panorama parcial (imágenes 1,2,3 sin imagen 4)")
+                    return True
+        except Exception:
+            pass
+        
+        return False
+            
+    except Exception as e:
+        print(f"✗ Error en método alternativo: {e}")
         return False
 
-
-stitch_images(
+success = stitch_images(
     full_path_input_image=[
-        'panorama1-input-1.jpg',
-        'panorama1-input-2.jpg'
+        'panoramas/singapur/1.png',
+        'panoramas/singapur/2.png', 
+        'panoramas/singapur/3.png',
+        'panoramas/singapur/4.png'
     ],
     blender=Blender.FeatherBlender,
     features_finder=FeaturesFinder.SIFT,
     features_matcher=FeaturesMatcher.BestOf2NearestRange,
-    warper=Warper.Plane,
-    full_path_output_image='panorama1-plane.jpg'
+    warper=Warper.Cylindrical,  
+    full_path_output_image='panorama1.jpg'
 )

@@ -120,6 +120,9 @@ def draw_mesh_on_top_of_marker(full_path_input_image, full_path_mesh, full_path_
     max_coords = np.max(vertices, axis=0)
     mesh_size = max_coords - min_coords
     
+    max_dim = max(mesh_size[0], mesh_size[1], mesh_size[2])
+    if max_dim == 0: max_dim = 1.0
+    
     scale_factor = (1.0 / max(mesh_size[0], mesh_size[1])) * 0.8
 
     transformed_vertices = (vertices - (min_coords + max_coords) / 2) * scale_factor
@@ -130,12 +133,14 @@ def draw_mesh_on_top_of_marker(full_path_input_image, full_path_mesh, full_path_
     projected_vertices, _ = cv2.projectPoints(transformed_vertices, rvec, tvec, camera_matrix, np.zeros((4,1)))
     projected_vertices = np.squeeze(projected_vertices).astype(int)
 
-    light_direction = np.array([0.5, 0.5, 1.0])
+    light_direction = np.array([0.5, -0.5, -1.0])
     
     R, _ = cv2.Rodrigues(rvec)
     cam_space_vertices = (R @ transformed_vertices.T).T + tvec.T
     face_depths = [np.mean(cam_space_vertices[face, 2]) for face in faces]
     sorted_face_indices = np.argsort(face_depths)[::-1]
+
+    ambient_light = 0.3
 
     for face_idx in sorted_face_indices:
         face = faces[face_idx]
@@ -143,26 +148,28 @@ def draw_mesh_on_top_of_marker(full_path_input_image, full_path_mesh, full_path_
         v1, v2, v3 = transformed_vertices[face[0]], transformed_vertices[face[1]], transformed_vertices[face[2]]
         
         normal = np.cross(v2 - v1, v3 - v1)
-        
+
         mesh_center = np.mean(transformed_vertices, axis=0)
         if np.dot(normal, v1 - mesh_center) < 0:
             normal = -normal
 
-        intensity = calculate_lighting(normal, light_direction)
+        rotated_normal = R @ normal
+        intensity = calculate_lighting(rotated_normal, light_direction)
+        total_intensity = ambient_light + (1.0 - ambient_light) * intensity
         
         pts = projected_vertices[face]
         
         if has_colors:
             base_color = np.mean([colors[i] for i in face], axis=0) / 255.0
-            shaded_color = base_color * intensity
+            shaded_color = base_color * total_intensity
             shaded_bgr_255 = shaded_color[::-1] * 255
             bgr_color = (int(shaded_bgr_255[0]), int(shaded_bgr_255[1]), int(shaded_bgr_255[2]))
         else:
-            gray_value = int(255 * intensity)
+            gray_value = int(255 * total_intensity)
             bgr_color = (gray_value, gray_value, gray_value)
         
         cv2.fillPoly(output_image, [pts], bgr_color)
-        cv2.polylines(output_image, [pts], isClosed=True, color=(0,0,0), thickness=1)
+        cv2.polylines(output_image, [pts], isClosed=True, color=(20,20,20), thickness=1)
 
     cv2.imwrite(full_path_output_image, output_image)
     print(f"Imagen de realidad aumentada guardada en: {full_path_output_image}")
@@ -170,6 +177,6 @@ def draw_mesh_on_top_of_marker(full_path_input_image, full_path_mesh, full_path_
 if __name__ == "__main__":
     draw_mesh_on_top_of_marker(
         full_path_input_image='markers/marker1.jpg',
-        full_path_mesh='mesh/sphere.ply',
+        full_path_mesh='mesh/cube.ply',
         full_path_output_image='output.jpg'
     )
